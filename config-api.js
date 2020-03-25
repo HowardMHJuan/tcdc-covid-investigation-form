@@ -1,9 +1,9 @@
 const apiConfig = {
-  mongoPost: '/api/mongo/users',
-  mongoPut: '/api/mongo/users/:id',
-  mongoDelete: '/api/mongo/users/:id',
-  mongoGetAll: '/api/mongo/users',
-  mongoGet: '/api/mongo/users/:id',
+  mongoPost: '/api/mongo/health-db',
+  mongoPut: '/api/mongo/health-db/:id',
+  mongoDelete: '/api/mongo/health-db/:id',
+  mongoGetAll: '/api/mongo/health-db',
+  mongoGet: '/api/mongo/health-db/:id',
 };
 
 const environment = {

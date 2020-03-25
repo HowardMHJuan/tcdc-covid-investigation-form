@@ -1,7 +1,18 @@
 import React, { Component } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 
 import { apiConfig } from '../../config-api';
+import FormBody from './FormBody';
+
+const getForm = s => ({
+  id: s.id,
+  information: {
+    report_date: s.report_date,
+    name: s.name,
+    gender: s.gender,
+  },
+});
 
 /**
  * This Component shows FormPage.
@@ -12,41 +23,30 @@ class FormPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      /**
-       * Used to decide which subpage to show
-       * 0: Registeration page (initial status)
-       * 1: Registeration succeed page */
-      status: false,
+      submitted: false,
     };
-    this.register = this.register.bind(this);
-    this.reset = this.reset.bind(this);
+    this.submit = this.submit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   /**
-   * Post the current Registeration data into backend, and switch into
-   * success page if the post request succeed. */
-  register() {
-    axios.post(apiConfig.mongoPost, {
-      username: this.username.value,
-      password: this.password.value,
-    });
-    axios.post(apiConfig.sqlCreate, {
-      username: this.username.value,
-      password: this.password.value,
-    })
+   * Post the data to backend. */
+  submit() {
+    console.log(getForm(this.state));
+    axios.post(apiConfig.mongoPost, getForm(this.state))
       .then((res) => {
         console.log(res.data);
-        this.setState({ status: true });
+        this.setState({ submitted: true });
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-  /**
-   * switch subpage back to initial status */
-  reset() {
-    this.setState({ status: false });
+  handleChange(event) {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+    setTimeout(() => console.log(this.state), 1000); 
   }
 
   /**
@@ -54,20 +54,14 @@ class FormPage extends Component {
    * eventually compiled into html code. */
   render() {
     return (
-      <div className="center">
-        {this.state.status === false
-          ?
-            <div>
-              FormPage - Register
-              <input type="text" placeholder="帳號" ref={(input) => { this.username = input; }} />
-              <input type="text" placeholder="密碼" ref={(input) => { this.password = input; }} />
-              <button onClick={this.register}>Register</button>
-            </div>
-          :
-            <div>
-              <button onClick={this.reset}>Go Back</button>
-            </div>
-        }
+      <div className="form-page">
+        <Container>
+          <Row className="justify-content-md-center">
+            <Col lg="8">
+              <FormBody handleChange={this.handleChange} submit={this.submit} />
+            </Col>
+          </Row>
+        </Container>
       </div>
     );
   }

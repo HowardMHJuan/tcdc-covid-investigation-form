@@ -6,6 +6,8 @@ import config from './config';
 import routes from './api/routes';
 import { environment } from '../config-api';
 
+require('dotenv').config();
+
 const app = express();
 /**
  * Switch between webpack Development & Production mode.
@@ -54,11 +56,15 @@ if (process.env.NODE_ENV === 'dev') {
 if (environment.mongodb) {
   const mongoose = require('mongoose');
   mongoose.Promise = global.Promise;
-  if (process.env.NODE_ENV !== 'test') {
-    /* To run mongodb, you'll have to type 'mongob' in terminal */
-    const dbName = 'users';
-    mongoose.connect(process.env.MONGODB_URI || `mongodb://localhost/${dbName}`);
-  }
+  // const dbName = 'health-db';
+  console.log(process.env.MONGODB_URI);
+  // mongoose.connect(process.env.MONGODB_URI || `mongodb://localhost/${dbName}`);
+  mongoose.connect(process.env.MONGODB_URI, {
+    auth: {
+      user: process.env.MONGODB_USER,
+      password: process.env.MONGODB_KEY,
+    },
+  });
 }
 
 app.use(bodyParser.json());

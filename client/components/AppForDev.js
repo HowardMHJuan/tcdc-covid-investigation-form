@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 
 import FormPage from './FormPage';
 
-import '../scss/style.scss';
-
 /**
  * This Component is Only used in development stage. It switches between pages.
  * @extends Component */

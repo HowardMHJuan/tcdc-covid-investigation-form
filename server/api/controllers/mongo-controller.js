@@ -1,46 +1,45 @@
-import User from '../models/User';
+import HealthForm from '../models/HealthForm';
 
 module.exports = {
-
   create(req, res, next) {
-    const userProps = req.body;
+    const healthFormProps = req.body;
 
-    User.create(userProps)
-      .then(user => res.send(user))
+    HealthForm.create(healthFormProps)
+      .then(healthForm => res.send(healthForm))
       .then(() => {
-        console.log('mongodb User created');
+        console.log('mongodb HealthForm created');
       })
       .catch(next);
   },
 
   edit(req, res, next) {
-    const userId = req.params.id;
-    const userProps = req.body;
+    const healthFormId = req.params.id;
+    const healthFormProps = req.body;
 
-    User.findByIdAndUpdate({ _id: userId }, userProps)
-      .then(() => User.findById({ _id: userId }))
-      .then(user => res.send(user))
+    HealthForm.findByIdAndUpdate({ _id: healthFormId }, healthFormProps)
+      .then(() => HealthForm.findById({ _id: healthFormId }))
+      .then(healthForm => res.send(healthForm))
       .catch(next);
   },
 
   delete(req, res, next) {
-    const userId = req.params.id;
+    const healthFormId = req.params.id;
 
-    User.findByIdAndRemove({ _id: userId })
-      .then(user => res.status(204).send(user))
+    HealthForm.findByIdAndRemove({ _id: healthFormId })
+      .then(healthForm => res.status(204).send(healthForm))
       .catch(next);
   },
 
-  getusers(req, res, next) {
-    User.find({})
-      .then(users => res.send(users))
+  getHealthForms(req, res, next) {
+    HealthForm.find({})
+      .then(healthForms => res.send(healthForms))
       .catch(next);
   },
 
-  getuser(req, res, next) {
-    const userId = req.params.id;
-    User.findOne({ _id: userId })
-      .then(user => res.send(user))
+  getHealthForm(req, res, next) {
+    const healthFormId = req.params.id;
+    HealthForm.findOne({ _id: healthFormId })
+      .then(healthForm => res.send(healthForm))
       .catch(next);
   },
 };
