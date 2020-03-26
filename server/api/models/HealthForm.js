@@ -7,33 +7,15 @@ const HealthFormSchema = new Schema({
     name: String,
     gender: String, // 男 / 女
     birth_date: String, // yyyy-mm-dd
+  },
+  source: {
+    is_abroad: Boolean, // T/F
+
+  },
+  contactor: {
+    
   }
-//     nationality: string,
-//     address: string,
-//     occupation: string,
-//     med_title: string ("" if false),
-//     onset: "YYYY-MM-DD",
-//     pregnant_weeks: int (0 if false),
-//     married: T/F
-// },
-// "health_condition":
-// {
-//     "symptoms": 
-//         [
-//             {"name": string, "date": "YYYY-MM-DD"},
-//             {"name": string, "date": "YYYY-MM-DD"}
-//         ] ([] if none), 
-//     "seeing_doctor":
-//         [
-//             {"type": 0,1,2 (門診、急診、住院), "name": string, "date":"YYYY-MM-DD"},
-//             {"type": 0,1,2 (門診、急診、住院), "name": string, "date":"YYYY-MM-DD"}
-//         ] ([] if none),
-//     "chronic_disease":
-//         [
-//             "name": string,
-//             "name": string
-//         ] ([] if none)
-// },
+
 // "source":
 //     {
 //         "abroad":

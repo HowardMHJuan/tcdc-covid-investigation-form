@@ -33,4 +33,35 @@ const SelectColumn = props => (
   </Form.Group>
 );
 
-export { StringColumn, DateColumn, SelectColumn };
+const TFcheckbox1 = props => (
+  <Form.Group as={Col} controlId={props.id}>
+      <Form.Label>{props.name}</Form.Label>
+      &nbsp; &nbsp; &nbsp;
+      <Form.Check inline label={props.options[0]} type={"checkbox"} id={"inline-checkbox-1"} onChange={props.handleChange}/>
+      <Form.Check inline label={props.options[1]} type={"checkbox"} id={"inline-checkbox-2"} onChange={props.handleChange}/>
+  </Form.Group>
+);
+
+const TFcheckbox2 = props => (
+  <Form.Group as={Col} controlId={props.id}>
+      <Form.Label>{props.name}</Form.Label>
+      &nbsp; &nbsp; &nbsp;
+      <Form.Check inline label={props.options[0]} type={"checkbox"} id={"inline-checkbox-1"} onChange={props.handleChange}/>
+      <Form.Check inline label={props.options[1]} type={"checkbox"} id={"inline-checkbox-2"} onChange={props.handleChange}/>
+      <Form.Check inline label={props.options[2]} type={"checkbox"} id={"inline-checkbox-3"} onChange={props.handleChange}/>
+      <Form.Check inline label={props.options[3]} type={"checkbox"} id={"inline-checkbox-4"} onChange={props.handleChange}/>
+      <Form.Control type="text" onChange={props.handleChange}/>
+  </Form.Group>
+);
+
+const TFcheckbox3 = props => (
+  <Form.Group as={Col} controlId={props.id}>
+      <Form.Label>{props.name}</Form.Label>
+      &nbsp; &nbsp; &nbsp;
+      <Form.Check inline label={props.options[0]} type={"checkbox"} id={"inline-checkbox-1"} onChange={props.handleChange}/>
+      <Form.Check inline label={props.options[1]} type={"checkbox"} id={"inline-checkbox-2"} onChange={props.handleChange}/>
+      <Form.Control type="text" onChange={props.handleChange}/>
+  </Form.Group>
+);
+
+export { StringColumn, DateColumn, SelectColumn, TFcheckbox1, TFcheckbox2, TFcheckbox3};
