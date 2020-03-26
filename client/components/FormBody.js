@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Col, Card, Button } from 'react-bootstrap';
-import { StringColumn, DateColumn, SelectColumn } from './FormColumns';
+import { StringColumn, DateColumn, SelectColumn, SelectAndInputColumn } from './FormColumns';
 
 /**
  * This Component shows FormBody.
@@ -55,6 +55,15 @@ const Information = props => (
     <Form.Row>
       <StringColumn id="name" name="姓名" handleChange={props.handleChange} />
       <SelectColumn id="gender" name="生理性別" options={['男', '女']} handleChange={props.handleChange} />
+    </Form.Row>
+    <Form.Row>
+      <DateColumn id="birth_date" name="出生日期（西元年）" handleChange={props.handleChange} />
+      <SelectAndInputColumn
+        id="nationality"
+        name="國籍"
+        options={[{ name: '本國籍' }, { name: '其他，國籍：', input: true }]}
+        handleChange={props.handleChange}
+      />
     </Form.Row>
   </React.Fragment>
 );

@@ -5,12 +5,17 @@ import axios from 'axios';
 import { apiConfig } from '../../config-api';
 import FormBody from './FormBody';
 
+const getRadioInputValue = (radioName, input) =>
+  (input === undefined ? radioName : radioName + input);
+
 const getForm = s => ({
   id: s.id,
   information: {
     report_date: s.report_date,
     name: s.name,
     gender: s.gender,
+    birth_date: s.birth_date,
+    nationality: getRadioInputValue(s.nationality__radio, s[`nationality__input__${s.nationality__radio}`]),
   },
 });
 

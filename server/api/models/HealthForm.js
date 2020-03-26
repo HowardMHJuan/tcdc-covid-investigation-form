@@ -7,6 +7,13 @@ const HealthFormSchema = new Schema({
     name: String,
     gender: String, // 男 / 女
     birth_date: String, // yyyy-mm-dd
+    nationality: String,
+    address: String,
+    occupation: String,
+    med_title: String, // ("" if false)
+    onset: String,
+    pregnant_weeks: Number, // (0 if false)
+    married: String,
   }
 //     nationality: string,
 //     address: string,
