@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Col, Card, Button } from 'react-bootstrap';
-import { StringColumn, DateColumn, SelectColumn, TFcheckbox1, TFcheckbox2, TFcheckbox3} from './FormColumns';
+import { StringColumn, DateColumn, SelectColumn, TFcheckbox1, TFcheckbox2, TFcheckbox3, TaskList} from './FormColumns';
 
 /**
  * This Component shows FormBody.
@@ -22,6 +22,13 @@ class FormBody extends Component {
     event.preventDefault();
     this.props.submit();
   }
+
+  addNewRow = (e) => {
+    // this.setState((prevState) => ({
+    //     taskList: [...prevState.taskList, { id: "nation_and_location-"+Math.random(), nation: "國家/城市", start_time: "開始日期", end_time: "結束日期", type: "旅遊型態或目的", companion_num: "同行旅客(人)", companion_symptoms: "同行者健康狀況", transport_and_flight_code: "交通工具或航班編號"}],
+    // }));
+  }
+
 
   /**
    * @return {JSX} - A syntax extension to JavaScript, which will be
@@ -76,6 +83,10 @@ const Source = props => (
       <TFcheckbox1 id="is_abroad" name="(一)發病前14天內是否曾在國外旅遊或居住" options={['是（續填以下欄位）', '否']} handleChange={props.handleChange} />
     </Form.Row> 
       <Form.Label>曾至之國家和地點(如篇幅不足，請自行增列)：</Form.Label>
+    <button onClick={Component.addNewRow} type="button">新增紀錄</button>
+    <Form.Row>
+      <TaskList add={Component.addNewRow} id={"nation_and_location-"+Math.random()} nation="國家/城市" start_time="開始日期" end_time="結束日期" type="旅遊型態或目的" companion_num="同行旅客(人)" companion_symptoms="同行者健康狀況" transport_and_flight_code="交通工具或航班編號" handleChange={props.handleChange} />
+    </Form.Row> 
     <Form.Row>
       <Form.Label>(二) 發病前14天內接觸史調查：</Form.Label>
     </Form.Row> 
@@ -165,3 +176,6 @@ const Contactor = props => (
 );
 
 export default FormBody;
+
+
+// https://github.com/AshutoshChoubey/DTRnodeReact/tree/master/my-app/src/components/Task
