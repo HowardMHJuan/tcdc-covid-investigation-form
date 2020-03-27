@@ -11,19 +11,14 @@ const HealthFormSchema = new Schema({
     address: String,
     contact: String,
     occupation: String,
-    med_title: String, // ("" if false)
+    med_title: String,
     onset: String,
-    pregnant_weeks: Number, // (0 if false)
+    pregnant_weeks: Number,
     married: String,
-  }
-//     nationality: string,
-//     address: string,
-//     occupation: string,
-//     med_title: string ("" if false),
-//     onset: "YYYY-MM-DD",
-//     pregnant_weeks: int (0 if false),
-//     married: T/F
-// },
+  },
+  health_condition: {
+    symptoms: Array, // { name: String, date: "yyyy-mm-dd" }
+  },
 // "health_condition":
 // {
 //     "symptoms": 

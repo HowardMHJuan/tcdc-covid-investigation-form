@@ -63,4 +63,44 @@ const RadioAndInputColumn = props => (
   </Form.Group>
 );
 
-export { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn };
+const CheckboxInputAndDateColumn = props => (
+  <Form.Group as={Col} controlId={props.id}>
+    <fieldset name={props.id} onChange={props.handleChange}>
+      <Form.Label>{props.name}</Form.Label>
+      {props.options.map(option => (
+        <Row>
+          <Col sm="auto">
+            <Form.Check
+              type="checkbox"
+              label={option.name}
+              name={`${props.id}__checkbox`}
+              value={option.name}
+            />
+          </Col>
+          {option.input === true ?
+            <Col>
+              <Form.Control
+                type="text"
+                name={`${props.id}__input__${option.name}`}
+              />
+            </Col>
+          :
+            null
+          }
+          {option.date === true ?
+            <Col sm={4}>
+              <Form.Control
+                type="date"
+                name={`${props.id}__date__${option.name}`}
+              />
+            </Col>
+          :
+            null
+          }
+        </Row>
+      ))}
+    </fieldset>
+  </Form.Group>
+);
+
+export { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, CheckboxInputAndDateColumn };

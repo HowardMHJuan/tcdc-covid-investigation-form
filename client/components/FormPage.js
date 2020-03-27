@@ -5,8 +5,19 @@ import axios from 'axios';
 import { apiConfig } from '../../config-api';
 import FormBody from './FormBody';
 
-const getRadioInputValue = (radioName, input) =>
-  (input === undefined ? radioName : radioName + input);
+const getRadioInputValue = (radioName, input) => (
+  input === undefined ? radioName : radioName + input
+);
+
+const getSymptomsValue = s => (
+  s.symptoms__checkbox.map((name) => {
+    if (name.slice(0, 2) === '其他') {
+      return { name: `其他：${s[`symptoms__input__${name}`]}`, date: s[`symptoms__date__${name}`] };
+    } else {
+      return { name, date: s[`symptoms__date__${name}`] };
+    }
+  })
+);
 
 const getForm = s => ({
   id: s.id,
@@ -22,6 +33,9 @@ const getForm = s => ({
     med_title: getRadioInputValue(s.med_title__radio, s[`med_title__input__${s.med_title__radio}`]),
     onset: s.onset,
     pregnant_week: getRadioInputValue(s.pregnant_week__radio, s[`pregnant_week__input__${s.pregnant_week__radio}`]),
+  },
+  health_condition: {
+    symptoms: getSymptomsValue(s),
   },
 });
 
@@ -54,10 +68,21 @@ class FormPage extends Component {
       });
   }
 
+  /**
+   * Handle the change of a column in the form.
+   * @param {object} event - The event of the column. */
   handleChange(event) {
-    const { name, value } = event.target;
+    const { name, type, checked } = event.target;
+    let { value } = event.target;
+    if (type === 'checkbox') {
+      if (checked === true) {
+        value = this.state[name] === undefined ? [value] : this.state[name].concat(value);
+      } else {
+        value = this.state[name].filter(val => val !== value);
+      }
+    }
     this.setState({ [name]: value });
-    setTimeout(() => console.log(this.state), 1000); 
+    setTimeout(() => console.log(this.state), 1000);
   }
 
   /**
