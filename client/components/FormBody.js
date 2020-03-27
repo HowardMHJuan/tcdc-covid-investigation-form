@@ -36,6 +36,17 @@ class FormBody extends Component {
               <Information handleChange={this.props.handleChange} />
             </Card.Body>
           </Card>
+          <Card>
+            <Card.Body>
+              <Card.Title>二、臨床狀況</Card.Title>
+              <Card>
+                <Card.Body>
+                  <Card.Title as="h6">（一）症狀（初始症狀或疾病過程中曾出現）</Card.Title>
+                  <HealthConditionSymptoms handleChange={this.props.handleChange} />
+                </Card.Body>
+              </Card>
+            </Card.Body>
+          </Card>
 
           <Button variant="primary" type="submit">
             Submit
@@ -65,7 +76,33 @@ const Information = props => (
         handleChange={props.handleChange}
       />
     </Form.Row>
+    <Form.Row>
+      <StringColumn id="address" name="居住地" handleChange={props.handleChange} />
+      <StringColumn id="contact" name="聯絡方式" handleChange={props.handleChange} />
+    </Form.Row>
+    <Form.Row>
+      <StringColumn id="occupation" name="職業" handleChange={props.handleChange} />
+      <SelectAndInputColumn
+        id="med_title"
+        name="是否為醫療機構人員*"
+        options={[{ name: '否' }, { name: '是，職稱：', input: true }]}
+        handleChange={props.handleChange}
+      />
+    </Form.Row>
+    <Form.Row>
+      <DateColumn id="onset" name="發病日期（西元年）" handleChange={props.handleChange} />
+      <SelectAndInputColumn
+        id="pregnant_week"
+        name=" 是否懷孕（女性）"
+        options={[{ name: '否' }, { name: '是，懷孕幾週：', input: true }]}
+        handleChange={props.handleChange}
+      />
+    </Form.Row>
   </React.Fragment>
+);
+
+const HealthConditionSymptoms = props => (
+  <div></div>
 );
 
 export default FormBody;

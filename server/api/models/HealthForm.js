@@ -9,6 +9,7 @@ const HealthFormSchema = new Schema({
     birth_date: String, // yyyy-mm-dd
     nationality: String,
     address: String,
+    contact: String,
     occupation: String,
     med_title: String, // ("" if false)
     onset: String,
