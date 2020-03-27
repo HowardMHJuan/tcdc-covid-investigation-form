@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Col, Card, Button } from 'react-bootstrap';
-import { StringColumn, DateColumn, SelectColumn, SelectAndInputColumn } from './FormColumns';
+import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn } from './FormColumns';
 
 /**
  * This Component shows FormBody.
@@ -69,7 +69,7 @@ const Information = props => (
     </Form.Row>
     <Form.Row>
       <DateColumn id="birth_date" name="出生日期（西元年）" handleChange={props.handleChange} />
-      <SelectAndInputColumn
+      <RadioAndInputColumn
         id="nationality"
         name="國籍"
         options={[{ name: '本國籍' }, { name: '其他，國籍：', input: true }]}
@@ -82,7 +82,7 @@ const Information = props => (
     </Form.Row>
     <Form.Row>
       <StringColumn id="occupation" name="職業" handleChange={props.handleChange} />
-      <SelectAndInputColumn
+      <RadioAndInputColumn
         id="med_title"
         name="是否為醫療機構人員*"
         options={[{ name: '否' }, { name: '是，職稱：', input: true }]}
@@ -91,7 +91,7 @@ const Information = props => (
     </Form.Row>
     <Form.Row>
       <DateColumn id="onset" name="發病日期（西元年）" handleChange={props.handleChange} />
-      <SelectAndInputColumn
+      <RadioAndInputColumn
         id="pregnant_week"
         name=" 是否懷孕（女性）"
         options={[{ name: '否' }, { name: '是，懷孕幾週：', input: true }]}

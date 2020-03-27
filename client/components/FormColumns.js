@@ -33,7 +33,7 @@ const SelectColumn = props => (
   </Form.Group>
 );
 
-const SelectAndInputColumn = props => (
+const RadioAndInputColumn = props => (
   <Form.Group as={Col} controlId={props.id}>
     <fieldset name={props.id} onChange={props.handleChange}>
       <Form.Label>{props.name}</Form.Label>
@@ -63,4 +63,4 @@ const SelectAndInputColumn = props => (
   </Form.Group>
 );
 
-export { StringColumn, DateColumn, SelectColumn, SelectAndInputColumn };
+export { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn };
