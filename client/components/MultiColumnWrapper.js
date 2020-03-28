@@ -19,7 +19,7 @@ class MultiColumnWrapper extends Component {
   /**
    * Handle the click of the add button. */
   handleAdd() {
-    const rowIds = this.state.rowIds.concat(Math.max(...this.state.rowIds) + 1);
+    const rowIds = this.state.rowIds.concat(Math.max(-1, ...this.state.rowIds) + 1);
     this.setState({ rowIds });
   }
 
