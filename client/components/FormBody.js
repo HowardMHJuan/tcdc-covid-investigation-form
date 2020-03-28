@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Card, Button } from 'react-bootstrap';
-import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, CheckboxInputAndDateColumn } from './FormColumns';
+import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, CheckboxInputAndDateColumn, MedicalTreatmentColumn } from './FormColumns';
+import MultiColumnWrapper from './MultiColumnWrapper';
 
 /**
  * This Component shows FormBody.
@@ -10,9 +11,7 @@ class FormBody extends Component {
    * @param {object} props - The props used to construct. */
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
+    this.state = {};
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -43,6 +42,15 @@ class FormBody extends Component {
                 <Card.Body>
                   <Card.Title as="h6">（一）症狀（初始症狀或疾病過程中曾出現）（請註明開始日期）</Card.Title>
                   <HealthConditionSymptoms handleChange={this.props.handleChange} />
+                </Card.Body>
+              </Card>
+              <Card>
+                <Card.Body>
+                  <Card.Title as="h6">（二）發病期間就醫歷程</Card.Title>
+                  <HealthConditionDoctors
+                    handleChange={this.props.handleChange}
+                    handleColumnRemove={this.props.handleColumnRemove}
+                  />
                 </Card.Body>
               </Card>
             </Card.Body>
@@ -137,6 +145,18 @@ const HealthConditionSymptoms = props => (
       ].map(name => ({ name, input: true, date: true })))}
       handleChange={props.handleChange}
     />
+  </React.Fragment>
+);
+
+const HealthConditionDoctors = props => (
+  <React.Fragment>
+    <MultiColumnWrapper
+      id="seeing_doctor"
+      handleChange={props.handleChange}
+      handleColumnRemove={props.handleColumnRemove}
+    >
+      <MedicalTreatmentColumn {...props} />
+    </MultiColumnWrapper>
   </React.Fragment>
 );
 

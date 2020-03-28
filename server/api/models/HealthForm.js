@@ -18,6 +18,7 @@ const HealthFormSchema = new Schema({
   },
   health_condition: {
     symptoms: Array, // { name: String, date: "yyyy-mm-dd" }
+    seeing_doctor: Array, // { type: 門診 / 急診 / 住院, name: String, date:"yyyy-mm-dd" }
   },
 // "health_condition":
 // {

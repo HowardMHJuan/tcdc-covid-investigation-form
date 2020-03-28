@@ -10,7 +10,7 @@ const getRadioInputValue = (radioName, input) => (
 );
 
 const getSymptomsValue = s => (
-  s.symptoms__checkbox.map((name) => {
+  s.symptoms__checkbox === undefined ? undefined : s.symptoms__checkbox.map((name) => {
     if (name.slice(0, 2) === '其他') {
       return { name: `其他：${s[`symptoms__input__${name}`]}`, date: s[`symptoms__date__${name}`] };
     } else {
@@ -18,6 +18,11 @@ const getSymptomsValue = s => (
     }
   })
 );
+
+const getDoctorsValue = (s) => {
+  const rowIds = [...new Set(Object.keys(s).filter(key => /\bseeing_doctor/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
+  return rowIds.map(id => ({ type: s[`seeing_doctor__${id}__radio`], name: s[`seeing_doctor__${id}__input`], date: s[`seeing_doctor__${id}__date`] }));
+};
 
 const getForm = s => ({
   id: s.id,
@@ -36,6 +41,7 @@ const getForm = s => ({
   },
   health_condition: {
     symptoms: getSymptomsValue(s),
+    seeing_doctor: getDoctorsValue(s),
   },
 });
 
@@ -52,6 +58,7 @@ class FormPage extends Component {
     };
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleColumnRemove = this.handleColumnRemove.bind(this);
   }
 
   /**
@@ -86,6 +93,18 @@ class FormPage extends Component {
   }
 
   /**
+   * Handle the removal of a column in a multi-column section.
+   * @param {object} target - The id of the target column. */
+  handleColumnRemove(target) {
+    const re = RegExp(`\\b${target}`);
+    Object.keys(this.state).forEach((key) => {
+      if (re.test(key)) {
+        this.setState({ [key]: undefined });
+      }
+    });
+  }
+
+  /**
    * @return {JSX} - A syntax extension to JavaScript, which will be
    * eventually compiled into html code. */
   render() {
@@ -94,7 +113,11 @@ class FormPage extends Component {
         <Container>
           <Row className="justify-content-md-center">
             <Col lg="8">
-              <FormBody handleChange={this.handleChange} submit={this.submit} />
+              <FormBody
+                handleChange={this.handleChange}
+                handleColumnRemove={this.handleColumnRemove}
+                submit={this.submit}
+              />
             </Col>
           </Row>
         </Container>
