@@ -1,19 +1,24 @@
 import mongoose, { Schema } from 'mongoose';
 
 const HealthFormSchema = new Schema({
-  id: String,
-  information: {
-    report_date: String, // yyyy-mm-dd
-    name: String,
-    gender: String, // 男 / 女
-    birth_date: String, // yyyy-mm-dd
-  },
   source: {
-    is_abroad: Boolean, // T/F
-
+    nation_and_location: Array,
+    contact_fever: Array,
+    contact_patient: Array,
+    contact_secretion: Array,
+    infect: String,
+    market: String,
+    hospital: String,
+    pet: String,
+    bird: String,
+    farm: String,
+    shamble: String,
+    wild: String,
+    other: String,
   },
   contactor: {
-    
+    public_area: Array,
+    close_contactor: Array,
   }
 
 // "source":

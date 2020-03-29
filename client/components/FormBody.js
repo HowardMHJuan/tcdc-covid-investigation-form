@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Col, Card, Button } from 'react-bootstrap';
-import { StringColumn, DateColumn, SelectColumn, TFcheckbox1, TFcheckbox2, TFcheckbox3, TaskList} from './FormColumns';
+import { StringColumn, DateColumn, SelectColumn, TFcheckbox1, TFcheckbox2, RadioAndInputColumn, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3} from './FormColumns';
+import MultiColumnWrapper from './MultiColumnWrapper';
 
 /**
  * This Component shows FormBody.
@@ -10,9 +11,7 @@ class FormBody extends Component {
    * @param {object} props - The props used to construct. */
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
+    this.state = {};
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -23,13 +22,6 @@ class FormBody extends Component {
     this.props.submit();
   }
 
-  addNewRow = (e) => {
-    // this.setState((prevState) => ({
-    //     taskList: [...prevState.taskList, { id: "nation_and_location-"+Math.random(), nation: "國家/城市", start_time: "開始日期", end_time: "結束日期", type: "旅遊型態或目的", companion_num: "同行旅客(人)", companion_symptoms: "同行者健康狀況", transport_and_flight_code: "交通工具或航班編號"}],
-    // }));
-  }
-
-
   /**
    * @return {JSX} - A syntax extension to JavaScript, which will be
    * eventually compiled into html code. */
@@ -37,22 +29,22 @@ class FormBody extends Component {
     return (
       <div className="form-body">
         <Form onSubmit={this.handleSubmit}>
-          <Card>
+          {/* <Card>
             <Card.Body>
               <Card.Title>一、基本資料</Card.Title>
               <Information handleChange={this.props.handleChange} />
             </Card.Body>
-          </Card>
+          </Card> */}
           <Card>
             <Card.Body>
               <Card.Title>三、暴露來源調查(發病前14天)</Card.Title>
-              <Source handleChange={this.props.handleChange} />
+              <Source handleChange={this.props.handleChange} handleColumnRemove={this.props.handleColumnRemove}/>
             </Card.Body>
           </Card>
           <Card>
             <Card.Body>
               <Card.Title>四、接觸者調查 (自個案發病日起至隔離前)：</Card.Title>
-              <Contactor handleChange={this.props.handleChange} />
+              <Contactor handleChange={this.props.handleChange} handleColumnRemove={this.props.handleColumnRemove}/>
             </Card.Body>
           </Card>
           <Button variant="primary" type="submit">
@@ -83,83 +75,63 @@ const Source = props => (
       <TFcheckbox1 id="is_abroad" name="(一)發病前14天內是否曾在國外旅遊或居住" options={['是（續填以下欄位）', '否']} handleChange={props.handleChange} />
     </Form.Row> 
       <Form.Label>曾至之國家和地點(如篇幅不足，請自行增列)：</Form.Label>
-    <button onClick={Component.addNewRow} type="button">新增紀錄</button>
-    <Form.Row>
-      <TaskList add={Component.addNewRow} id={"nation_and_location-"+Math.random()} nation="國家/城市" start_time="開始日期" end_time="結束日期" type="旅遊型態或目的" companion_num="同行旅客(人)" companion_symptoms="同行者健康狀況" transport_and_flight_code="交通工具或航班編號" handleChange={props.handleChange} />
-    </Form.Row> 
+    <Card.Body>
+      <Card.Title as="h6">（二）發病期間就醫歷程</Card.Title>
+      <NationandLocation
+        handleChange={props.handleChange}
+        handleColumnRemove={props.handleColumnRemove}
+      />
+    </Card.Body>
     <Form.Row>
       <Form.Label>(二) 發病前14天內接觸史調查：</Form.Label>
-    </Form.Row> 
-    <Form.Row>
-      <TFcheckbox1 id="is_fever" name="是否曾接觸有發燒或呼吸道症狀人士：" options={['是（續填以下欄位，可複選）', '否']} handleChange={props.handleChange} />
     </Form.Row>
-    <Form.Row>
-      <TFcheckbox2 id="fever_location" name="接觸場所為：" options={['同住', '同住', '醫療院所', '其他，請註明']} handleChange={props.handleChange} />
-    </Form.Row>
-    <Form.Row>
-      <TFcheckbox1 id="is_fever" name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例：" options={['是（續填以下欄位，可複選）', '否']} handleChange={props.handleChange} />
-    </Form.Row>
-    <Form.Row>
-      <TFcheckbox2 id="fever_location" name="接觸場所為：" options={['同住', '同住', '醫療院所', '其他，請註明']} handleChange={props.handleChange} />
-    </Form.Row>
-    <Form.Row>
-      <DateColumn id="fever_time_start" name="接觸開始日期" handleChange={props.handleChange} />
-      <DateColumn id="fever_time_end" name="接觸結束日期" handleChange={props.handleChange} />
-    </Form.Row>
-    <Form.Row>
-      <TFcheckbox1 id="is_fever" name="是否曾接觸是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例之呼吸道分泌物、體液（包含實驗室檢體）：嚴重特殊傳染性肺炎極可能或確定病例：" options={['是（續填以下欄位，可複選）', '否']} handleChange={props.handleChange} />
-    </Form.Row>
-    <Form.Row>
-      <TFcheckbox2 id="fever_location" name="接觸場所為：" options={['同住', '同住', '醫療院所', '其他，請註明']} handleChange={props.handleChange} />
-    </Form.Row>
-    <Form.Row>
-      <DateColumn id="fever_time_start" name="接觸開始日期" handleChange={props.handleChange} />
-      <DateColumn id="fever_time_end" name="接觸結束日期" handleChange={props.handleChange} />
-    </Form.Row>
+    <Card>
+      <Card.Body>
+        <RadioAndInputColumn3 id="contact_fever" name="是否曾接觸有發燒或呼吸道症狀人士：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所',].map(name => ({ name })).concat(['其他，請註明',].map(name => ({ name, input: true})))} handleChange={props.handleChange} />
+      </Card.Body>
+    </Card>
+    <Card>
+      <Card.Body>
+        <RadioAndInputColumn3 id="contact_patient" name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所',].map(name => ({ name })).concat(['其他，請註明',].map(name => ({ name, input: true})))} handleChange={props.handleChange} />
+      </Card.Body>
+    </Card>
+    <Card>
+      <Card.Body>
+        <RadioAndInputColumn3 id="contact_secretion" name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例之呼吸道分泌物、體液（包含實驗室檢體）：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所',].map(name => ({ name })).concat(['其他，請註明',].map(name => ({ name, input: true})))} handleChange={props.handleChange} />
+      </Card.Body>
+    </Card>
     <Form.Row>
       <Form.Label>(三) 發病前14天內之活動史調查：</Form.Label>
     </Form.Row>
     <Form.Row>
-      <TFcheckbox1 id="infect_area" name="是否曾至中國湖北省（含武漢市）（或公告疫區）：" options={['是', '否']} handleChange={props.handleChange} />
+      <RadioAndInputColumn2 id="infect" name="是否曾至中國湖北省（含武漢市）（或公告疫區）：" loc="地點" datename="日期" options={[{ name: '否' }, { name: '是：', input: true, date: true }]} handleChange={props.handleChange} />
     </Form.Row>
     <Form.Row>
-      <StringColumn id="infect_location" name="地點" handleChange={props.handleChange} />
-      <DateColumn id="infect_time" name="日期" handleChange={props.handleChange} />
+      <RadioAndInputColumn2 id="market" name="是否曾至野味市場：" loc="地點" datename="日期" options={[{ name: '否' }, { name: '是：', input: true, date: true }]} handleChange={props.handleChange} />
     </Form.Row>
     <Form.Row>
-      <TFcheckbox1 id="market" name="是否曾至野味市場：" options={['是', '否']} handleChange={props.handleChange} />
-    </Form.Row>
-    <Form.Row>
-      <StringColumn id="market_location" name="地點" handleChange={props.handleChange} />
-      <DateColumn id="market_time" name="日期" handleChange={props.handleChange} />
-    </Form.Row>
-    <Form.Row>
-      <TFcheckbox1 id="infect_area" name="是否曾至醫療院所：" options={['是', '否']} handleChange={props.handleChange} />
-    </Form.Row>
-    <Form.Row>
-      <StringColumn id="infect_location" name="醫療院所名稱" handleChange={props.handleChange} />
-      <DateColumn id="infect_time" name="日期" handleChange={props.handleChange} />
+      <RadioAndInputColumn2 id="hospital" name="是否曾至醫療院所：" loc="醫療院所名稱" datename="日期" options={[{ name: '否' }, { name: '是：', input: true, date: true }]} handleChange={props.handleChange} />
     </Form.Row>
     <Form.Row>
       <Form.Label>(四) 發病前14天內之動物接觸史調查：</Form.Label>
     </Form.Row>
     <Form.Row>
-      <TFcheckbox3 id="pet" name="是否飼養任何動物(寵物)：" options={['是，請註明', '否']} handleChange={props.handleChange} />
+      <RadioAndInputColumn id="pet" name="是否飼養任何動物(寵物)：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
     </Form.Row>
     <Form.Row>
-      <TFcheckbox3 id="bird" name="是否曾接觸禽鳥、活禽市場或養禽場(雞鴨等禽類) ：" options={['是，請註明', '否']} handleChange={props.handleChange} />
+      <RadioAndInputColumn id="bird" name="是否曾接觸禽鳥、活禽市場或養禽場(雞鴨等禽類) ：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
     </Form.Row>
     <Form.Row>
-      <TFcheckbox3 id="farm" name="是否曾接觸畜牧場(豬、牛、羊及鹿等畜類) ：" options={['是，請註明', '否']} handleChange={props.handleChange} />
+      <RadioAndInputColumn id="farm" name="是否曾接觸畜牧場(豬、牛、羊及鹿等畜類) ：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
     </Form.Row>
     <Form.Row>
-      <TFcheckbox3 id="shamble" name="是否曾接觸屠宰場：" options={['是，請註明', '否']} handleChange={props.handleChange} />
+      <RadioAndInputColumn id="shamble" name="是否曾接觸屠宰場：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
     </Form.Row>
     <Form.Row>
-      <TFcheckbox3 id="wild" name="是否曾接觸或食用野生動物：" options={['是，請註明', '否']} handleChange={props.handleChange} />
+      <RadioAndInputColumn id="wild" name="是否曾接觸或食用野生動物：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
     </Form.Row>
     <Form.Row>
-      <TFcheckbox3 id="other" name="是否有其他動物接觸史：" options={['是，請註明', '否']} handleChange={props.handleChange} />
+      <RadioAndInputColumn id="other" name="是否有其他動物接觸史：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
     </Form.Row>
   </React.Fragment>
 );
@@ -167,11 +139,57 @@ const Source = props => (
 const Contactor = props => (
   <React.Fragment>
     <Form.Row>
-      <TFcheckbox1 id="public_area" name="(一)自個案發病日起至隔離前，是否曾至國內公共場所或搭乘大眾交通工具？" options={['是（續填以下欄位，如篇幅不足，請自行增列)：', '否']} handleChange={props.handleChange} />
+      <TFcheckbox1 id="public_area" name="(一)自個案發病日起至隔離前，是否曾至國內公共場所或搭乘大眾交通工具？" options={['是：', '否']} handleChange={props.handleChange} />
     </Form.Row>
-    <Form.Row>
-      <Form.Label>(二)自個案發病日起至隔離前，（1）在無適當防護下曾有長時間（大於 15 分鐘）面對面之接觸者，或提供照護、相處、接觸病患呼吸道分泌物或體液之同住者；（2）曾與確認病例在無適當防護下2公尺近距離接觸之醫療機構人員：</Form.Label>
-    </Form.Row> 
+    <Card.Body>
+      <PublicArea
+        handleChange={props.handleChange}
+        handleColumnRemove={props.handleColumnRemove}
+      />
+    </Card.Body>
+    <Card.Body>
+      <Card.Title as="h6">(二)自個案發病日起至隔離前，（1）在無適當防護下曾有長時間（大於 15 分鐘）面對面之接觸者，或提供照護、相處、接觸病患呼吸道分泌物或體液之同住者；（2）曾與確認病例在無適當防護下2公尺近距離接觸之醫療機構人員：</Card.Title>
+      <CloseContactor
+        handleChange={props.handleChange}
+        handleColumnRemove={props.handleColumnRemove}
+      />
+    </Card.Body>
+  </React.Fragment>
+);
+
+const NationandLocation = props => (
+  <React.Fragment>
+    <MultiColumnWrapper
+      id="nation_and_location"
+      handleChange={props.handleChange}
+      handleColumnRemove={props.handleColumnRemove}
+    >
+      <NationColumn {...props} />
+    </MultiColumnWrapper>
+  </React.Fragment>
+);
+
+const PublicArea = props => (
+  <React.Fragment>
+    <MultiColumnWrapper
+      id="public_area"
+      handleChange={props.handleChange}
+      handleColumnRemove={props.handleColumnRemove}
+    >
+      <PublicColumn {...props} />
+    </MultiColumnWrapper>
+  </React.Fragment>
+);
+
+const CloseContactor = props => (
+  <React.Fragment>
+    <MultiColumnWrapper
+      id="close_contactor"
+      handleChange={props.handleChange}
+      handleColumnRemove={props.handleColumnRemove}
+    >
+      <CloseContactorColumn {...props} />
+    </MultiColumnWrapper>
   </React.Fragment>
 );
 

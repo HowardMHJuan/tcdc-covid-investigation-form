@@ -5,19 +5,103 @@ import axios from 'axios';
 import { apiConfig } from '../../config-api';
 import FormBody from './FormBody';
 
+const getRadioInputValue = (radioName, input) => (
+  input === undefined ? radioName : radioName + input
+);
+
+const getRadioInputValue2 = (radioName, input, date) => (
+  input === undefined ? radioName : radioName + input + ',' + date
+);
+
+const getFeverValue = s => (
+  s[`contact_fever__type__checkbox`] === undefined ? [] : s[`contact_fever__radio`] === undefined ? [] : s[`contact_fever__radio`] === '否' ? [] : s[`contact_fever__type__checkbox`].map((name) => {
+    let tempName = '是（續填以下欄位，可複選）';
+    if (name.slice(0, 2) === '其他') {
+      // console.log('if_part', { name: `其他：${s[`contact_fever__type__input__${name}`]}`, start_date: `${s[`contact_fever__date1__${tempName}`]}`, end_date: `${s[`contact_fever__date2__${tempName}`]}` });
+      return { name: `其他：${s[`contact_fever__type__input__${name}`]}`, start_date: `${s[`contact_fever__date1__${tempName}`]}`, end_date: `${s[`contact_fever__date2__${tempName}`]}` };
+    } else {
+      // console.log('else_part', { name, start_date: s[`contact_fever__date1__${tempName}`], end_date: s[`contact_fever__date2__${tempName}`] } );
+      return { name, start_date: s[`contact_fever__date1__${tempName}`], end_date: s[`contact_fever__date2__${tempName}`] };
+    }
+  })
+);
+
+const getPatientValue = s => (
+  s[`contact_patient__type__checkbox`] === undefined ? [] : s[`contact_patient__radio`] === undefined ? [] : s[`contact_patient__radio`] === '否' ? [] : s[`contact_patient__type__checkbox`].map((name) => {
+    if (s[`contact_patient__radio`] === undefined) {
+      return;
+    }
+    if (s[`contact_patient__radio`] === '否') {
+      return;
+    }
+    let tempName = '是（續填以下欄位，可複選）';
+    // console.log(name);
+    if (name.slice(0, 2) === '其他') {
+      // console.log('if_part', { name: `其他：${s[`contact_patient__type__input__${name}`]}`, start_date: `${s[`contact_patient__date1__${tempName}`]}`, end_date: `${s[`contact_patient__date2__${tempName}`]}` });
+      return { name: `其他：${s[`contact_patient__type__input__${name}`]}`, start_date: `${s[`contact_patient__date1__${tempName}`]}`, end_date: `${s[`contact_patient__date2__${tempName}`]}` };
+    } else {
+      // console.log('else_part', { name, start_date: s[`contact_patient__date1__${tempName}`], end_date: s[`contact_patient__date2__${tempName}`] } );
+      return { name, start_date: s[`contact_patient__date1__${tempName}`], end_date: s[`contact_patient__date2__${tempName}`] };
+    }
+  })
+);
+
+const getSecretionValue = s => (
+  s[`contact_secretion__type__checkbox`] === undefined ? [] : s[`contact_secretion__radio`] === undefined ? [] : s[`contact_secretion__radio`] === '否' ? [] : s[`contact_secretion__type__checkbox`].map((name) => {
+    if (s[`contact_secretion__radio`] === undefined) {
+      return;
+    }
+    if (s[`contact_secretion__radio`] === '否') {
+      return;
+    }
+    let tempName = '是（續填以下欄位，可複選）';
+    // console.log(name);
+    if (name.slice(0, 2) === '其他') {
+      // console.log('if_part', { name: `其他：${s[`contact_secretion__type__input__${name}`]}`, start_date: `${s[`contact_secretion__date1__${tempName}`]}`, end_date: `${s[`contact_secretion__date2__${tempName}`]}` });
+      return { name: `其他：${s[`contact_secretion__type__input__${name}`]}`, start_date: `${s[`contact_secretion__date1__${tempName}`]}`, end_date: `${s[`contact_secretion__date2__${tempName}`]}` };
+    } else {
+      // console.log('else_part', { name, start_date: s[`contact_secretion__date1__${tempName}`], end_date: s[`contact_secretion__date2__${tempName}`] } );
+      return { name, start_date: s[`contact_secretion__date1__${tempName}`], end_date: s[`contact_secretion__date2__${tempName}`] };
+    }
+  })
+);
+
+const getNationValue = (s) => {
+  const rowIds = [...new Set(Object.keys(s).filter(key => /\bnation_and_location/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
+  return rowIds.map(id => ({ nation: s[`nation_and_location__${id}__nation`], type: s[`nation_and_location__${id}__type`], start_date: s[`nation_and_location__${id}__start_date`], end_date: s[`nation_and_location__${id}__end_date`], companion_num: s[`nation_and_location__${id}__companion_num`], companion_symptoms: s[`nation_and_location__${id}__companion_symptoms`], transport_and_flight_code: s[`nation_and_location__${id}__transport_and_flight_code`] }));
+};
+
+const getPublicValue = (s) => {
+  const rowIds = [...new Set(Object.keys(s).filter(key => /\bpublic_area/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
+  return rowIds.map(id => ({ start_date: s[`public_area__${id}__start_date`], end_date: s[`public_area__${id}__end_date`], city: s[`public_area__${id}__city`], location: s[`public_area__${id}__location`], transportation: s[`public_area__${id}__transportation`] }));
+};
+
+const getCloseContactorValue = (s) => {
+  const rowIds = [...new Set(Object.keys(s).filter(key => /\bclose_contactor/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
+  return rowIds.map(id => ({ type: s[`close_contactor__${id}__type`], number: s[`close_contactor__${id}__number`], symptom_count: s[`close_contactor__${id}__symptom_count`], fever_count: s[`close_contactor__${id}__fever_count`], note: s[`close_contactor__${id}__note`] }));
+};
+
 const getForm = s => ({
-  id: s.id,
-  information: {
-    report_date: s.report_date,
-    name: s.name,
-    gender: s.gender,
-  },
   source: {
-    is_abroad: s.is_abroad,
+    // abroad: ,
+    nation_and_location: getNationValue(s),
+    contact_fever: getFeverValue(s),
+    contact_patient: getPatientValue(s),
+    contact_secretion: getSecretionValue(s),
+    infect: getRadioInputValue2(s.infect__radio, s[`infect__input__${s.infect__radio}`], s[`infect__date__${s.infect__radio}`]),
+    market: getRadioInputValue2(s.market__radio, s[`market__input__${s.market__radio}`], s[`market__date__${s.market__radio}`]),
+    hospital: getRadioInputValue2(s.hospital__radio, s[`hospital__input__${s.hospital__radio}`], s[`hospital__date__${s.hospital__radio}`]),
+    pet: getRadioInputValue(s.pet__radio, s[`pet__input__${s.pet__radio}`]),
+    bird: getRadioInputValue(s.bird__radio, s[`bird__input__${s.bird__radio}`]),
+    farm: getRadioInputValue(s.farm__radio, s[`farm__input__${s.farm__radio}`]),
+    shamble: getRadioInputValue(s.shamble__radio, s[`shamble__input__${s.shamble__radio}`]),
+    wild: getRadioInputValue(s.wild__radio, s[`wild__input__${s.wild__radio}`]),
+    other: getRadioInputValue(s.other__radio, s[`other__input__${s.other__radio}`]),
   },
   contactor: {
-
-  },
+    public_area: getPublicValue(s),
+    close_contactor: getCloseContactorValue(s),
+  }
 });
 
 /**
@@ -33,6 +117,7 @@ class FormPage extends Component {
     };
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleColumnRemove = this.handleColumnRemove.bind(this);
   }
 
   /**
@@ -47,12 +132,36 @@ class FormPage extends Component {
       .catch((err) => {
         console.log(err);
       });
+
   }
 
+  /**
+   * Handle the change of a column in the form.
+   * @param {object} event - The event of the column. */
   handleChange(event) {
-    const { name, value } = event.target;
+    const { name, type, checked } = event.target;
+    let { value } = event.target;
+    if (type === 'checkbox') {
+      if (checked === true) {
+        value = this.state[name] === undefined ? [value] : this.state[name].concat(value);
+      } else {
+        value = this.state[name].filter(val => val !== value);
+      }
+    }
     this.setState({ [name]: value });
-    setTimeout(() => console.log(this.state), 1000); 
+    setTimeout(() => console.log(this.state), 1000);
+  }
+
+  /**
+   * Handle the removal of a column in a multi-column section.
+   * @param {object} target - The id of the target column. */
+  handleColumnRemove(target) {
+    const re = RegExp(`\\b${target}`);
+    Object.keys(this.state).forEach((key) => {
+      if (re.test(key)) {
+        this.setState({ [key]: undefined });
+      }
+    });
   }
 
   /**
@@ -64,7 +173,11 @@ class FormPage extends Component {
         <Container>
           <Row className="justify-content-md-center">
             <Col lg="8">
-              <FormBody handleChange={this.handleChange} submit={this.submit} />
+              <FormBody
+                handleChange={this.handleChange}
+                handleColumnRemove={this.handleColumnRemove}
+                submit={this.submit}
+              />
             </Col>
           </Row>
         </Container>

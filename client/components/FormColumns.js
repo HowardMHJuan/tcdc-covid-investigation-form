@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Col } from 'react-bootstrap';
+import { Form, Col, Row, Card, Button } from 'react-bootstrap';
 
 const StringColumn = props => (
   <Form.Group as={Col} controlId={props.id}>
@@ -54,88 +54,335 @@ const TFcheckbox2 = props => (
   </Form.Group>
 );
 
-const TFcheckbox3 = props => (
+const RadioAndInputColumn = props => (
   <Form.Group as={Col} controlId={props.id}>
+    <fieldset name={props.id} onChange={props.handleChange}>
       <Form.Label>{props.name}</Form.Label>
-      &nbsp; &nbsp; &nbsp;
-      <Form.Check inline label={props.options[0]} type={"checkbox"} id={"inline-checkbox-1"} onChange={props.handleChange}/>
-      <Form.Check inline label={props.options[1]} type={"checkbox"} id={"inline-checkbox-2"} onChange={props.handleChange}/>
-      <Form.Control type="text" onChange={props.handleChange}/>
+      {props.options.map(option => (
+        <Row>
+          <Col sm="auto">
+            <Form.Check
+              type="radio"
+              label={option.name}
+              name={`${props.id}__radio`}
+              value={option.name}
+            />
+          </Col>
+          {option.input === true ?
+            <Col>
+              <Form.Control
+                type="text"
+                name={`${props.id}__input__${option.name}`}
+              />
+            </Col>
+          :
+            null
+          }
+        </Row>
+      ))}
+    </fieldset>
   </Form.Group>
 );
 
-const TaskList = (props) => (
+const RadioAndInputColumn2 = props => (
   <Form.Group as={Col} controlId={props.id}>
-    <Form.Label>{props.nation}</Form.Label>
-    <Form.Control
-      type="text"
-      name="nation"
-      onChange={props.handleChange}
-    />
-    <Form.Label>{props.start_time}</Form.Label>
-    <Form.Control
-      type="date"
-      name="start_time"
-      onChange={props.handleChange}
-    />
-    <Form.Label>{props.end_time}</Form.Label>
-    <Form.Control
-      type="date"
-      name="end_time"
-      onChange={props.handleChange}
-    />
-    <Form.Label>{props.type}</Form.Label>
-    <Form.Control
-      type="text"
-      name="type"
-      onChange={props.handleChange}
-    />
-    <Form.Label>{props.companion_num}</Form.Label>
-    <Form.Control
-      type="text"
-      name="companion_num"
-      onChange={props.handleChange}
-    />
-    <Form.Label>{props.companion_symptoms}</Form.Label>
-    <Form.Control
-      type="text"
-      name="companion_symptoms"
-      onChange={props.handleChange}
-    />
-    <Form.Label>{props.transport_and_flight_code}</Form.Label>
-    <Form.Control
-      type="text"
-      name="transport_and_flight_code"
-      onChange={props.handleChange}
-    />
+    <fieldset name={props.id} onChange={props.handleChange}>
+      <Form.Label>{props.name}</Form.Label>
+      {props.options.map(option => (
+        <Row>
+          <Col sm="auto">
+            <Form.Check
+              type="radio"
+              label={option.name}
+              name={`${props.id}__radio`}
+              value={option.name}
+            />
+          </Col>
+          {option.input === true ?
+            <Col>
+              <Form.Label>{props.loc}</Form.Label>
+              <Form.Control
+                type="text"
+                name={`${props.id}__input__${option.name}`}
+              />
+            </Col>
+          :
+            null
+          }
+          {option.date === true ?
+            <Col sm={4}>
+              <Form.Label>{props.datename}</Form.Label>
+              <Form.Control
+                type="date"
+                name={`${props.id}__date__${option.name}`}
+              />
+            </Col>
+          :
+            null
+          }
+        </Row>
+      ))}
+    </fieldset>
   </Form.Group>
 );
 
-// const TaskList = (props) => {
-//   return (
-//     props.taskList.map((val, idx) => {
-//       let projectName = `projectName-${idx}`, task = `task-${idx}`, taskNotes = `taskNotes-${idx}`, taskStatus = `taskStatus-${idx}`
-//       return (
-//         <tr key={val.index}>
-//           <td>
-//             <input type="text"  name="projectName" data-id={idx} id={projectName} className="form-control " />
-//           </td>
-//           <td>
-//             <input type="text"  name="task" id={task} data-id={idx} className="form-control " />
-//           </td>
-//           <td>
-//             <textarea  name="taskNotes" id={taskNotes} data-id={idx} className="form-control"></textarea>
-//           </td>
-//           <td>
-//             {
-//             idx===0?<button onClick={()=>props.add()} type="button" className="btn btn-primary text-center"><i className="fa fa-plus-circle" aria-hidden="true"></i></button>
-//             : <button className="btn btn-danger" onClick={(() => props.delete(val))} ><i className="fa fa-minus" aria-hidden="true"></i></button>
-//             }
-//           </td>
-//         </tr >
-//       )
-//     })
-//   )
-// }
+const RadioAndInputColumn3 = props => (
+  <Form.Group as={Col} controlId={props.id}>
+    <fieldset name={props.id} onChange={props.handleChange}>
+      <Form.Label>{props.name}</Form.Label>
+        <React.Fragment>
+          {props.options.map(option => (
+            <Row>
+                <Col sm="auto">
+                  <Form.Check
+                    type="radio"
+                    label={option.name}
+                    name={`${props.id}__radio`}
+                    value={option.name}
+                  />
+                </Col>
+                {option.date1 === true ?
+                  <Col>
+                    <Form.Label>接觸開始日期</Form.Label>
+                    <Form.Control
+                      type="date"
+                      name={`${props.id}__date1__${option.name}`}
+                    />
+                  </Col>
+                :
+                  null
+                }
+                {option.date2 === true ?
+                  <Col>
+                    <Form.Label>接觸結束日期</Form.Label>
+                    <Form.Control
+                      type="date"
+                      name={`${props.id}__date2__${option.name}`}
+                    />
+                  </Col>
+                :
+                  null
+                }
+            </Row>
+          ))}
+          <Form.Label>接觸場所為：</Form.Label>
+          {props.options2.map(option => (
+            <Row>
+              <Col sm="auto">
+                <Form.Check
+                  type="checkbox"
+                  label={option.name}
+                  name={`${props.id}__type__checkbox`}
+                  value={option.name}
+                />
+              </Col>
+              {option.input === true ?
+                <Col>
+                  <Form.Control
+                    type="text"
+                    name={`${props.id}__type__input__${option.name}`}
+                  />
+                </Col>
+              :
+                null
+              }
+            </Row>
+          ))}
+        </React.Fragment>
+    </fieldset>
+  </Form.Group>
+);
 
-export { StringColumn, DateColumn, SelectColumn, TFcheckbox1, TFcheckbox2, TFcheckbox3, TaskList};
+const NationColumn = props => (
+  <Card>
+    <Card.Body>
+      <fieldset name={props.id} onChange={props.handleChange}>
+        <Button size="sm" variant="danger" id={props.id} onClick={props.handleRemove}>
+          移除
+        </Button>
+        <Row>
+          <Col>
+            <Form.Label>國家/城市</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__nation`}
+              value={props.inputValue}
+            />
+          </Col>
+          <Col>
+            <Form.Label>旅遊型態或目的</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__type`}
+              value={props.inputValue}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Label>開始日期</Form.Label>
+            <Form.Control
+              type="date"
+              name={`${props.id}__start_date`}
+              value={props.dateValue}
+            />
+          </Col>
+          <Col>
+            <Form.Label>結束日期</Form.Label>
+            <Form.Control
+              type="date"
+              name={`${props.id}__end_date`}
+              value={props.dateValue}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Label>同行旅客 (人)</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__companion_num`}
+              value={props.inputValue}
+            />
+          </Col>
+          <Col>
+            <Form.Label>同行者健康狀況</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__companion_symptoms`}
+              value={props.inputValue}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Label>交通工具或航班編號</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__transport_and_flight_code`}
+              value={props.inputValue}
+            />
+          </Col>
+        </Row>
+      </fieldset>
+    </Card.Body>
+  </Card>
+);
+
+const PublicColumn = props => (
+  <Card>
+    <Card.Body>
+      <fieldset name={props.id} onChange={props.handleChange}>
+        <Button size="sm" variant="danger" id={props.id} onClick={props.handleRemove}>
+          移除
+        </Button>
+        <Row>
+          <Col>
+            <Form.Label>開始日期</Form.Label>
+            <Form.Control
+              type="date"
+              name={`${props.id}__start_date`}
+              value={props.dateValue}
+            />
+          </Col>
+          <Col>
+            <Form.Label>結束日期</Form.Label>
+            <Form.Control
+              type="date"
+              name={`${props.id}__end_date`}
+              value={props.dateValue}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Label>縣市</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__city`}
+              value={props.inputValue}
+            />
+          </Col>
+          <Col>
+            <Form.Label>地點/場所</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__location`}
+              value={props.inputValue}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Label>交通工具</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__transportation`}
+              value={props.inputValue}
+            />
+          </Col>
+        </Row>
+      </fieldset>
+    </Card.Body>
+  </Card>
+);
+
+const CloseContactorColumn = props => (
+  <Card>
+    <Card.Body>
+      <fieldset name={props.id} onChange={props.handleChange}>
+        <Button size="sm" variant="danger" id={props.id} onClick={props.handleRemove}>
+          移除
+        </Button>
+        <Row>
+          <Col>
+            <Form.Label>接觸者類別</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__type`}
+              value={props.inputValue}
+            />
+          </Col>
+          <Col>
+            <Form.Label>總數</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__number`}
+              value={props.inputValue}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Label>有症狀人數</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__symptom_count`}
+              value={props.inputValue}
+            />
+          </Col>
+          <Col>
+            <Form.Label>發燒人數</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__fever_count`}
+              value={props.inputValue}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Label>備註</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__note`}
+              value={props.inputValue}
+            />
+          </Col>
+        </Row>
+      </fieldset>
+    </Card.Body>
+  </Card>
+);
+
+export { StringColumn, DateColumn, SelectColumn, TFcheckbox1, TFcheckbox2, RadioAndInputColumn, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3 };
