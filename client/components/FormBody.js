@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Form, Col, Card, Button } from 'react-bootstrap';
-import { StringColumn, DateColumn, SelectColumn, TFcheckbox1, TFcheckbox2, RadioAndInputColumn, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3} from './FormColumns';
+import { Form, Card, Button } from 'react-bootstrap';
+import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, CheckboxInputAndDateColumn, MedicalTreatmentColumn, TFcheckbox1, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3 } from './FormColumns';
 import MultiColumnWrapper from './MultiColumnWrapper';
 
 /**
@@ -29,26 +29,58 @@ class FormBody extends Component {
     return (
       <div className="form-body">
         <Form onSubmit={this.handleSubmit}>
-          {/* <Card>
+          <Card>
             <Card.Body>
               <Card.Title>一、基本資料</Card.Title>
               <Information handleChange={this.props.handleChange} />
             </Card.Body>
-          </Card> */}
+          </Card>
+          <Card>
+            <Card.Body>
+              <Card.Title>二、臨床狀況</Card.Title>
+              <Card>
+                <Card.Body>
+                  <Card.Title as="h6">（一）症狀（初始症狀或疾病過程中曾出現）（請註明開始日期）</Card.Title>
+                  <HealthConditionSymptoms handleChange={this.props.handleChange} />
+                </Card.Body>
+              </Card>
+              <Card>
+                <Card.Body>
+                  <Card.Title as="h6">（二）發病期間就醫歷程</Card.Title>
+                  <HealthConditionDoctors
+                    handleChange={this.props.handleChange}
+                    handleColumnRemove={this.props.handleColumnRemove}
+                  />
+                </Card.Body>
+              </Card>
+              <Card>
+                <Card.Body>
+                  <Card.Title as="h6">（三）慢性疾病</Card.Title>
+                  <HealthConditionChronicDisease handleChange={this.props.handleChange} />
+                </Card.Body>
+              </Card>
+            </Card.Body>
+          </Card>
           <Card>
             <Card.Body>
               <Card.Title>三、暴露來源調查(發病前14天)</Card.Title>
-              <Source handleChange={this.props.handleChange} handleColumnRemove={this.props.handleColumnRemove}/>
+              <Source
+                handleChange={this.props.handleChange}
+                handleColumnRemove={this.props.handleColumnRemove}
+              />
             </Card.Body>
           </Card>
           <Card>
             <Card.Body>
               <Card.Title>四、接觸者調查 (自個案發病日起至隔離前)：</Card.Title>
-              <Contactor handleChange={this.props.handleChange} handleColumnRemove={this.props.handleColumnRemove}/>
+              <Contactor
+                handleChange={this.props.handleChange}
+                handleColumnRemove={this.props.handleColumnRemove}
+              />
             </Card.Body>
           </Card>
           <Button variant="primary" type="submit">
-            Submit
+            填完送出
           </Button>
         </Form>
       </div>
@@ -66,6 +98,117 @@ const Information = props => (
       <StringColumn id="name" name="姓名" handleChange={props.handleChange} />
       <SelectColumn id="gender" name="生理性別" options={['男', '女']} handleChange={props.handleChange} />
     </Form.Row>
+    <Form.Row>
+      <DateColumn id="birth_date" name="出生日期（西元年）" handleChange={props.handleChange} />
+      <RadioAndInputColumn
+        id="nationality"
+        name="國籍"
+        options={[{ name: '本國籍' }, { name: '其他，國籍：', input: true }]}
+        handleChange={props.handleChange}
+      />
+    </Form.Row>
+    <Form.Row>
+      <StringColumn id="address" name="居住地" handleChange={props.handleChange} />
+      <StringColumn id="contact" name="聯絡方式" handleChange={props.handleChange} />
+    </Form.Row>
+    <Form.Row>
+      <StringColumn id="occupation" name="職業" handleChange={props.handleChange} />
+      <RadioAndInputColumn
+        id="med_title"
+        name="是否為醫療機構人員*"
+        options={[{ name: '否' }, { name: '是，職稱：', input: true }]}
+        handleChange={props.handleChange}
+      />
+    </Form.Row>
+    <Form.Row>
+      <DateColumn id="onset" name="發病日期（西元年）" handleChange={props.handleChange} />
+      <RadioAndInputColumn
+        id="pregnant_week"
+        name="是否懷孕（女性）"
+        options={[{ name: '否' }, { name: '是，懷孕幾週：', input: true }]}
+        handleChange={props.handleChange}
+      />
+    </Form.Row>
+  </React.Fragment>
+);
+
+const HealthConditionSymptoms = props => (
+  <React.Fragment>
+    <CheckboxInputAndDateColumn
+      id="symptoms"
+      options={[
+        '發燒（≥38℃）',
+        '全身倦怠',
+        '意識混亂躁動',
+        '頭痛',
+        '結膜充血',
+
+        '喉嚨痛',
+        '流鼻水鼻塞',
+        '咳嗽',
+        '呼吸困難',
+
+        '胸痛',
+        '腹痛',
+        '肌肉酸痛',
+        '關節酸痛',
+
+        '噁心',
+        '嘔吐',
+        '腹瀉',
+        '尿量減少',
+        '下肢水腫',
+        '血尿',
+        '胸部影像學檢查(CXR 或 CT)顯示肺炎',
+      ].map(name => ({ name, date: true }))
+      .concat([
+        '其他 1（請註明）：',
+        '其他 2（請註明）：',
+        '其他 3（請註明）：',
+      ].map(name => ({ name, input: true, date: true })))}
+      handleChange={props.handleChange}
+    />
+  </React.Fragment>
+);
+
+const HealthConditionDoctors = props => (
+  <React.Fragment>
+    <MultiColumnWrapper
+      id="seeing_doctor"
+      handleChange={props.handleChange}
+      handleColumnRemove={props.handleColumnRemove}
+    >
+      <MedicalTreatmentColumn {...props} />
+    </MultiColumnWrapper>
+  </React.Fragment>
+);
+
+const HealthConditionChronicDisease = props => (
+  <React.Fragment>
+    <CheckboxInputAndDateColumn
+      id="chronic_disease"
+      options={[
+        '無',
+        '精神疾病',
+        '神經肌肉疾病',
+        '氣喘',
+        '慢性肺疾（如支氣管擴張、慢性阻塞性肺疾等，氣喘除外）',
+
+        '糖尿病',
+        '代謝性疾病（如高血脂，糖尿病除外）',
+        '心血管疾病（高血壓除外）',
+        '肝臟疾病（如肝炎、肝硬化等）',
+
+        '腎臟疾病（如慢性腎功能不全、長期接受血液或腹膜透析等）',
+        '仍在治療中或未治癒之癌症',
+        '肥胖（BMI≥30）',
+      ].map(name => ({ name }))
+      .concat([
+        '免疫低下狀態，說明：',
+        '其他，說明：',
+      ].map(name => ({ name, input: true })))}
+      handleChange={props.handleChange}
+    />
   </React.Fragment>
 );
 
@@ -73,8 +216,8 @@ const Source = props => (
   <React.Fragment>
     <Form.Row>
       <TFcheckbox1 id="is_abroad" name="(一)發病前14天內是否曾在國外旅遊或居住" options={['是（續填以下欄位）', '否']} handleChange={props.handleChange} />
-    </Form.Row> 
-      <Form.Label>曾至之國家和地點(如篇幅不足，請自行增列)：</Form.Label>
+    </Form.Row>
+    <Form.Label>曾至之國家和地點(如篇幅不足，請自行增列)：</Form.Label>
     <Card.Body>
       <Card.Title as="h6">（二）發病期間就醫歷程</Card.Title>
       <NationandLocation
@@ -87,17 +230,17 @@ const Source = props => (
     </Form.Row>
     <Card>
       <Card.Body>
-        <RadioAndInputColumn3 id="contact_fever" name="是否曾接觸有發燒或呼吸道症狀人士：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所',].map(name => ({ name })).concat(['其他，請註明',].map(name => ({ name, input: true})))} handleChange={props.handleChange} />
+        <RadioAndInputColumn3 id="contact_fever" name="是否曾接觸有發燒或呼吸道症狀人士：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))} handleChange={props.handleChange} />
       </Card.Body>
     </Card>
     <Card>
       <Card.Body>
-        <RadioAndInputColumn3 id="contact_patient" name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所',].map(name => ({ name })).concat(['其他，請註明',].map(name => ({ name, input: true})))} handleChange={props.handleChange} />
+        <RadioAndInputColumn3 id="contact_patient" name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))} handleChange={props.handleChange} />
       </Card.Body>
     </Card>
     <Card>
       <Card.Body>
-        <RadioAndInputColumn3 id="contact_secretion" name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例之呼吸道分泌物、體液（包含實驗室檢體）：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所',].map(name => ({ name })).concat(['其他，請註明',].map(name => ({ name, input: true})))} handleChange={props.handleChange} />
+        <RadioAndInputColumn3 id="contact_secretion" name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例之呼吸道分泌物、體液（包含實驗室檢體）：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))} handleChange={props.handleChange} />
       </Card.Body>
     </Card>
     <Form.Row>
@@ -194,6 +337,3 @@ const CloseContactor = props => (
 );
 
 export default FormBody;
-
-
-// https://github.com/AshutoshChoubey/DTRnodeReact/tree/master/my-app/src/components/Task

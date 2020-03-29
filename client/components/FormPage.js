@@ -9,58 +9,59 @@ const getRadioInputValue = (radioName, input) => (
   input === undefined ? radioName : radioName + input
 );
 
+const getSymptomsValue = s => (
+  s.symptoms__checkbox === undefined ? [] : s.symptoms__checkbox.map((name) => {
+    if (name.slice(0, 2) === '其他') {
+      return { name: `其他：${s[`symptoms__input__${name}`]}`, date: s[`symptoms__date__${name}`] };
+    } else {
+      return { name, date: s[`symptoms__date__${name}`] };
+    }
+  })
+);
+
+const getDoctorsValue = (s) => {
+  const rowIds = [...new Set(Object.keys(s).filter(key => /\bseeing_doctor/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
+  return rowIds.map(id => ({ type: s[`seeing_doctor__${id}__radio`], name: s[`seeing_doctor__${id}__input`], date: s[`seeing_doctor__${id}__date`] }));
+};
+
+const getChronicDiseaseValue = s => (
+  s.chronic_disease__checkbox === undefined ? [] : s.chronic_disease__checkbox.map(name => (
+    getRadioInputValue(name, s[`chronic_disease__input__${name}`])
+  ))
+);
+
 const getRadioInputValue2 = (radioName, input, date) => (
-  input === undefined ? radioName : radioName + input + ',' + date
+  input === undefined ? radioName : `${radioName + input},${date}`
 );
 
 const getFeverValue = s => (
-  s[`contact_fever__type__checkbox`] === undefined ? [] : s[`contact_fever__radio`] === undefined ? [] : s[`contact_fever__radio`] === '否' ? [] : s[`contact_fever__type__checkbox`].map((name) => {
-    let tempName = '是（續填以下欄位，可複選）';
+  s.contact_fever__type__checkbox === undefined || s.contact_fever__radio === undefined || s.contact_fever__radio === '否' ? [] : s.contact_fever__type__checkbox.map((name) => {
+    const tempName = '是（續填以下欄位，可複選）';
     if (name.slice(0, 2) === '其他') {
-      // console.log('if_part', { name: `其他：${s[`contact_fever__type__input__${name}`]}`, start_date: `${s[`contact_fever__date1__${tempName}`]}`, end_date: `${s[`contact_fever__date2__${tempName}`]}` });
       return { name: `其他：${s[`contact_fever__type__input__${name}`]}`, start_date: `${s[`contact_fever__date1__${tempName}`]}`, end_date: `${s[`contact_fever__date2__${tempName}`]}` };
     } else {
-      // console.log('else_part', { name, start_date: s[`contact_fever__date1__${tempName}`], end_date: s[`contact_fever__date2__${tempName}`] } );
       return { name, start_date: s[`contact_fever__date1__${tempName}`], end_date: s[`contact_fever__date2__${tempName}`] };
     }
   })
 );
 
 const getPatientValue = s => (
-  s[`contact_patient__type__checkbox`] === undefined ? [] : s[`contact_patient__radio`] === undefined ? [] : s[`contact_patient__radio`] === '否' ? [] : s[`contact_patient__type__checkbox`].map((name) => {
-    if (s[`contact_patient__radio`] === undefined) {
-      return;
-    }
-    if (s[`contact_patient__radio`] === '否') {
-      return;
-    }
-    let tempName = '是（續填以下欄位，可複選）';
-    // console.log(name);
+  s.contact_patient__type__checkbox === undefined || s.contact_patient__radio === undefined || s.contact_patient__radio === '否' ? [] : s.contact_patient__type__checkbox.map((name) => {
+    const tempName = '是（續填以下欄位，可複選）';
     if (name.slice(0, 2) === '其他') {
-      // console.log('if_part', { name: `其他：${s[`contact_patient__type__input__${name}`]}`, start_date: `${s[`contact_patient__date1__${tempName}`]}`, end_date: `${s[`contact_patient__date2__${tempName}`]}` });
       return { name: `其他：${s[`contact_patient__type__input__${name}`]}`, start_date: `${s[`contact_patient__date1__${tempName}`]}`, end_date: `${s[`contact_patient__date2__${tempName}`]}` };
     } else {
-      // console.log('else_part', { name, start_date: s[`contact_patient__date1__${tempName}`], end_date: s[`contact_patient__date2__${tempName}`] } );
       return { name, start_date: s[`contact_patient__date1__${tempName}`], end_date: s[`contact_patient__date2__${tempName}`] };
     }
   })
 );
 
 const getSecretionValue = s => (
-  s[`contact_secretion__type__checkbox`] === undefined ? [] : s[`contact_secretion__radio`] === undefined ? [] : s[`contact_secretion__radio`] === '否' ? [] : s[`contact_secretion__type__checkbox`].map((name) => {
-    if (s[`contact_secretion__radio`] === undefined) {
-      return;
-    }
-    if (s[`contact_secretion__radio`] === '否') {
-      return;
-    }
-    let tempName = '是（續填以下欄位，可複選）';
-    // console.log(name);
+  s.contact_secretion__type__checkbox === undefined || s.contact_secretion__radio === undefined || s.contact_secretion__radio === '否' ? [] : s.contact_secretion__type__checkbox.map((name) => {
+    const tempName = '是（續填以下欄位，可複選）';
     if (name.slice(0, 2) === '其他') {
-      // console.log('if_part', { name: `其他：${s[`contact_secretion__type__input__${name}`]}`, start_date: `${s[`contact_secretion__date1__${tempName}`]}`, end_date: `${s[`contact_secretion__date2__${tempName}`]}` });
       return { name: `其他：${s[`contact_secretion__type__input__${name}`]}`, start_date: `${s[`contact_secretion__date1__${tempName}`]}`, end_date: `${s[`contact_secretion__date2__${tempName}`]}` };
     } else {
-      // console.log('else_part', { name, start_date: s[`contact_secretion__date1__${tempName}`], end_date: s[`contact_secretion__date2__${tempName}`] } );
       return { name, start_date: s[`contact_secretion__date1__${tempName}`], end_date: s[`contact_secretion__date2__${tempName}`] };
     }
   })
@@ -68,22 +69,60 @@ const getSecretionValue = s => (
 
 const getNationValue = (s) => {
   const rowIds = [...new Set(Object.keys(s).filter(key => /\bnation_and_location/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
-  return rowIds.map(id => ({ nation: s[`nation_and_location__${id}__nation`], type: s[`nation_and_location__${id}__type`], start_date: s[`nation_and_location__${id}__start_date`], end_date: s[`nation_and_location__${id}__end_date`], companion_num: s[`nation_and_location__${id}__companion_num`], companion_symptoms: s[`nation_and_location__${id}__companion_symptoms`], transport_and_flight_code: s[`nation_and_location__${id}__transport_and_flight_code`] }));
+  return rowIds.map(id => ({
+    nation: s[`nation_and_location__${id}__nation`],
+    type: s[`nation_and_location__${id}__type`],
+    start_date: s[`nation_and_location__${id}__start_date`],
+    end_date: s[`nation_and_location__${id}__end_date`],
+    companion_num: s[`nation_and_location__${id}__companion_num`],
+    companion_symptoms: s[`nation_and_location__${id}__companion_symptoms`],
+    transport_and_flight_code: s[`nation_and_location__${id}__transport_and_flight_code`],
+  }));
 };
 
 const getPublicValue = (s) => {
   const rowIds = [...new Set(Object.keys(s).filter(key => /\bpublic_area/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
-  return rowIds.map(id => ({ start_date: s[`public_area__${id}__start_date`], end_date: s[`public_area__${id}__end_date`], city: s[`public_area__${id}__city`], location: s[`public_area__${id}__location`], transportation: s[`public_area__${id}__transportation`] }));
+  return rowIds.map(id => ({
+    start_date: s[`public_area__${id}__start_date`],
+    end_date: s[`public_area__${id}__end_date`],
+    city: s[`public_area__${id}__city`],
+    location: s[`public_area__${id}__location`],
+    transportation: s[`public_area__${id}__transportation`],
+  }));
 };
 
 const getCloseContactorValue = (s) => {
   const rowIds = [...new Set(Object.keys(s).filter(key => /\bclose_contactor/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
-  return rowIds.map(id => ({ type: s[`close_contactor__${id}__type`], number: s[`close_contactor__${id}__number`], symptom_count: s[`close_contactor__${id}__symptom_count`], fever_count: s[`close_contactor__${id}__fever_count`], note: s[`close_contactor__${id}__note`] }));
+  return rowIds.map(id => ({
+    type: s[`close_contactor__${id}__type`],
+    number: s[`close_contactor__${id}__number`],
+    symptom_count: s[`close_contactor__${id}__symptom_count`],
+    fever_count: s[`close_contactor__${id}__fever_count`],
+    note: s[`close_contactor__${id}__note`],
+  }));
 };
 
 const getForm = s => ({
+  id: s.id,
+  information: {
+    report_date: s.report_date,
+    name: s.name,
+    gender: s.gender,
+    birth_date: s.birth_date,
+    nationality: getRadioInputValue(s.nationality__radio, s[`nationality__input__${s.nationality__radio}`]),
+    address: s.address,
+    contact: s.contact,
+    occupation: s.occupation,
+    med_title: getRadioInputValue(s.med_title__radio, s[`med_title__input__${s.med_title__radio}`]),
+    onset: s.onset,
+    pregnant_week: getRadioInputValue(s.pregnant_week__radio, s[`pregnant_week__input__${s.pregnant_week__radio}`]),
+  },
+  health_condition: {
+    symptoms: getSymptomsValue(s),
+    seeing_doctor: getDoctorsValue(s),
+    chronic_disease: getChronicDiseaseValue(s),
+  },
   source: {
-    // abroad: ,
     nation_and_location: getNationValue(s),
     contact_fever: getFeverValue(s),
     contact_patient: getPatientValue(s),
@@ -101,7 +140,7 @@ const getForm = s => ({
   contactor: {
     public_area: getPublicValue(s),
     close_contactor: getCloseContactorValue(s),
-  }
+  },
 });
 
 /**
@@ -132,7 +171,6 @@ class FormPage extends Component {
       .catch((err) => {
         console.log(err);
       });
-
   }
 
   /**
