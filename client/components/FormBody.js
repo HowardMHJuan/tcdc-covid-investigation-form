@@ -53,6 +53,12 @@ class FormBody extends Component {
                   />
                 </Card.Body>
               </Card>
+              <Card>
+                <Card.Body>
+                  <Card.Title as="h6">（三）慢性疾病</Card.Title>
+                  <HealthConditionChronicDisease handleChange={this.props.handleChange} />
+                </Card.Body>
+              </Card>
             </Card.Body>
           </Card>
 
@@ -157,6 +163,35 @@ const HealthConditionDoctors = props => (
     >
       <MedicalTreatmentColumn {...props} />
     </MultiColumnWrapper>
+  </React.Fragment>
+);
+
+const HealthConditionChronicDisease = props => (
+  <React.Fragment>
+    <CheckboxInputAndDateColumn
+      id="chronic_disease"
+      options={[
+        '無',
+        '精神疾病',
+        '神經肌肉疾病',
+        '氣喘',
+        '慢性肺疾（如支氣管擴張、慢性阻塞性肺疾等，氣喘除外）',
+
+        '糖尿病',
+        '代謝性疾病（如高血脂，糖尿病除外）',
+        '心血管疾病（高血壓除外）',
+        '肝臟疾病（如肝炎、肝硬化等）',
+
+        '腎臟疾病（如慢性腎功能不全、長期接受血液或腹膜透析等）',
+        '仍在治療中或未治癒之癌症',
+        '肥胖（BMI≥30）',
+      ].map(name => ({ name }))
+      .concat([
+        '免疫低下狀態，說明：',
+        '其他，說明：',
+      ].map(name => ({ name, input: true })))}
+      handleChange={props.handleChange}
+    />
   </React.Fragment>
 );
 

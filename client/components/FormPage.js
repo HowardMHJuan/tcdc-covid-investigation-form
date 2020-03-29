@@ -10,7 +10,7 @@ const getRadioInputValue = (radioName, input) => (
 );
 
 const getSymptomsValue = s => (
-  s.symptoms__checkbox === undefined ? undefined : s.symptoms__checkbox.map((name) => {
+  s.symptoms__checkbox === undefined ? [] : s.symptoms__checkbox.map((name) => {
     if (name.slice(0, 2) === '其他') {
       return { name: `其他：${s[`symptoms__input__${name}`]}`, date: s[`symptoms__date__${name}`] };
     } else {
@@ -23,6 +23,12 @@ const getDoctorsValue = (s) => {
   const rowIds = [...new Set(Object.keys(s).filter(key => /\bseeing_doctor/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
   return rowIds.map(id => ({ type: s[`seeing_doctor__${id}__radio`], name: s[`seeing_doctor__${id}__input`], date: s[`seeing_doctor__${id}__date`] }));
 };
+
+const getChronicDiseaseValue = s => (
+  s.chronic_disease__checkbox === undefined ? [] : s.chronic_disease__checkbox.map(name => (
+    getRadioInputValue(name, s[`chronic_disease__input__${name}`])
+  ))
+);
 
 const getForm = s => ({
   id: s.id,
@@ -42,6 +48,7 @@ const getForm = s => ({
   health_condition: {
     symptoms: getSymptomsValue(s),
     seeing_doctor: getDoctorsValue(s),
+    chronic_disease: getChronicDiseaseValue(s),
   },
 });
 

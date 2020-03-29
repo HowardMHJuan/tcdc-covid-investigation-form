@@ -19,25 +19,8 @@ const HealthFormSchema = new Schema({
   health_condition: {
     symptoms: Array, // { name: String, date: "yyyy-mm-dd" }
     seeing_doctor: Array, // { type: 門診 / 急診 / 住院, name: String, date:"yyyy-mm-dd" }
+    chronic_disease: Array, // String
   },
-// "health_condition":
-// {
-//     "symptoms": 
-//         [
-//             {"name": string, "date": "YYYY-MM-DD"},
-//             {"name": string, "date": "YYYY-MM-DD"}
-//         ] ([] if none), 
-//     "seeing_doctor":
-//         [
-//             {"type": 0,1,2 (門診、急診、住院), "name": string, "date":"YYYY-MM-DD"},
-//             {"type": 0,1,2 (門診、急診、住院), "name": string, "date":"YYYY-MM-DD"}
-//         ] ([] if none),
-//     "chronic_disease":
-//         [
-//             "name": string,
-//             "name": string
-//         ] ([] if none)
-// },
 // "source":
 //     {
 //         "abroad":
