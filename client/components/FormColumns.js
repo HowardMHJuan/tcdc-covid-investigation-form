@@ -33,27 +33,6 @@ const SelectColumn = props => (
   </Form.Group>
 );
 
-const TFcheckbox1 = props => (
-  <Form.Group as={Col} controlId={props.id}>
-      <Form.Label>{props.name}</Form.Label>
-      &nbsp; &nbsp; &nbsp;
-      <Form.Check inline label={props.options[0]} type={"checkbox"} id={"inline-checkbox-1"} onChange={props.handleChange}/>
-      <Form.Check inline label={props.options[1]} type={"checkbox"} id={"inline-checkbox-2"} onChange={props.handleChange}/>
-  </Form.Group>
-);
-
-const TFcheckbox2 = props => (
-  <Form.Group as={Col} controlId={props.id}>
-      <Form.Label>{props.name}</Form.Label>
-      &nbsp; &nbsp; &nbsp;
-      <Form.Check inline label={props.options[0]} type={"checkbox"} id={"inline-checkbox-1"} onChange={props.handleChange}/>
-      <Form.Check inline label={props.options[1]} type={"checkbox"} id={"inline-checkbox-2"} onChange={props.handleChange}/>
-      <Form.Check inline label={props.options[2]} type={"checkbox"} id={"inline-checkbox-3"} onChange={props.handleChange}/>
-      <Form.Check inline label={props.options[3]} type={"checkbox"} id={"inline-checkbox-4"} onChange={props.handleChange}/>
-      <Form.Control type="text" onChange={props.handleChange}/>
-  </Form.Group>
-);
-
 const RadioAndInputColumn = props => (
   <Form.Group as={Col} controlId={props.id}>
     <fieldset name={props.id} onChange={props.handleChange}>
@@ -81,6 +60,106 @@ const RadioAndInputColumn = props => (
         </Row>
       ))}
     </fieldset>
+  </Form.Group>
+);
+
+const CheckboxInputAndDateColumn = props => (
+  <Form.Group as={Col} controlId={props.id}>
+    <fieldset name={props.id} onChange={props.handleChange}>
+      {props.options.map(option => (
+        <Row>
+          <Col sm="auto">
+            <Form.Check
+              type="checkbox"
+              label={option.name}
+              name={`${props.id}__checkbox`}
+              value={option.name}
+            />
+          </Col>
+          {option.input === true ?
+            <Col>
+              <Form.Control
+                type="text"
+                name={`${props.id}__input__${option.name}`}
+              />
+            </Col>
+          :
+            null
+          }
+          {option.date === true ?
+            <Col sm={4}>
+              <Form.Control
+                type="date"
+                name={`${props.id}__date__${option.name}`}
+              />
+            </Col>
+          :
+            null
+          }
+        </Row>
+      ))}
+    </fieldset>
+  </Form.Group>
+);
+
+const MedicalTreatmentColumn = props => (
+  <Card>
+    <Card.Body>
+      <fieldset name={props.id} onChange={props.handleChange}>
+        <Row>
+          <Button size="sm" variant="danger" id={props.id} onClick={props.handleRemove} style={{ padding: '0 0.3rem 0 0.3rem', margin: '1.5rem 0 1.5rem 0' }}>
+            移除
+          </Button>
+          <Col sm={5}>
+            <Form.Label>就醫日期</Form.Label>
+            <Form.Control
+              type="date"
+              name={`${props.id}__date`}
+              value={props.dateValue}
+            />
+          </Col>
+          <Col>
+            <Form.Label>醫療院所名稱</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__input`}
+              value={props.inputValue}
+            />
+          </Col>
+          <Col sm="auto">
+            {['門診', '急診', '住院'].map(value => (
+              <Form.Check
+                type="radio"
+                label={value}
+                name={`${props.id}__radio`}
+                value={value}
+              />
+            ))}
+          </Col>
+        </Row>
+      </fieldset>
+    </Card.Body>
+  </Card>
+);
+
+const TFcheckbox1 = props => (
+  <Form.Group as={Col} controlId={props.id}>
+    <Form.Label>{props.name}</Form.Label>
+    &nbsp; &nbsp; &nbsp;
+    <Form.Check inline label={props.options[0]} type="checkbox" id="inline-checkbox-1" onChange={props.handleChange} />
+    <Form.Check inline label={props.options[1]} type="checkbox" id="inline-checkbox-2" onChange={props.handleChange} />
+  </Form.Group>
+);
+
+const TFcheckbox2 = props => (
+  <Form.Group as={Col} controlId={props.id}>
+    <Form.Label>{props.name}</Form.Label>
+    &nbsp; &nbsp; &nbsp;
+    <Form.Check inline label={props.options[0]} type="checkbox" id="inline-checkbox-1" onChange={props.handleChange} />
+    <Form.Check inline label={props.options[1]} type="checkbox" id="inline-checkbox-2" onChange={props.handleChange} />
+    <Form.Check inline label={props.options[2]} type="checkbox" id="inline-checkbox-3" onChange={props.handleChange} />
+    <Form.Check inline label={props.options[3]} type="checkbox" id="inline-checkbox-4" onChange={props.handleChange} />
+    <Form.Control type="text" onChange={props.handleChange} />
   </Form.Group>
 );
 
@@ -130,65 +209,65 @@ const RadioAndInputColumn3 = props => (
   <Form.Group as={Col} controlId={props.id}>
     <fieldset name={props.id} onChange={props.handleChange}>
       <Form.Label>{props.name}</Form.Label>
-        <React.Fragment>
-          {props.options.map(option => (
-            <Row>
-                <Col sm="auto">
-                  <Form.Check
-                    type="radio"
-                    label={option.name}
-                    name={`${props.id}__radio`}
-                    value={option.name}
-                  />
-                </Col>
-                {option.date1 === true ?
-                  <Col>
-                    <Form.Label>接觸開始日期</Form.Label>
-                    <Form.Control
-                      type="date"
-                      name={`${props.id}__date1__${option.name}`}
-                    />
-                  </Col>
-                :
-                  null
-                }
-                {option.date2 === true ?
-                  <Col>
-                    <Form.Label>接觸結束日期</Form.Label>
-                    <Form.Control
-                      type="date"
-                      name={`${props.id}__date2__${option.name}`}
-                    />
-                  </Col>
-                :
-                  null
-                }
-            </Row>
-          ))}
-          <Form.Label>接觸場所為：</Form.Label>
-          {props.options2.map(option => (
-            <Row>
-              <Col sm="auto">
-                <Form.Check
-                  type="checkbox"
-                  label={option.name}
-                  name={`${props.id}__type__checkbox`}
-                  value={option.name}
+      <React.Fragment>
+        {props.options.map(option => (
+          <Row>
+            <Col sm="auto">
+              <Form.Check
+                type="radio"
+                label={option.name}
+                name={`${props.id}__radio`}
+                value={option.name}
+              />
+            </Col>
+            {option.date1 === true ?
+              <Col>
+                <Form.Label>接觸開始日期</Form.Label>
+                <Form.Control
+                  type="date"
+                  name={`${props.id}__date1__${option.name}`}
                 />
               </Col>
-              {option.input === true ?
-                <Col>
-                  <Form.Control
-                    type="text"
-                    name={`${props.id}__type__input__${option.name}`}
-                  />
-                </Col>
-              :
-                null
-              }
-            </Row>
-          ))}
-        </React.Fragment>
+            :
+              null
+            }
+            {option.date2 === true ?
+              <Col>
+                <Form.Label>接觸結束日期</Form.Label>
+                <Form.Control
+                  type="date"
+                  name={`${props.id}__date2__${option.name}`}
+                />
+              </Col>
+            :
+              null
+            }
+          </Row>
+        ))}
+        <Form.Label>接觸場所為：</Form.Label>
+        {props.options2.map(option => (
+          <Row>
+            <Col sm="auto">
+              <Form.Check
+                type="checkbox"
+                label={option.name}
+                name={`${props.id}__type__checkbox`}
+                value={option.name}
+              />
+            </Col>
+            {option.input === true ?
+              <Col>
+                <Form.Control
+                  type="text"
+                  name={`${props.id}__type__input__${option.name}`}
+                />
+              </Col>
+            :
+              null
+            }
+          </Row>
+        ))}
+      </React.Fragment>
     </fieldset>
   </Form.Group>
 );
@@ -385,4 +464,18 @@ const CloseContactorColumn = props => (
   </Card>
 );
 
-export { StringColumn, DateColumn, SelectColumn, TFcheckbox1, TFcheckbox2, RadioAndInputColumn, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3 };
+export {
+  StringColumn,
+  DateColumn,
+  SelectColumn,
+  RadioAndInputColumn,
+  CheckboxInputAndDateColumn,
+  MedicalTreatmentColumn,
+  TFcheckbox1,
+  TFcheckbox2,
+  NationColumn,
+  PublicColumn,
+  CloseContactorColumn,
+  RadioAndInputColumn2,
+  RadioAndInputColumn3,
+};
