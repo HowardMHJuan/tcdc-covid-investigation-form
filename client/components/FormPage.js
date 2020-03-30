@@ -116,6 +116,7 @@ const getForm = s => ({
     med_title: getRadioInputValue(s.med_title__radio, s[`med_title__input__${s.med_title__radio}`]),
     onset: s.onset,
     pregnant_week: getRadioInputValue(s.pregnant_week__radio, s[`pregnant_week__input__${s.pregnant_week__radio}`]),
+    married: s.married__radio,
   },
   health_condition: {
     symptoms: getSymptomsValue(s),

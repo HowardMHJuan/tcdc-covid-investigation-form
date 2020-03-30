@@ -129,6 +129,14 @@ const Information = props => (
         handleChange={props.handleChange}
       />
     </Form.Row>
+    <Form.Row>
+      <RadioAndInputColumn
+        id="married"
+        name="婚姻狀況"
+        options={[{ name: '已婚' }, { name: '未婚' }]}
+        handleChange={props.handleChange}
+      />
+    </Form.Row>
   </React.Fragment>
 );
 
