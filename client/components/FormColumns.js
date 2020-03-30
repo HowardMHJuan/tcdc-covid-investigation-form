@@ -208,10 +208,9 @@ const RadioAndInputColumn2 = props => (
 const RadioAndInputColumn3 = props => (
   <Form.Group as={Col} controlId={props.id}>
     <fieldset name={props.id} onChange={props.handleChange}>
-      <Form.Label>{props.name}</Form.Label>
-      <React.Fragment>
-        {props.options.map(option => (
-          <React.Fragment>
+      <Form.Label as="b">{props.name}</Form.Label>
+      {props.options.map(option => (
+        <React.Fragment>
           <Row>
             <Col sm="auto">
               <Form.Check
@@ -224,7 +223,7 @@ const RadioAndInputColumn3 = props => (
           </Row>
           <Row>
             {option.date1 === true ?
-              <Col>
+              <Col style={{ margin: '1rem 0 1.5rem 0' }}>
                 <Form.Label>接觸開始日期</Form.Label>
                 <Form.Control
                   type="date"
@@ -235,7 +234,7 @@ const RadioAndInputColumn3 = props => (
               null
             }
             {option.date2 === true ?
-              <Col>
+              <Col style={{ margin: '1rem 0 1rem 0' }}>
                 <Form.Label>接觸結束日期</Form.Label>
                 <Form.Control
                   type="date"
@@ -246,32 +245,31 @@ const RadioAndInputColumn3 = props => (
               null
             }
           </Row>
-          </React.Fragment>
-        ))}
-        <Form.Label>接觸場所為：</Form.Label>
-        {props.options2.map(option => (
-          <Row>
-            <Col sm="auto">
-              <Form.Check
-                type="checkbox"
-                label={option.name}
-                name={`${props.id}__type__checkbox`}
-                value={option.name}
+        </React.Fragment>
+      ))}
+      <Form.Label>接觸場所為：</Form.Label>
+      {props.options2.map(option => (
+        <Row>
+          <Col sm="auto">
+            <Form.Check
+              type="checkbox"
+              label={option.name}
+              name={`${props.id}__type__checkbox`}
+              value={option.name}
+            />
+          </Col>
+          {option.input === true ?
+            <Col>
+              <Form.Control
+                type="text"
+                name={`${props.id}__type__input__${option.name}`}
               />
             </Col>
-            {option.input === true ?
-              <Col>
-                <Form.Control
-                  type="text"
-                  name={`${props.id}__type__input__${option.name}`}
-                />
-              </Col>
-            :
-              null
-            }
-          </Row>
-        ))}
-      </React.Fragment>
+          :
+            null
+          }
+        </Row>
+      ))}
     </fieldset>
   </Form.Group>
 );

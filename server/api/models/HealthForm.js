@@ -3,6 +3,8 @@ import mongoose, { Schema } from 'mongoose';
 const HealthFormSchema = new Schema({
   id: String,
   information: {
+    inv_date: String, // yyyy-mm-dd
+    inv_person: String,
     report_date: String, // yyyy-mm-dd
     name: String,
     gender: String, // 男 / 女

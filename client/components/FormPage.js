@@ -105,6 +105,8 @@ const getCloseContactorValue = (s) => {
 const getForm = s => ({
   id: s.id,
   information: {
+    inv_date: s.inv_date,
+    inv_person: s.inv_person,
     report_date: s.report_date,
     name: s.name,
     gender: s.gender,
