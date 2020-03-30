@@ -211,6 +211,7 @@ const RadioAndInputColumn3 = props => (
       <Form.Label>{props.name}</Form.Label>
       <React.Fragment>
         {props.options.map(option => (
+          <React.Fragment>
           <Row>
             <Col sm="auto">
               <Form.Check
@@ -220,6 +221,8 @@ const RadioAndInputColumn3 = props => (
                 value={option.name}
               />
             </Col>
+          </Row>
+          <Row>
             {option.date1 === true ?
               <Col>
                 <Form.Label>接觸開始日期</Form.Label>
@@ -243,6 +246,7 @@ const RadioAndInputColumn3 = props => (
               null
             }
           </Row>
+          </React.Fragment>
         ))}
         <Form.Label>接觸場所為：</Form.Label>
         {props.options2.map(option => (
