@@ -227,7 +227,6 @@ const Source = props => (
     </Form.Row>
     <Form.Label>曾至之國家和地點(如篇幅不足，請自行增列)：</Form.Label>
     <Card.Body>
-      <Card.Title as="h6">（二）發病期間就醫歷程</Card.Title>
       <NationandLocation
         handleChange={props.handleChange}
         handleColumnRemove={props.handleColumnRemove}
