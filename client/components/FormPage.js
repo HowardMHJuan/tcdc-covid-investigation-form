@@ -155,7 +155,7 @@ class FormPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      submitted: false,
+      submitting: false,
     };
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -165,11 +165,12 @@ class FormPage extends Component {
   /**
    * Post the data to backend. */
   submit() {
-    console.log(getForm(this.state));
+    // console.log(getForm(this.state));
+    this.setState({ submitting: true });
     axios.post(apiConfig.mongoPost, getForm(this.state))
       .then((res) => {
         console.log(res.data);
-        this.setState({ submitted: true });
+        this.props.changeMode(1);
       })
       .catch((err) => {
         console.log(err);
@@ -212,12 +213,13 @@ class FormPage extends Component {
     return (
       <div className="form-page">
         <Container>
-          <Row className="justify-content-md-center">
+          <Row className="justify-content-center" style={{ margin: '2rem 0 2rem 0' }}>
             <Col lg="8">
               <FormBody
                 handleChange={this.handleChange}
                 handleColumnRemove={this.handleColumnRemove}
                 submit={this.submit}
+                submitting={this.state.submitting}
               />
             </Col>
           </Row>

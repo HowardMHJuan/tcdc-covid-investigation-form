@@ -4,4 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import FormPage from '../components/FormPage';
 // import '../scss/style.scss';
 
-render(<FormPage />, document.getElementById('root'));
+const redirect = () => { window.location.href = '/submitted'; };
+
+render(<FormPage changeMode={redirect} />, document.getElementById('root'));

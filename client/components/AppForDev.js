@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import FormPage from './FormPage';
+import SubmittedPage from './SubmittedPage';
 
 /**
  * This Component is Only used in development stage. It switches between pages.
@@ -31,7 +32,9 @@ class AppForDev extends Component {
    * into html code. */
   renderPages() {
     if (this.state.mode === 0) {
-      return <FormPage />;
+      return <FormPage changeMode={this.changeMode} />;
+    } else {
+      return <SubmittedPage changeMode={this.changeMode} />;
     }
   }
 
@@ -42,6 +45,7 @@ class AppForDev extends Component {
     return (
       <div>
         <button onClick={() => { this.changeMode(0); }}>FormPage</button>
+        <button onClick={() => { this.changeMode(1); }}>SubmittedPage</button>
         {this.renderPages()}
       </div>
     );

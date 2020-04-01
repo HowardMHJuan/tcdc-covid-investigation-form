@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Card, Row, Col, Button } from 'react-bootstrap';
+import { Form, Card, Row, Col, Button, Spinner } from 'react-bootstrap';
 import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, CheckboxInputAndDateColumn, MedicalTreatmentColumn, TFcheckbox1, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3 } from './FormColumns';
 import MultiColumnWrapper from './MultiColumnWrapper';
 
@@ -90,12 +90,15 @@ class FormBody extends Component {
           </Card>
           <Card>
             <Card.Body>
-              <Row>
-                <Col sm={4} />
-                <Col sm={4}>
-                  <Button variant="primary" type="submit" block>
-                    填完送出
-                  </Button>
+              <Row className="justify-content-center">
+                <Col sm={4} align="center">
+                  {this.props.submitting ?
+                    <Spinner animation="border" variant="primary" />
+                  :
+                    <Button variant="primary" type="submit" block>
+                      填完送出
+                    </Button>
+                  }
                 </Col>
               </Row>
             </Card.Body>

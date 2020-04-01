@@ -51,6 +51,9 @@ if (process.env.NODE_ENV === 'dev') {
   app.get('/form', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/form/index.html'));
   });
+  app.get('/submitted', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/submitted/index.html'));
+  });
 }
 
 if (environment.mongodb) {
