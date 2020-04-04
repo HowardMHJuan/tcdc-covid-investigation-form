@@ -112,7 +112,7 @@ const getForm = s => ({
     gender: s.gender,
     birth_date: s.birth_date,
     nationality: getRadioInputValue(s.nationality__radio, s[`nationality__input__${s.nationality__radio}`]),
-    address: s.address,
+    address: s.address_city + s.address_area + s.address,
     contact: s.contact,
     occupation: s.occupation,
     med_title: getRadioInputValue(s.med_title__radio, s[`med_title__input__${s.med_title__radio}`]),
@@ -220,6 +220,7 @@ class FormPage extends Component {
                 handleColumnRemove={this.handleColumnRemove}
                 submit={this.submit}
                 submitting={this.state.submitting}
+                address_city={this.state.address_city}
               />
             </Col>
           </Row>

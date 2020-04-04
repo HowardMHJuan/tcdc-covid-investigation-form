@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Col, Row, Card, Button } from 'react-bootstrap';
+import AreaNames from '../utils/AreaNames';
 
 const StringColumn = props => (
   <Form.Group as={Col} controlId={props.id}>
@@ -99,6 +100,37 @@ const CheckboxInputAndDateColumn = props => (
         </Row>
       ))}
     </fieldset>
+  </Form.Group>
+);
+
+const LocationColumn = props => (
+  <Form.Group as={Col} controlId={props.id}>
+    <Form.Label>{props.name}</Form.Label>
+    <Row style={{ marginBottom: '0.3rem' }}>
+      <Col sm="4">
+        <div>縣市：</div>
+        <Form.Control as="select" name={`${props.id}_city`} onChange={props.handleChange}>
+          <option key="null" />
+          {Object.keys(AreaNames).map(option => <option key={option}>{option}</option>)}
+        </Form.Control>
+      </Col>
+      <Col sm="5">
+        <div>鄉鎮市區：</div>
+        <Form.Control as="select" name={`${props.id}_area`} onChange={props.handleChange}>
+          <option key="null" />
+          {AreaNames[props[`${props.id}_city`]] === undefined ?
+            null
+          :
+            AreaNames[props[`${props.id}_city`]].map(option => <option key={option}>{option}</option>)}
+        </Form.Control>
+      </Col>
+    </Row>
+    <div>地址：</div>
+    <Form.Control
+      type="text"
+      name={props.id}
+      onChange={props.handleChange}
+    />
   </Form.Group>
 );
 
@@ -472,6 +504,7 @@ export {
   SelectColumn,
   RadioAndInputColumn,
   CheckboxInputAndDateColumn,
+  LocationColumn,
   MedicalTreatmentColumn,
   TFcheckbox1,
   TFcheckbox2,

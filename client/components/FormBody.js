@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Card, Row, Col, Button, Spinner } from 'react-bootstrap';
-import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, CheckboxInputAndDateColumn, MedicalTreatmentColumn, TFcheckbox1, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3 } from './FormColumns';
+import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, CheckboxInputAndDateColumn, LocationColumn, MedicalTreatmentColumn, TFcheckbox1, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3 } from './FormColumns';
 import MultiColumnWrapper from './MultiColumnWrapper';
 
 /**
@@ -41,7 +41,10 @@ class FormBody extends Component {
           <Card>
             <Card.Body>
               <Card.Title>一、基本資料</Card.Title>
-              <Information handleChange={this.props.handleChange} />
+              <Information
+                handleChange={this.props.handleChange}
+                address_city={this.props.address_city}
+              />
             </Card.Body>
           </Card>
           <Card>
@@ -129,28 +132,33 @@ const Information = props => (
       />
     </Form.Row>
     <Form.Row>
-      <StringColumn id="address" name="居住地" handleChange={props.handleChange} />
-      <StringColumn id="contact" name="聯絡方式" handleChange={props.handleChange} />
+      <LocationColumn
+        id="address"
+        name="居住地"
+        address_city={props.address_city}
+        handleChange={props.handleChange}
+      />
     </Form.Row>
     <Form.Row>
+      <StringColumn id="contact" name="聯絡方式" handleChange={props.handleChange} />
       <StringColumn id="occupation" name="職業" handleChange={props.handleChange} />
+    </Form.Row>
+    <Form.Row>
       <RadioAndInputColumn
         id="med_title"
         name="是否為醫療機構人員*"
         options={[{ name: '否' }, { name: '是，職稱：', input: true }]}
         handleChange={props.handleChange}
       />
+      <DateColumn id="onset" name="發病日期（西元年）" handleChange={props.handleChange} />
     </Form.Row>
     <Form.Row>
-      <DateColumn id="onset" name="發病日期（西元年）" handleChange={props.handleChange} />
       <RadioAndInputColumn
         id="pregnant_week"
         name="是否懷孕（女性）"
         options={[{ name: '否' }, { name: '是，懷孕幾週：', input: true }]}
         handleChange={props.handleChange}
       />
-    </Form.Row>
-    <Form.Row>
       <RadioAndInputColumn
         id="married"
         name="婚姻狀況"
@@ -338,6 +346,10 @@ const Contactor = props => (
             handleColumnRemove={props.handleColumnRemove}
           />
         </Card.Body>
+      </Card.Body>
+    </Card>
+    <Card>
+      <Card.Body>
         <Card.Title as="h6">（二）自個案發病日起至隔離前</Card.Title>
         <div style={{ margin: '0 0 0 1.5rem' }}>
           <Card.Title as="h6">（1）在無適當防護下曾有長時間（大於 15 分鐘）面對面之接觸者，或提供照護、相處、接觸病患呼吸道分泌物或體液之同住者</Card.Title>
