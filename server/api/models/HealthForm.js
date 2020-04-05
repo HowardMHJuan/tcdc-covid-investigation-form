@@ -10,7 +10,9 @@ const HealthFormSchema = new Schema({
     gender: String, // 男 / 女
     birth_date: String, // yyyy-mm-dd
     nationality: String,
-    address: String,
+    address_city: String,
+    address_area: String,
+    address_detail: String,
     contact: String,
     occupation: String,
     med_title: String,
