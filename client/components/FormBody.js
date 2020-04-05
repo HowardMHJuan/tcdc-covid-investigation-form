@@ -28,7 +28,7 @@ class FormBody extends Component {
   render() {
     return (
       <div className="form-body">
-        <Form onSubmit={this.handleSubmit}>
+        <Form>
           <Card>
             <Card.Body>
               <Card.Title as="h2">嚴重特殊傳染性肺炎疫調單</Card.Title>
@@ -98,7 +98,7 @@ class FormBody extends Component {
                   {this.props.submitting ?
                     <Spinner animation="border" variant="primary" />
                   :
-                    <Button variant="primary" type="submit" block>
+                    <Button variant="primary" onClick={this.handleSubmit} block>
                       填完送出
                     </Button>
                   }
