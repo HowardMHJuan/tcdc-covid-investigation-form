@@ -498,6 +498,36 @@ const CloseContactorColumn = props => (
   </Card>
 );
 
+const ActivityColumn = props => (
+  <Card>
+    <Card.Body>
+      <fieldset name={props.id} onChange={props.handleChange}>
+        <Button size="sm" variant="danger" id={props.id} onClick={props.handleRemove}>
+          移除
+        </Button>
+        <Row>
+          <Col>
+            <Form.Label>日期</Form.Label>
+            <Form.Control
+              type="date"
+              name={`${props.id}__date`}
+              value={props.inputValue}
+            />
+          </Col>
+          <Col>
+            <Form.Label>活動地</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__location`}
+              value={props.inputValue}
+            />
+          </Col>
+        </Row>
+      </fieldset>
+    </Card.Body>
+  </Card>
+);
+
 export {
   StringColumn,
   DateColumn,
@@ -513,4 +543,5 @@ export {
   CloseContactorColumn,
   RadioAndInputColumn2,
   RadioAndInputColumn3,
+  ActivityColumn,
 };

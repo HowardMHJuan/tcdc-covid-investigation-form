@@ -102,6 +102,14 @@ const getCloseContactorValue = (s) => {
   }));
 };
 
+const getActivityValue = (s) => {
+  const rowIds = [...new Set(Object.keys(s).filter(key => /\bactivity_detail/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
+  return rowIds.map(id => ({
+    date: s[`activity_detail__${id}__date`],
+    location: s[`activity_detail__${id}__location`],
+  }));
+};
+
 const getForm = s => ({
   id: s.id,
   timestamp: Date.now(),
@@ -146,6 +154,9 @@ const getForm = s => ({
   contactor: {
     public_area: getPublicValue(s),
     close_contactor: getCloseContactorValue(s),
+  },
+  activity: {
+    activity_detail: getActivityValue(s),
   },
 });
 

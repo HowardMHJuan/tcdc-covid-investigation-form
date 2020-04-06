@@ -45,6 +45,9 @@ const HealthFormSchema = new Schema({
     public_area: Array,
     close_contactor: Array,
   },
+  activity: {
+    activity_detail: Array,
+  }
 });
 
 const HealthForm = mongoose.model('form', HealthFormSchema);

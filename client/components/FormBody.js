@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Card, Row, Col, Button, Spinner } from 'react-bootstrap';
-import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, CheckboxInputAndDateColumn, LocationColumn, MedicalTreatmentColumn, TFcheckbox1, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3 } from './FormColumns';
+import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, CheckboxInputAndDateColumn, LocationColumn, MedicalTreatmentColumn, TFcheckbox1, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3, ActivityColumn} from './FormColumns';
 import MultiColumnWrapper from './MultiColumnWrapper';
 
 /**
@@ -86,6 +86,15 @@ class FormBody extends Component {
             <Card.Body>
               <Card.Title>四、接觸者調查 (自個案發病日起至隔離前)</Card.Title>
               <Contactor
+                handleChange={this.props.handleChange}
+                handleColumnRemove={this.props.handleColumnRemove}
+              />
+            </Card.Body>
+          </Card>
+          <Card>
+            <Card.Body>
+              <Card.Title>五、活動史細節</Card.Title>
+              <ActivityDetail
                 handleChange={this.props.handleChange}
                 handleColumnRemove={this.props.handleColumnRemove}
               />
@@ -398,6 +407,18 @@ const CloseContactor = props => (
       handleColumnRemove={props.handleColumnRemove}
     >
       <CloseContactorColumn {...props} />
+    </MultiColumnWrapper>
+  </React.Fragment>
+);
+
+const ActivityDetail = props => (
+  <React.Fragment>
+    <MultiColumnWrapper
+      id="activity_detail"
+      handleChange={props.handleChange}
+      handleColumnRemove={props.handleColumnRemove}
+    >
+      <ActivityColumn {...props} />
     </MultiColumnWrapper>
   </React.Fragment>
 );
