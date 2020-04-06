@@ -104,6 +104,7 @@ const getCloseContactorValue = (s) => {
 
 const getForm = s => ({
   id: s.id,
+  timestamp: Date.now(),
   information: {
     inv_date: s.inv_date,
     inv_person: s.inv_person,

@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 const HealthFormSchema = new Schema({
   id: String,
+  timestamp: Number,
   information: {
     inv_date: String, // yyyy-mm-dd
     inv_person: String,
