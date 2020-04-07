@@ -515,10 +515,28 @@ const ActivityColumn = props => (
             />
           </Col>
           <Col>
-            <Form.Label>活動地</Form.Label>
+            <Form.Label>開始時間</Form.Label>
+            <Form.Control
+              type="time"
+              name={`${props.id}__start_time`}
+              value={props.inputValue}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Label>結束時間</Form.Label>
+            <Form.Control
+              type="time"
+              name={`${props.id}__end_time`}
+              value={props.inputValue}
+            />
+          </Col>
+          <Col>
+            <Form.Label>活動描述</Form.Label>
             <Form.Control
               type="text"
-              name={`${props.id}__location`}
+              name={`${props.id}__description`}
               value={props.inputValue}
             />
           </Col>

@@ -106,7 +106,9 @@ const getActivityValue = (s) => {
   const rowIds = [...new Set(Object.keys(s).filter(key => /\bactivity_detail/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
   return rowIds.map(id => ({
     date: s[`activity_detail__${id}__date`],
-    location: s[`activity_detail__${id}__location`],
+    start_time: s[`activity_detail__${id}__start_time`],
+    end_time: s[`activity_detail__${id}__end_time`],
+    description: s[`activity_detail__${id}__description`],
   }));
 };
 
