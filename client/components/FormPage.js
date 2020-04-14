@@ -30,8 +30,8 @@ const getChronicDiseaseValue = s => (
   ))
 );
 
-const getRadioInputValue2 = (radioName, input, date) => (
-  input === undefined ? radioName : `${radioName + input},${date}`
+const getRadioInputValue2 = (radioName, input, start_date, end_date) => (
+  input === undefined ? radioName : `${radioName + input},${start_date},${end_date}`
 );
 
 const getFeverValue = s => (
@@ -98,6 +98,7 @@ const getCloseContactorValue = (s) => {
     number: s[`close_contactor__${id}__number`],
     symptom_count: s[`close_contactor__${id}__symptom_count`],
     fever_count: s[`close_contactor__${id}__fever_count`],
+    last_date: s[`close_contactor__${id}__last_date`],
     note: s[`close_contactor__${id}__note`],
   }));
 };
@@ -143,9 +144,9 @@ const getForm = s => ({
     contact_fever: getFeverValue(s),
     contact_patient: getPatientValue(s),
     contact_secretion: getSecretionValue(s),
-    infect: getRadioInputValue2(s.infect__radio, s[`infect__input__${s.infect__radio}`], s[`infect__date__${s.infect__radio}`]),
-    market: getRadioInputValue2(s.market__radio, s[`market__input__${s.market__radio}`], s[`market__date__${s.market__radio}`]),
-    hospital: getRadioInputValue2(s.hospital__radio, s[`hospital__input__${s.hospital__radio}`], s[`hospital__date__${s.hospital__radio}`]),
+    infect: getRadioInputValue2(s.infect__radio, s[`infect__input__${s.infect__radio}`], s[`infect__start_date__${s.infect__radio}`], s[`infect__end_date__${s.infect__radio}`]),
+    market: getRadioInputValue2(s.market__radio, s[`market__input__${s.market__radio}`], s[`market__start_date__${s.market__radio}`], s[`market__end_date__${s.market__radio}`]),
+    hospital: getRadioInputValue2(s.hospital__radio, s[`hospital__input__${s.hospital__radio}`], s[`hospital__start_date__${s.hospital__radio}`], s[`hospital__end_date__${s.hospital__radio}`]),
     pet: getRadioInputValue(s.pet__radio, s[`pet__input__${s.pet__radio}`]),
     bird: getRadioInputValue(s.bird__radio, s[`bird__input__${s.bird__radio}`]),
     farm: getRadioInputValue(s.farm__radio, s[`farm__input__${s.farm__radio}`]),

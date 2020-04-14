@@ -200,38 +200,53 @@ const RadioAndInputColumn2 = props => (
     <fieldset name={props.id} onChange={props.handleChange}>
       <Form.Label>{props.name}</Form.Label>
       {props.options.map(option => (
-        <Row>
-          <Col sm="auto">
-            <Form.Check
-              type="radio"
-              label={option.name}
-              name={`${props.id}__radio`}
-              value={option.name}
-            />
-          </Col>
-          {option.input === true ?
-            <Col>
-              <Form.Label>{props.loc}</Form.Label>
-              <Form.Control
-                type="text"
-                name={`${props.id}__input__${option.name}`}
+        <React.Fragment>
+          <Row>
+            <Col sm="auto">
+              <Form.Check
+                type="radio"
+                label={option.name}
+                name={`${props.id}__radio`}
+                value={option.name}
               />
             </Col>
-          :
-            null
-          }
-          {option.date === true ?
-            <Col sm={4}>
-              <Form.Label>{props.datename}</Form.Label>
-              <Form.Control
-                type="date"
-                name={`${props.id}__date__${option.name}`}
-              />
-            </Col>
-          :
-            null
-          }
-        </Row>
+          </Row>
+          <Row>
+            {option.input === true ?
+              <Col sm={4} style={{ margin: '1rem 0 1rem 0' }}>
+                <Form.Label>{props.loc}</Form.Label>
+                <Form.Control
+                  type="text"
+                  name={`${props.id}__input__${option.name}`}
+                />
+              </Col>
+            :
+              null
+            }
+            {option.start_date === true ?
+              <Col sm={4} style={{ margin: '1rem 0 1rem 0' }}>
+                <Form.Label>開始日期</Form.Label>
+                <Form.Control
+                  type="date"
+                  name={`${props.id}__start_date__${option.name}`}
+                />
+              </Col>
+            :
+              null
+            }
+            {option.end_date === true ?
+              <Col sm={4} style={{ margin: '1rem 0 1rem 0' }}>
+                <Form.Label>結束日期</Form.Label>
+                <Form.Control
+                  type="date"
+                  name={`${props.id}__end_date__${option.name}`}
+                />
+              </Col>
+            :
+              null
+            }
+          </Row>
+        </React.Fragment>
       ))}
     </fieldset>
   </Form.Group>
@@ -484,6 +499,14 @@ const CloseContactorColumn = props => (
           </Col>
         </Row>
         <Row>
+          <Col>
+            <Form.Label>最後接觸日期</Form.Label>
+            <Form.Control
+              type="date"
+              name={`${props.id}__last_date`}
+              value={props.dateValue}
+            />
+          </Col>
           <Col>
             <Form.Label>備註</Form.Label>
             <Form.Control

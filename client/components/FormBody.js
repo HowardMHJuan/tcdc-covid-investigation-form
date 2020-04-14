@@ -84,7 +84,7 @@ class FormBody extends Component {
           </Card>
           <Card>
             <Card.Body>
-              <Card.Title>四、接觸者調查 (自個案發病日起至隔離前)</Card.Title>
+              <Card.Title>四、接觸者調查 (自個案發病日前兩天至隔離前)</Card.Title>
               <Contactor
                 handleChange={this.props.handleChange}
                 handleColumnRemove={this.props.handleColumnRemove}
@@ -302,13 +302,13 @@ const Source = props => (
         <Card.Title as="h6">（三）發病前14天內之活動史調查</Card.Title>
         <Card.Body>
           <Form.Row>
-            <RadioAndInputColumn2 id="infect" name="是否曾至中國湖北省（含武漢市）（或公告疫區）：" loc="地點" datename="日期" options={[{ name: '否' }, { name: '是：', input: true, date: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn2 id="infect" name="是否曾至中國湖北省（含武漢市）（或公告疫區）：" loc="地點" options={[{ name: '否' }, { name: '是：', input: true, start_date: true, end_date: true }]} handleChange={props.handleChange} />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn2 id="market" name="是否曾至野味市場：" loc="地點" datename="日期" options={[{ name: '否' }, { name: '是：', input: true, date: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn2 id="market" name="是否曾至野味市場：" loc="地點" options={[{ name: '否' }, { name: '是：', input: true, start_date: true, end_date: true }]} handleChange={props.handleChange} />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn2 id="hospital" name="是否曾至醫療院所：" loc="醫療院所名稱" datename="日期" options={[{ name: '否' }, { name: '是：', input: true, date: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn2 id="hospital" name="是否曾至醫療院所：" loc="醫療院所名稱" options={[{ name: '否' }, { name: '是：', input: true, start_date: true, end_date: true }]} handleChange={props.handleChange} />
           </Form.Row>
         </Card.Body>
       </Card.Body>
@@ -345,9 +345,9 @@ const Contactor = props => (
   <React.Fragment>
     <Card>
       <Card.Body>
-        <Card.Title as="h6">（一）自個案發病日起至隔離前，是否曾至國內公共場所或搭乘大眾交通工具？</Card.Title>
+        <Card.Title as="h6">（一）自個案發病日前兩天至隔離前，是否曾至國內公共場所或搭乘大眾交通工具？</Card.Title>
         <Form.Row>
-          <TFcheckbox1 id="public_area" name="" options={['是', '否']} handleChange={props.handleChange} />
+          <TFcheckbox1 id="is_public_area" name="" options={['是', '否']} handleChange={props.handleChange} />
         </Form.Row>
         <Card.Body>
           <PublicArea
@@ -359,8 +359,13 @@ const Contactor = props => (
     </Card>
     <Card>
       <Card.Body>
-        <Card.Title as="h6">（二）自個案發病日起至隔離前</Card.Title>
+        <Card.Title as="h6">（二）自個案發病日前兩天至隔離前</Card.Title>
         <div style={{ margin: '0 0 0 1.5rem' }}>
+          <Form.Row>    
+            <Card.Title as="h6"> 是否有密切接觸者*：</Card.Title>
+            <TFcheckbox1 id="is_close_contactor" name="" options={['是', '否']} handleChange={props.handleChange} />
+          </Form.Row>
+          <Card.Title as="h6"> *密切接觸者：</Card.Title>
           <Card.Title as="h6">（1）在無適當防護下曾有長時間（大於 15 分鐘）面對面之接觸者，或提供照護、相處、接觸病患呼吸道分泌物或體液之同住者</Card.Title>
           <Card.Title as="h6">（2）曾與確認病例在無適當防護下2公尺近距離接觸之醫療機構人員</Card.Title>
         </div>
