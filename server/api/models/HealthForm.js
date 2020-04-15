@@ -6,6 +6,7 @@ const HealthFormSchema = new Schema({
   information: {
     inv_date: String, // yyyy-mm-dd
     inv_person: String,
+    inv_institution: String,
     report_date: String, // yyyy-mm-dd
     name: String,
     gender: String, // 男 / 女

@@ -9,15 +9,25 @@ const getRadioInputValue = (radioName, input) => (
   input === undefined ? radioName : radioName + input
 );
 
-const getSymptomsValue = s => (
-  s.symptoms__checkbox === undefined ? [] : s.symptoms__checkbox.map((name) => {
-    if (name.slice(0, 2) === '其他') {
-      return { name: `其他：${s[`symptoms__input__${name}`]}`, date: s[`symptoms__date__${name}`] };
-    } else {
-      return { name, date: s[`symptoms__date__${name}`] };
+const getOtherSymptomsValue = (s) => {
+  const rowIds = [...new Set(Object.keys(s).filter(key => /\bsymptoms_other/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
+  return rowIds.map(id => ({ name: `其他：${s[`symptoms_other__${id}__input`]}`, date: s[`symptoms_other__${id}__date`] }));
+};
+
+const getSymptomsValue = (s) => {
+  if (s.no_symptom__checkbox !== undefined && s.no_symptom__checkbox.length === 1) {
+    return [];
+  }
+  const allSymptoms = getOtherSymptomsValue(s);
+  const symptoms = [...new Set(Object.keys(s).filter(key => /\bsymptoms__radio/.test(key) && s[key] !== undefined).map(key => key.split('__')[2]))];
+  for (let i = 0; i < symptoms.length; i += 1) {
+    const symptom = symptoms[i];
+    if (s[`symptoms__radio__${symptom}`] === '是') {
+      allSymptoms.push({ name: symptom, date: s[`symptoms__date__${symptom}`] });
     }
-  })
-);
+  }
+  return allSymptoms;
+};
 
 const getDoctorsValue = (s) => {
   const rowIds = [...new Set(Object.keys(s).filter(key => /\bseeing_doctor/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
@@ -119,6 +129,7 @@ const getForm = s => ({
   information: {
     inv_date: s.inv_date,
     inv_person: s.inv_person,
+    inv_institution: s.inv_institution,
     report_date: s.report_date,
     name: s.name,
     gender: s.gender,

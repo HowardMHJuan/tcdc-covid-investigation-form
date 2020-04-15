@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Card, Row, Col, Button, Spinner } from 'react-bootstrap';
-import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, CheckboxInputAndDateColumn, LocationColumn, MedicalTreatmentColumn, TFcheckbox1, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3, ActivityColumn} from './FormColumns';
+import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, RadioAndDateColumn, OtherSymptomsColumn, CheckboxInputAndDateColumn, LocationColumn, MedicalTreatmentColumn, TFcheckbox1, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3, ActivityColumn} from './FormColumns';
 import MultiColumnWrapper from './MultiColumnWrapper';
 
 /**
@@ -33,8 +33,9 @@ class FormBody extends Component {
             <Card.Body>
               <Card.Title as="h2">嚴重特殊傳染性肺炎疫調單</Card.Title>
               <Form.Row>
-                <DateColumn id="inv_date" name="調查日期" handleChange={this.props.handleChange} />
-                <StringColumn id="inv_person" name="調查人／單位" handleChange={this.props.handleChange} />
+                <DateColumn id="inv_date" name="調查日期（西元年）" handleChange={this.props.handleChange} />
+                <StringColumn id="inv_person" name="調查人" handleChange={this.props.handleChange} />
+                <StringColumn id="inv_institution" name="調查單位" handleChange={this.props.handleChange} />
               </Form.Row>
             </Card.Body>
           </Card>
@@ -53,7 +54,10 @@ class FormBody extends Component {
               <Card>
                 <Card.Body>
                   <Card.Title as="h6">（一）症狀（初始症狀或疾病過程中曾出現）（請註明開始日期）</Card.Title>
-                  <HealthConditionSymptoms handleChange={this.props.handleChange} />
+                  <HealthConditionSymptoms
+                    handleChange={this.props.handleChange}
+                    handleColumnRemove={this.props.handleColumnRemove}
+                  />
                 </Card.Body>
               </Card>
               <Card>
@@ -125,14 +129,14 @@ const Information = props => (
   <React.Fragment>
     <Form.Row>
       <StringColumn id="id" name="法傳編號" handleChange={props.handleChange} />
-      <DateColumn id="report_date" name="通報日期（西元年）" handleChange={props.handleChange} />
+      <DateColumn id="report_date" name="通報日期" handleChange={props.handleChange} />
     </Form.Row>
     <Form.Row>
       <StringColumn id="name" name="姓名" handleChange={props.handleChange} />
       <SelectColumn id="gender" name="生理性別" options={['男', '女']} handleChange={props.handleChange} />
     </Form.Row>
     <Form.Row>
-      <DateColumn id="birth_date" name="出生日期（西元年）" handleChange={props.handleChange} />
+      <DateColumn id="birth_date" name="出生日期" handleChange={props.handleChange} />
       <RadioAndInputColumn
         id="nationality"
         name="國籍"
@@ -155,11 +159,11 @@ const Information = props => (
     <Form.Row>
       <RadioAndInputColumn
         id="med_title"
-        name="是否為醫療機構人員*"
+        name="是否為醫療機構人員"
         options={[{ name: '否' }, { name: '是，職稱：', input: true }]}
         handleChange={props.handleChange}
       />
-      <DateColumn id="onset" name="發病日期（西元年）" handleChange={props.handleChange} />
+      <DateColumn id="onset" name="發病日期（無症狀者填第一次採檢日期）" handleChange={props.handleChange} />
     </Form.Row>
     <Form.Row>
       <RadioAndInputColumn
@@ -181,39 +185,49 @@ const Information = props => (
 const HealthConditionSymptoms = props => (
   <React.Fragment>
     <CheckboxInputAndDateColumn
-      id="symptoms"
-      options={[
-        '發燒（≥38℃）',
-        '全身倦怠',
-        '意識混亂躁動',
-        '頭痛',
-        '結膜充血',
-
-        '喉嚨痛',
-        '流鼻水鼻塞',
-        '咳嗽',
-        '呼吸困難',
-
-        '胸痛',
-        '腹痛',
-        '肌肉酸痛',
-        '關節酸痛',
-
-        '噁心',
-        '嘔吐',
-        '腹瀉',
-        '尿量減少',
-        '下肢水腫',
-        '血尿',
-        '胸部影像學檢查(CXR 或 CT)顯示肺炎',
-      ].map(name => ({ name, date: true }))
-      .concat([
-        '其他 1（請註明）：',
-        '其他 2（請註明）：',
-        '其他 3（請註明）：',
-      ].map(name => ({ name, input: true, date: true })))}
+      id="no_symptom"
+      options={['無症狀（以下免填，跳至（二））'].map(name => ({ name }))}
       handleChange={props.handleChange}
     />
+    {[
+      '發燒（≥38℃）',
+      '全身倦怠',
+      '意識混亂躁動',
+      '頭痛',
+      '結膜充血',
+
+      '喉嚨痛',
+      '流鼻水鼻塞',
+      '咳嗽',
+      '呼吸困難',
+
+      '胸痛',
+      '腹痛',
+      '肌肉酸痛',
+      '關節酸痛',
+
+      '噁心',
+      '嘔吐',
+      '腹瀉',
+      '尿量減少',
+      '下肢水腫',
+      '血尿',
+      '胸部影像學檢查(CXR 或 CT)顯示肺炎',
+    ].map(name => (
+      <RadioAndDateColumn
+        id="symptoms"
+        name={name}
+        options={[{ name: '否' }, { name: '是', date: true }]}
+        handleChange={props.handleChange}
+      />
+    ))}
+    <MultiColumnWrapper
+      id="symptoms_other"
+      handleChange={props.handleChange}
+      handleColumnRemove={props.handleColumnRemove}
+    >
+      <OtherSymptomsColumn {...props} />
+    </MultiColumnWrapper>
   </React.Fragment>
 );
 

@@ -64,6 +64,68 @@ const RadioAndInputColumn = props => (
   </Form.Group>
 );
 
+const RadioAndDateColumn = props => (
+  <Form.Group as={Col} controlId={props.id}>
+    <fieldset name={props.id} onChange={props.handleChange}>
+      <Row>
+        <Form.Label>{props.name}</Form.Label>
+        {props.options.map(option => (
+          <React.Fragment>
+            <Col sm="auto">
+              <Form.Check
+                type="radio"
+                label={option.name}
+                name={`${props.id}__radio__${props.name}`}
+                value={option.name}
+              />
+            </Col>
+            {option.date === true ?
+              <Col sm={4}>
+                <Form.Control
+                  type="date"
+                  name={`${props.id}__date__${props.name}`}
+                />
+              </Col>
+            :
+              null
+            }
+          </React.Fragment>
+        ))}
+      </Row>
+    </fieldset>
+  </Form.Group>
+);
+
+const OtherSymptomsColumn = props => (
+  <Card>
+    <Card.Body>
+      <fieldset name={props.id} onChange={props.handleChange}>
+        <Row>
+          <Button size="sm" variant="danger" id={props.id} onClick={props.handleRemove} style={{ padding: '0 0.3rem 0 0.3rem', margin: '1.5rem 0 1.5rem 0' }}>
+            移除
+          </Button>
+          <Col sm={5}>
+            <Form.Label>其他症狀</Form.Label>
+            <Form.Control
+              type="text"
+              name={`${props.id}__input`}
+              value={props.dateValue}
+            />
+          </Col>
+          <Col>
+            <Form.Label>開始日期</Form.Label>
+            <Form.Control
+              type="date"
+              name={`${props.id}__date`}
+              value={props.inputValue}
+            />
+          </Col>
+        </Row>
+      </fieldset>
+    </Card.Body>
+  </Card>
+);
+
 const CheckboxInputAndDateColumn = props => (
   <Form.Group as={Col} controlId={props.id}>
     <fieldset name={props.id} onChange={props.handleChange}>
@@ -574,6 +636,8 @@ export {
   DateColumn,
   SelectColumn,
   RadioAndInputColumn,
+  RadioAndDateColumn,
+  OtherSymptomsColumn,
   CheckboxInputAndDateColumn,
   LocationColumn,
   MedicalTreatmentColumn,
