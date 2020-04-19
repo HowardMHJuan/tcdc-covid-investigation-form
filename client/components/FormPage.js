@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import axios from 'axios';
 
 import { apiConfig } from '../../config-api';
@@ -185,7 +185,11 @@ class FormPage extends Component {
 
     const params = new URLSearchParams(window.location.search);
     if (params.has('id')) {
-      this.search(params.get('id'));
+      if (params.get('id') === '') { // If id === '', it gets all data from db.
+        this.props.changeMode(1, { error: true });
+      } else {
+        this.search(params.get('id'));
+      }
     }
 
     this.state = {
@@ -209,6 +213,8 @@ class FormPage extends Component {
         if (res.data === '') {
           this.props.changeMode(1, { error: true });
         } else {
+          const newState = res.data;
+          newState.editMode = true;
           this.setState(res.data);
         }
       })
@@ -268,7 +274,19 @@ class FormPage extends Component {
     return (
       <div className="form-page">
         <Container>
-          <Row className="justify-content-center" style={{ margin: '2rem 0 2rem 0' }}>
+          <Row style={{ margin: '2rem 0 0 0' }}>
+            <Col lg={{ span: 6, offset: 4 }} style={{ textAlign: 'right' }}>
+              {this.state.editMode ?
+                <Button variant="dark" onClick={() => this.props.changeMode(0)}>
+                  填新疫調單 ＞
+                </Button>
+              :
+                <Button variant="dark" onClick={() => this.props.changeMode(2)}>
+                  編輯資料庫中的疫調單（前往搜尋頁面）＞
+                </Button>}
+            </Col>
+          </Row>
+          <Row className="justify-content-center" style={{ margin: '1rem 0 2rem 0' }}>
             <Col lg="8">
               <FormBody
                 handleChange={this.handleChange}

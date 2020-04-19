@@ -25,12 +25,14 @@ class AppForDev extends Component {
    * @param {number} mode - the page's mode we want to switch into
    * @param {object} props - (optional) the page's props we want to switch into */
   changeMode(mode, props) {
-    if (mode === 0 && props !== undefined) {
-      window.history.pushState({}, '', `/?id=${props.id}&name=${props.name}`);
-      // window.location.href = `/?id=${props.id}&name=${props.name}`;
-    } else if (mode === 1 && props.error) {
+    if (mode === 0) {
+      if (props !== undefined) {
+        window.history.pushState({}, '', `/?id=${props.id}&name=${props.name}`);
+      } else {
+        window.location.href = '/';
+      }
+    } else if (mode === 1 && props !== undefined) {
       window.history.pushState({}, '', `/?error=${props.error}`);
-      // window.location.href = `/?error=${props.error}`;
     }
     this.setState({ mode });
   }

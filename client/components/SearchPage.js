@@ -46,9 +46,16 @@ class SearchPage extends Component {
    * eventually compiled into html code. */
   render() {
     return (
-      <Row className="justify-content-center" style={{ marginTop: '2rem' }}>
-        <Col sm="8">
-          <Container>
+      <Container>
+        <Row style={{ margin: '2rem 0 0 0' }}>
+          <Col lg={{ span: 6, offset: 4 }} style={{ textAlign: 'right' }}>
+            <Button variant="dark" onClick={() => this.props.changeMode(0)}>
+              填新疫調單 ＞
+            </Button>
+          </Col>
+        </Row>
+        <Row className="justify-content-center" style={{ marginTop: '1rem' }}>
+          <Col sm="8">
             <Card>
               <Card.Body>
                 <Row className="justify-content-center">
@@ -77,9 +84,9 @@ class SearchPage extends Component {
                 </Row>
               </Card.Body>
             </Card>
-          </Container>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

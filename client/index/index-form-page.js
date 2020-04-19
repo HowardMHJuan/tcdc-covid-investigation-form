@@ -5,13 +5,15 @@ import FormPage from '../components/FormPage';
 // import '../scss/style.scss';
 
 const redirect = (mode, props) => {
-  if (mode === 1) {
+  if (mode === 0) {
+    window.location.href = '/form';
+  } else if (mode === 1) {
     if (props.error) {
       window.location.href = `/submitted?error=${props.error}`;
     } else {
       window.location.href = '/submitted';
     }
-  } else {
+  } else if (mode === 2) {
     window.location.href = '/search';
   }
 };
