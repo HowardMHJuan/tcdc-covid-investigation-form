@@ -9,7 +9,13 @@ class SubmittedPage extends Component {
    * @param {object} props - The props used to construct. */
   constructor(props) {
     super(props);
-    this.state = {};
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('error')) {
+      this.state = { error: true };
+    } else {
+      this.state = {};
+    }
   }
 
   /**
@@ -23,7 +29,10 @@ class SubmittedPage extends Component {
             <Card>
               <Card.Body>
                 <Row className="justify-content-center">
-                  <Col sm="auto" as="h4">已送出</Col>
+                  {this.state.error ?
+                    <Col sm="auto" as="h4">無此頁面或查無資料</Col>
+                  :
+                    <Col sm="auto" as="h4">已送出</Col>}
                 </Row>
                 <Row className="justify-content-center">
                   <Col sm="auto">

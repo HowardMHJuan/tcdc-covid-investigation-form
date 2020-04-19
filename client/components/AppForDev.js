@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import FormPage from './FormPage';
 import SubmittedPage from './SubmittedPage';
+import SearchPage from './SearchPage';
 
 /**
  * This Component is Only used in development stage. It switches between pages.
@@ -21,8 +22,16 @@ class AppForDev extends Component {
   /**
    * It changes the value of this.state.mode and used it to switch between pages.
    * this.state.mode === 0 -> FormPage
-   * @param {number} mode - the page's mode we want to switch into */
-  changeMode(mode) {
+   * @param {number} mode - the page's mode we want to switch into
+   * @param {object} props - (optional) the page's props we want to switch into */
+  changeMode(mode, props) {
+    if (mode === 0 && props !== undefined) {
+      window.history.pushState({}, '', `/?id=${props.id}&name=${props.name}`);
+      // window.location.href = `/?id=${props.id}&name=${props.name}`;
+    } else if (mode === 1 && props.error) {
+      window.history.pushState({}, '', `/?error=${props.error}`);
+      // window.location.href = `/?error=${props.error}`;
+    }
     this.setState({ mode });
   }
 
@@ -33,8 +42,10 @@ class AppForDev extends Component {
   renderPages() {
     if (this.state.mode === 0) {
       return <FormPage changeMode={this.changeMode} />;
-    } else {
+    } else if (this.state.mode === 1) {
       return <SubmittedPage changeMode={this.changeMode} />;
+    } else {
+      return <SearchPage changeMode={this.changeMode} />;
     }
   }
 
@@ -46,6 +57,7 @@ class AppForDev extends Component {
       <div>
         <button onClick={() => { this.changeMode(0); }}>FormPage</button>
         <button onClick={() => { this.changeMode(1); }}>SubmittedPage</button>
+        <button onClick={() => { this.changeMode(2); }}>SearchPage</button>
         {this.renderPages()}
       </div>
     );

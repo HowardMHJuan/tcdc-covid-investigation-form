@@ -9,6 +9,7 @@
     "build:server": "webpack --config webpackConfig/webpack.server.config.js",
     "build:form-page": "webpack --config webpackConfig/webpack.prod.form-page.config.js",
     "build:submitted-page": "webpack --config webpackConfig/webpack.prod.submitted-page.config.js",
+    "build:search-page": "webpack --config webpackConfig/webpack.prod.search-page.config.js",
     "build": "npm-run-all build:*",
     "dev": "NODE_ENV=dev webpack-dashboard -- nodemon --exec babel-node server/server.js --ignore public/ --ignore client/",
     "win-dev": "set NODE_ENV=dev && webpack-dashboard -- nodemon --exec babel-node server/server.js --ignore public/ --ignore client/"

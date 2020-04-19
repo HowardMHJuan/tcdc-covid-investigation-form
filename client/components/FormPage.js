@@ -182,12 +182,39 @@ class FormPage extends Component {
    * @param {object} props - The props used to construct. */
   constructor(props) {
     super(props);
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('id')) {
+      this.search(params.get('id'));
+    }
+
     this.state = {
       submitting: false,
     };
+
+    this.search = this.search.bind(this);
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleColumnRemove = this.handleColumnRemove.bind(this);
+  }
+
+  /**
+   * Search form by id.
+   * @param {string} id - The id to search. */
+  search(id) {
+    console.log(id);
+    axios.get(apiConfig.mongoGet.replace(':id', id))
+      .then((res) => {
+        // console.log(res.data);
+        if (res.data === '') {
+          this.props.changeMode(1, { error: true });
+        } else {
+          this.setState(res.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   /**
