@@ -16,8 +16,8 @@ module.exports = {
     const healthFormId = req.params.id;
     const healthFormProps = req.body;
 
-    HealthForm.findByIdAndUpdate({ id: healthFormId }, healthFormProps)
-      .then(() => HealthForm.findById({ id: healthFormId }))
+    HealthForm.findOneAndUpdate({ id: healthFormId }, healthFormProps)
+      .then(() => HealthForm.findOne({ id: healthFormId }))
       .then(healthForm => res.send(healthForm))
       .catch(next);
   },

@@ -108,13 +108,23 @@ class FormBody extends Component {
             <Card.Body>
               <Row className="justify-content-center">
                 <Col sm={4} align="center">
-                  {this.props.submitting ?
-                    <Spinner animation="border" variant="primary" />
-                  :
-                    <Button variant="primary" onClick={this.handleSubmit} block>
-                      填完送出
-                    </Button>
-                  }
+                  {(() => {
+                    if (this.props.submitting) {
+                      return <Spinner animation="border" variant="primary" />;
+                    } else if (this.props.editMode) {
+                      return (
+                        <Button variant="primary" onClick={this.handleSubmit} block>
+                          送出修改
+                        </Button>
+                      );
+                    } else {
+                      return (
+                        <Button variant="primary" onClick={this.handleSubmit} block>
+                          填完送出
+                        </Button>
+                      );
+                    }
+                  })()}
                 </Col>
               </Row>
             </Card.Body>

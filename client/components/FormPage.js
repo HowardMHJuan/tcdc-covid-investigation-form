@@ -172,6 +172,7 @@ const getForm = s => ({
   activity: {
     activity_detail: getActivityValue(s),
   },
+  orig_state: JSON.stringify(s),
 });
 
 /**
@@ -213,9 +214,11 @@ class FormPage extends Component {
         if (res.data === '') {
           this.props.changeMode(1, { error: true });
         } else {
-          const newState = res.data;
+          const newState = JSON.parse(res.data.orig_state);
+          // console.log(newState);
           newState.editMode = true;
-          this.setState(res.data);
+          newState.submitting = false;
+          this.setState(newState);
         }
       })
       .catch((err) => {
@@ -228,14 +231,25 @@ class FormPage extends Component {
   submit() {
     // console.log(getForm(this.state));
     this.setState({ submitting: true });
-    axios.post(apiConfig.mongoPost, getForm(this.state))
-      .then((res) => {
-        console.log(res.data);
-        this.props.changeMode(1);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (this.state.editMode) {
+      axios.put(apiConfig.mongoPut.replace(':id', this.state.id), getForm(this.state))
+        .then((res) => {
+          console.log(res.data);
+          this.props.changeMode(1);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      axios.post(apiConfig.mongoPost, getForm(this.state))
+        .then((res) => {
+          console.log(res.data);
+          this.props.changeMode(1);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   /**
@@ -293,6 +307,7 @@ class FormPage extends Component {
                 handleColumnRemove={this.handleColumnRemove}
                 submit={this.submit}
                 submitting={this.state.submitting}
+                editMode={this.state.editMode}
                 address_city={this.state.address_city}
               />
             </Col>

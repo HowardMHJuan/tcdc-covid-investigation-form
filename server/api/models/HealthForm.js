@@ -48,7 +48,8 @@ const HealthFormSchema = new Schema({
   },
   activity: {
     activity_detail: Array,
-  }
+  },
+  orig_state: String,
 });
 
 const HealthForm = mongoose.model('form', HealthFormSchema);
