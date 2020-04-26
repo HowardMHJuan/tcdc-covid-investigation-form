@@ -8,7 +8,7 @@ const redirect = (mode, props) => {
   if (mode === 0) {
     window.location.href = '/form';
   } else if (mode === 1) {
-    if (props.error) {
+    if (props !== undefined && props.error) {
       window.location.href = `/submitted?error=${props.error}`;
     } else {
       window.location.href = '/submitted';
