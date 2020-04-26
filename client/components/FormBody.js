@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Card, Row, Col, Button, Spinner } from 'react-bootstrap';
-import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, RadioAndDateColumn, OtherSymptomsColumn, CheckboxInputAndDateColumn, LocationColumn, MedicalTreatmentColumn, TFcheckbox1, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3, ActivityColumn} from './FormColumns';
+import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, RadioAndDateColumn, OtherSymptomsColumn, CheckboxInputAndDateColumn, LocationColumn, MedicalTreatmentColumn, TFcheckbox1, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3, ActivityColumn } from './FormColumns';
 import MultiColumnWrapper from './MultiColumnWrapper';
 
 /**
@@ -66,6 +66,20 @@ class FormBody extends Component {
                   <HealthConditionDoctors
                     handleChange={this.props.handleChange}
                     handleColumnRemove={this.props.handleColumnRemove}
+                    {...(() => {
+                      const values = {};
+                      Object.entries(this.props).forEach(([key, val]) => {
+                        if (/\bseeing_doctor/.test(key)) {
+                          const id = key.split('__')[1];
+                          const columnName = key.split('__')[2];
+                          if (values[id] === undefined) {
+                            values[id] = {};
+                          }
+                          values[id][columnName] = val;
+                        }
+                      });
+                      return { values };
+                    })()}
                   />
                 </Card.Body>
               </Card>
@@ -245,8 +259,7 @@ const HealthConditionDoctors = props => (
   <React.Fragment>
     <MultiColumnWrapper
       id="seeing_doctor"
-      handleChange={props.handleChange}
-      handleColumnRemove={props.handleColumnRemove}
+      {...props}
     >
       <MedicalTreatmentColumn {...props} />
     </MultiColumnWrapper>
@@ -326,13 +339,55 @@ const Source = props => (
         <Card.Title as="h6">（三）發病前14天內之活動史調查</Card.Title>
         <Card.Body>
           <Form.Row>
-            <RadioAndInputColumn2 id="infect" name="是否曾至中國湖北省（含武漢市）（或公告疫區）：" loc="地點" options={[{ name: '否' }, { name: '是：', input: true, start_date: true, end_date: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn2
+              id="infect"
+              name="是否曾至中國湖北省（含武漢市）（或公告疫區）："
+              loc="地點"
+              options={[
+                { name: '否' },
+                {
+                  name: '是：',
+                  input: true,
+                  start_date: true,
+                  end_date: true,
+                },
+              ]}
+              handleChange={props.handleChange}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn2 id="market" name="是否曾至野味市場：" loc="地點" options={[{ name: '否' }, { name: '是：', input: true, start_date: true, end_date: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn2
+              id="market"
+              name="是否曾至野味市場："
+              loc="地點"
+              options={[
+                { name: '否' },
+                {
+                  name: '是：',
+                  input: true,
+                  start_date: true,
+                  end_date: true,
+                },
+              ]}
+              handleChange={props.handleChange}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn2 id="hospital" name="是否曾至醫療院所：" loc="醫療院所名稱" options={[{ name: '否' }, { name: '是：', input: true, start_date: true, end_date: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn2
+              id="hospital"
+              name="是否曾至醫療院所："
+              loc="醫療院所名稱"
+              options={[
+                { name: '否' },
+                {
+                  name: '是：',
+                  input: true,
+                  start_date: true,
+                  end_date: true,
+                },
+              ]}
+              handleChange={props.handleChange}
+            />
           </Form.Row>
         </Card.Body>
       </Card.Body>
@@ -385,7 +440,7 @@ const Contactor = props => (
       <Card.Body>
         <Card.Title as="h6">（二）自個案發病日前兩天至隔離前</Card.Title>
         <div style={{ margin: '0 0 0 1.5rem' }}>
-          <Form.Row>    
+          <Form.Row>
             <Card.Title as="h6"> 是否有密切接觸者*：</Card.Title>
             <TFcheckbox1 id="is_close_contactor" name="" options={['是', '否']} handleChange={props.handleChange} />
           </Form.Row>

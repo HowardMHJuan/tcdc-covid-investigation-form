@@ -209,7 +209,7 @@ const MedicalTreatmentColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__date`}
-              value={props.dateValue}
+              value={props.values.date}
             />
           </Col>
           <Col>
@@ -217,7 +217,7 @@ const MedicalTreatmentColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__input`}
-              value={props.inputValue}
+              value={props.values.input}
             />
           </Col>
           <Col sm="auto">
@@ -226,7 +226,7 @@ const MedicalTreatmentColumn = props => (
                 type="radio"
                 label={value}
                 name={`${props.id}__radio`}
-                value={value}
+                checked={props.values.radio === value}
               />
             ))}
           </Col>

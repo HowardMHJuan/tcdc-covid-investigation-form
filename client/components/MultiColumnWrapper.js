@@ -17,6 +17,17 @@ class MultiColumnWrapper extends Component {
   }
 
   /**
+   * @param {object} props - The props changed.
+   * @param {object} state - The state to change.
+   * @return {object} - The state changed. */
+  static getDerivedStateFromProps(props, state) {
+    if (props.values) {
+      state = { rowIds: Object.keys(props.values) };
+    }
+    return state;
+  }
+
+  /**
    * Handle the click of the add button. */
   handleAdd() {
     const rowIds = this.state.rowIds.concat(Math.max(-1, ...this.state.rowIds) + 1);
@@ -43,6 +54,7 @@ class MultiColumnWrapper extends Component {
           React.cloneElement(this.props.children, {
             id: `${this.props.id}__${id}`,
             key: `${this.props.id}__${id}`,
+            values: this.props.values ? this.props.values[id] : {},
             handleRemove: this.handleRemove,
           })
         ))}

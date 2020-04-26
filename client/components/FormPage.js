@@ -306,9 +306,8 @@ class FormPage extends Component {
                 handleChange={this.handleChange}
                 handleColumnRemove={this.handleColumnRemove}
                 submit={this.submit}
-                submitting={this.state.submitting}
-                editMode={this.state.editMode}
-                address_city={this.state.address_city}
+
+                {...this.state}
               />
             </Col>
           </Row>
