@@ -97,6 +97,7 @@ class FormBody extends Component {
               <Source
                 handleChange={this.props.handleChange}
                 handleColumnRemove={this.props.handleColumnRemove}
+                states={this.props}
               />
             </Card.Body>
           </Card>
@@ -106,6 +107,7 @@ class FormBody extends Component {
               <Contactor
                 handleChange={this.props.handleChange}
                 handleColumnRemove={this.props.handleColumnRemove}
+                states={this.props}
               />
             </Card.Body>
           </Card>
@@ -115,6 +117,20 @@ class FormBody extends Component {
               <ActivityDetail
                 handleChange={this.props.handleChange}
                 handleColumnRemove={this.props.handleColumnRemove}
+                {...(() => {
+                  const values = {};
+                  Object.entries(this.props).forEach(([key, val]) => {
+                    if (/\bactivity_detail/.test(key)) {
+                      const id = key.split('__')[1];
+                      const columnName = key.split('__')[2];
+                      if (values[id] === undefined) {
+                        values[id] = {};
+                      }
+                      values[id][columnName] = val;
+                    }
+                  });
+                  return { values };
+                })()}
               />
             </Card.Body>
           </Card>
@@ -301,7 +317,21 @@ const Source = props => (
       <Card.Body>
         <Card.Title as="h6">（一）發病前14天內是否曾在國外旅遊或居住</Card.Title>
         <Form.Row>
-          <TFcheckbox1 id="is_abroad" name="" options={['是（續填以下欄位）', '否']} handleChange={props.handleChange} />
+          <TFcheckbox1
+            id="is_abroad"
+            name="" 
+            options={['是（續填以下欄位）', '否']}
+            handleChange={props.handleChange}
+            ischecked={(() => {
+              var ischecked = false;
+              Object.entries(props.states).forEach(([key, val]) => {
+                if (/\bnation_and_location/.test(key)) {
+                  ischecked = true;
+                }
+              });
+              return { ischecked };
+            })()}
+          />
         </Form.Row>
         <Card.Body>
           <Form.Row>
@@ -310,6 +340,20 @@ const Source = props => (
           <NationandLocation
             handleChange={props.handleChange}
             handleColumnRemove={props.handleColumnRemove}
+            {...(() => {
+              const values = {};
+              Object.entries(props.states).forEach(([key, val]) => {
+                if (/\bnation_and_location/.test(key)) {
+                  const id = key.split('__')[1];
+                  const columnName = key.split('__')[2];
+                  if (values[id] === undefined) {
+                    values[id] = {};
+                  }
+                  values[id][columnName] = val;
+                }
+              });
+              return { values };
+            })()}
           />
         </Card.Body>
       </Card.Body>
@@ -319,7 +363,14 @@ const Source = props => (
         <Card.Title as="h6">（二）發病前14天內接觸史調查</Card.Title>
         <Card>
           <Card.Body>
-            <RadioAndInputColumn3 id="contact_fever" name="是否曾接觸有發燒或呼吸道症狀人士：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))} handleChange={props.handleChange} />
+            <RadioAndInputColumn3
+              id="contact_fever"
+              name="是否曾接觸有發燒或呼吸道症狀人士："
+              options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]}
+              options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))}
+              handleChange={props.handleChange}
+
+            />
           </Card.Body>
         </Card>
         <Card>
@@ -426,12 +477,40 @@ const Contactor = props => (
       <Card.Body>
         <Card.Title as="h6">（一）自個案發病日前兩天至隔離前，是否曾至國內公共場所或搭乘大眾交通工具？</Card.Title>
         <Form.Row>
-          <TFcheckbox1 id="is_public_area" name="" options={['是', '否']} handleChange={props.handleChange} />
+          <TFcheckbox1
+            id="is_public_area"
+            name=""
+            options={['是', '否']}
+            handleChange={props.handleChange}
+            ischecked={(() => {
+              var ischecked = false;
+              Object.entries(props.states).forEach(([key, val]) => {
+                if (/\bpublic_area/.test(key)) {
+                  ischecked = true;
+                }
+              });
+              return { ischecked };
+            })()}
+            />
         </Form.Row>
         <Card.Body>
           <PublicArea
             handleChange={props.handleChange}
             handleColumnRemove={props.handleColumnRemove}
+            {...(() => {
+              const values = {};
+              Object.entries(props.states).forEach(([key, val]) => {
+                if (/\bpublic_area/.test(key)) {
+                  const id = key.split('__')[1];
+                  const columnName = key.split('__')[2];
+                  if (values[id] === undefined) {
+                    values[id] = {};
+                  }
+                  values[id][columnName] = val;
+                }
+              });
+              return { values };
+            })()}
           />
         </Card.Body>
       </Card.Body>
@@ -442,7 +521,20 @@ const Contactor = props => (
         <div style={{ margin: '0 0 0 1.5rem' }}>
           <Form.Row>
             <Card.Title as="h6"> 是否有密切接觸者*：</Card.Title>
-            <TFcheckbox1 id="is_close_contactor" name="" options={['是', '否']} handleChange={props.handleChange} />
+            <TFcheckbox1
+              id="is_close_contactor"
+              name="" options={['是', '否']}
+              handleChange={props.handleChange}
+              ischecked={(() => {
+                var ischecked = false;
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bpublic_area/.test(key)) {
+                    ischecked = true;
+                  }
+                });
+                return { ischecked };
+              })()}
+              />
           </Form.Row>
           <Card.Title as="h6"> *密切接觸者：</Card.Title>
           <Card.Title as="h6">（1）在無適當防護下曾有長時間（大於 15 分鐘）面對面之接觸者，或提供照護、相處、接觸病患呼吸道分泌物或體液之同住者</Card.Title>
@@ -452,6 +544,20 @@ const Contactor = props => (
           <CloseContactor
             handleChange={props.handleChange}
             handleColumnRemove={props.handleColumnRemove}
+            {...(() => {
+              const values = {};
+              Object.entries(props.states).forEach(([key, val]) => {
+                if (/\bclose_contactor/.test(key)) {
+                  const id = key.split('__')[1];
+                  const columnName = key.split('__')[2];
+                  if (values[id] === undefined) {
+                    values[id] = {};
+                  }
+                  values[id][columnName] = val;
+                }
+              });
+              return { values };
+            })()}
           />
         </Card.Body>
       </Card.Body>
@@ -463,8 +569,7 @@ const NationandLocation = props => (
   <React.Fragment>
     <MultiColumnWrapper
       id="nation_and_location"
-      handleChange={props.handleChange}
-      handleColumnRemove={props.handleColumnRemove}
+      {...props}
     >
       <NationColumn {...props} />
     </MultiColumnWrapper>
@@ -475,8 +580,7 @@ const PublicArea = props => (
   <React.Fragment>
     <MultiColumnWrapper
       id="public_area"
-      handleChange={props.handleChange}
-      handleColumnRemove={props.handleColumnRemove}
+      {...props}
     >
       <PublicColumn {...props} />
     </MultiColumnWrapper>
@@ -487,8 +591,7 @@ const CloseContactor = props => (
   <React.Fragment>
     <MultiColumnWrapper
       id="close_contactor"
-      handleChange={props.handleChange}
-      handleColumnRemove={props.handleColumnRemove}
+      {...props}
     >
       <CloseContactorColumn {...props} />
     </MultiColumnWrapper>
@@ -499,8 +602,7 @@ const ActivityDetail = props => (
   <React.Fragment>
     <MultiColumnWrapper
       id="activity_detail"
-      handleChange={props.handleChange}
-      handleColumnRemove={props.handleColumnRemove}
+      {...props}
     >
       <ActivityColumn {...props} />
     </MultiColumnWrapper>
