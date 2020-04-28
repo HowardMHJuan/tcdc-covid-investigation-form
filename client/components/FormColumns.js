@@ -9,6 +9,7 @@ const StringColumn = props => (
       type="text"
       name={props.id}
       onChange={props.handleChange}
+      value={props.value}
     />
   </Form.Group>
 );
@@ -20,6 +21,7 @@ const DateColumn = props => (
       type="date"
       name={props.id}
       onChange={props.handleChange}
+      value={props.value}
     />
   </Form.Group>
 );
@@ -27,7 +29,7 @@ const DateColumn = props => (
 const SelectColumn = props => (
   <Form.Group as={Col} controlId={props.id}>
     <Form.Label>{props.name}</Form.Label>
-    <Form.Control as="select" name={props.id} onChange={props.handleChange}>
+    <Form.Control as="select" name={props.id} onChange={props.handleChange} value={props.value}>
       <option>{null}</option>
       {props.options.map(option => <option>{option}</option>)}
     </Form.Control>
@@ -46,6 +48,7 @@ const RadioAndInputColumn = props => (
               label={option.name}
               name={`${props.id}__radio`}
               value={option.name}
+              checked={props.value.radio === option.name}
             />
           </Col>
           {option.input === true ?
@@ -53,6 +56,8 @@ const RadioAndInputColumn = props => (
               <Form.Control
                 type="text"
                 name={`${props.id}__input__${option.name}`}
+                {...console.log(props.value)}
+                value={props.value.input ? props.value.input[option.name] : undefined}
               />
             </Col>
           :
@@ -171,14 +176,14 @@ const LocationColumn = props => (
     <Row style={{ marginBottom: '0.3rem' }}>
       <Col sm="4">
         <div>縣市：</div>
-        <Form.Control as="select" name={`${props.id}_city`} onChange={props.handleChange}>
+        <Form.Control as="select" name={`${props.id}_city`} onChange={props.handleChange} value={props.value[`${props.id}_city`]}>
           <option key="null" />
           {Object.keys(AreaNames).map(option => <option key={option}>{option}</option>)}
         </Form.Control>
       </Col>
       <Col sm="5">
         <div>鄉鎮市區：</div>
-        <Form.Control as="select" name={`${props.id}_area`} onChange={props.handleChange}>
+        <Form.Control as="select" name={`${props.id}_area`} onChange={props.handleChange} value={props.value[`${props.id}_area`]}>
           <option key="null" />
           {AreaNames[props[`${props.id}_city`]] === undefined ?
             null
@@ -192,6 +197,7 @@ const LocationColumn = props => (
       type="text"
       name={props.id}
       onChange={props.handleChange}
+      value={props.value[props.id]}
     />
   </Form.Group>
 );
@@ -227,7 +233,7 @@ const MedicalTreatmentColumn = props => (
                 label={value}
                 name={`${props.id}__radio`}
                 value={value}
-                defaultChecked={props.values.radio === value}
+                checked={props.values.radio === value}
               />
             ))}
           </Col>

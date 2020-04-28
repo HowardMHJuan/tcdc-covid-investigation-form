@@ -33,9 +33,9 @@ class FormBody extends Component {
             <Card.Body>
               <Card.Title as="h2">嚴重特殊傳染性肺炎疫調單</Card.Title>
               <Form.Row>
-                <DateColumn id="inv_date" name="調查日期（西元年）" handleChange={this.props.handleChange} />
-                <StringColumn id="inv_person" name="調查人" handleChange={this.props.handleChange} />
-                <StringColumn id="inv_institution" name="調查單位" handleChange={this.props.handleChange} />
+                <DateColumn id="inv_date" name="調查日期（西元年）" handleChange={this.props.handleChange} value={this.props.inv_date} />
+                <StringColumn id="inv_person" name="調查人" handleChange={this.props.handleChange} value={this.props.inv_person} />
+                <StringColumn id="inv_institution" name="調查單位" handleChange={this.props.handleChange} value={this.props.inv_institution} />
               </Form.Row>
             </Card.Body>
           </Card>
@@ -43,8 +43,7 @@ class FormBody extends Component {
             <Card.Body>
               <Card.Title>一、基本資料</Card.Title>
               <Information
-                handleChange={this.props.handleChange}
-                address_city={this.props.address_city}
+                {...this.props}
               />
             </Card.Body>
           </Card>
@@ -170,20 +169,37 @@ class FormBody extends Component {
 const Information = props => (
   <React.Fragment>
     <Form.Row>
-      <StringColumn id="id" name="法傳編號" handleChange={props.handleChange} />
-      <DateColumn id="report_date" name="通報日期" handleChange={props.handleChange} />
+      <StringColumn id="id" name="法傳編號" handleChange={props.handleChange} value={props.id} />
+      <DateColumn id="report_date" name="通報日期" handleChange={props.handleChange} value={props.report_date} />
     </Form.Row>
     <Form.Row>
-      <StringColumn id="name" name="姓名" handleChange={props.handleChange} />
-      <SelectColumn id="gender" name="生理性別" options={['男', '女']} handleChange={props.handleChange} />
+      <StringColumn id="name" name="姓名" handleChange={props.handleChange} value={props.name} />
+      <SelectColumn id="gender" name="生理性別" options={['男', '女']} handleChange={props.handleChange} value={props.gender} />
     </Form.Row>
     <Form.Row>
-      <DateColumn id="birth_date" name="出生日期" handleChange={props.handleChange} />
+      <DateColumn id="birth_date" name="出生日期" handleChange={props.handleChange} value={props.birth_date} />
       <RadioAndInputColumn
         id="nationality"
         name="國籍"
         options={[{ name: '本國籍' }, { name: '其他，國籍：', input: true }]}
         handleChange={props.handleChange}
+        {...(() => {
+          const value = {};
+          Object.entries(props).forEach(([key, val]) => {
+            if (/\bnationality/.test(key)) {
+              if (val !== undefined) {
+                const type = key.split('__')[1];
+                if (type === 'input') {
+                  const columnName = key.split('__')[2];
+                  value[type][columnName] = val;
+                } else {
+                  value[type] = val;
+                }
+              }
+            }
+          });
+          return { value };
+        })()}
       />
     </Form.Row>
     <Form.Row>
@@ -192,11 +208,22 @@ const Information = props => (
         name="居住地"
         address_city={props.address_city}
         handleChange={props.handleChange}
+        {...(() => {
+          const value = {};
+          Object.entries(props).forEach(([key, val]) => {
+            if (/\baddress/.test(key)) {
+              if (val !== undefined) {
+                value[key] = val;
+              }
+            }
+          });
+          return { value };
+        })()}
       />
     </Form.Row>
     <Form.Row>
-      <StringColumn id="contact" name="聯絡方式" handleChange={props.handleChange} />
-      <StringColumn id="occupation" name="職業" handleChange={props.handleChange} />
+      <StringColumn id="contact" name="聯絡方式" handleChange={props.handleChange} value={props.contact} />
+      <StringColumn id="occupation" name="職業" handleChange={props.handleChange} value={props.occupation} />
     </Form.Row>
     <Form.Row>
       <RadioAndInputColumn
@@ -204,8 +231,25 @@ const Information = props => (
         name="是否為醫療機構人員"
         options={[{ name: '否' }, { name: '是，職稱：', input: true }]}
         handleChange={props.handleChange}
+        {...(() => {
+          const value = {};
+          Object.entries(props).forEach(([key, val]) => {
+            if (/\bmed_title/.test(key)) {
+              if (val !== undefined) {
+                const type = key.split('__')[1];
+                if (type === 'input') {
+                  const columnName = key.split('__')[2];
+                  value[type][columnName] = val;
+                } else {
+                  value[type] = val;
+                }
+              }
+            }
+          });
+          return { value };
+        })()}
       />
-      <DateColumn id="onset" name="發病日期（無症狀者填第一次採檢日期）" handleChange={props.handleChange} />
+      <DateColumn id="onset" name="發病日期（無症狀者填第一次採檢日期）" handleChange={props.handleChange} value={props.onset} />
     </Form.Row>
     <Form.Row>
       <RadioAndInputColumn
@@ -213,12 +257,46 @@ const Information = props => (
         name="是否懷孕（女性）"
         options={[{ name: '否' }, { name: '是，懷孕幾週：', input: true }]}
         handleChange={props.handleChange}
+        {...(() => {
+          const value = {};
+          Object.entries(props).forEach(([key, val]) => {
+            if (/\bpregnant_week/.test(key)) {
+              if (val !== undefined) {
+                const type = key.split('__')[1];
+                if (type === 'input') {
+                  const columnName = key.split('__')[2];
+                  value[type][columnName] = val;
+                } else {
+                  value[type] = val;
+                }
+              }
+            }
+          });
+          return { value };
+        })()}
       />
       <RadioAndInputColumn
         id="married"
         name="婚姻狀況"
         options={[{ name: '已婚' }, { name: '未婚' }]}
         handleChange={props.handleChange}
+        {...(() => {
+          const value = {};
+          Object.entries(props).forEach(([key, val]) => {
+            if (/\bmarried/.test(key)) {
+              if (val !== undefined) {
+                const type = key.split('__')[1];
+                if (type === 'input') {
+                  const columnName = key.split('__')[2];
+                  value[type][columnName] = val;
+                } else {
+                  value[type] = val;
+                }
+              }
+            }
+          });
+          return { value };
+        })()}
       />
     </Form.Row>
   </React.Fragment>
@@ -450,22 +528,172 @@ const Source = props => (
         <Card.Title as="h6">（四）發病前14天內之動物接觸史調查</Card.Title>
         <Card.Body>
           <Form.Row>
-            <RadioAndInputColumn id="pet" name="是否飼養任何動物(寵物)：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn
+              id="pet"
+              name="是否飼養任何動物(寵物)："
+              options={[{ name: '否' }, { name: '是：', input: true }]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bpet/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn id="bird" name="是否曾接觸禽鳥、活禽市場或養禽場(雞鴨等禽類) ：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn
+              id="bird"
+              name="是否曾接觸禽鳥、活禽市場或養禽場(雞鴨等禽類) ："
+              options={[{ name: '否' }, { name: '是：', input: true }]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bbird/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn id="farm" name="是否曾接觸畜牧場(豬、牛、羊及鹿等畜類) ：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn
+              id="farm"
+              name="是否曾接觸畜牧場(豬、牛、羊及鹿等畜類) ："
+              options={[{ name: '否' }, { name: '是：', input: true }]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bfarm/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn id="shamble" name="是否曾接觸屠宰場：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn
+              id="shamble"
+              name="是否曾接觸屠宰場："
+              options={[{ name: '否' }, { name: '是：', input: true }]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bshamble/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn id="wild" name="是否曾接觸或食用野生動物：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn
+              id="wild"
+              name="是否曾接觸或食用野生動物："
+              options={[{ name: '否' }, { name: '是：', input: true }]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bwild/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn id="other" name="是否有其他動物接觸史：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn
+              id="other"
+              name="是否有其他動物接觸史："
+              options={[{ name: '否' }, { name: '是：', input: true }]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bother/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
         </Card.Body>
       </Card.Body>
