@@ -56,7 +56,6 @@ const RadioAndInputColumn = props => (
               <Form.Control
                 type="text"
                 name={`${props.id}__input__${option.name}`}
-                {...console.log(props.value)}
                 value={props.value.input ? props.value.input[option.name] : undefined}
               />
             </Col>
@@ -82,6 +81,7 @@ const RadioAndDateColumn = props => (
                 label={option.name}
                 name={`${props.id}__radio__${props.name}`}
                 value={option.name}
+                checked={props.value.radio === option.name}
               />
             </Col>
             {option.date === true ?
@@ -89,6 +89,7 @@ const RadioAndDateColumn = props => (
                 <Form.Control
                   type="date"
                   name={`${props.id}__date__${props.name}`}
+                  value={props.value.date}
                 />
               </Col>
             :
@@ -114,7 +115,7 @@ const OtherSymptomsColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__input`}
-              value={props.dateValue}
+              value={props.values.input}
             />
           </Col>
           <Col>
@@ -122,7 +123,7 @@ const OtherSymptomsColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__date`}
-              value={props.inputValue}
+              value={props.values.date}
             />
           </Col>
         </Row>
@@ -142,6 +143,7 @@ const CheckboxInputAndDateColumn = props => (
               label={option.name}
               name={`${props.id}__checkbox`}
               value={option.name}
+              checked={props.values.checkbox ? props.values.checkbox.includes(option.name) : undefined}
             />
           </Col>
           {option.input === true ?
@@ -149,6 +151,7 @@ const CheckboxInputAndDateColumn = props => (
               <Form.Control
                 type="text"
                 name={`${props.id}__input__${option.name}`}
+                value={props.values.input ? props.values.input[option.name] : undefined}
               />
             </Col>
           :
@@ -159,6 +162,7 @@ const CheckboxInputAndDateColumn = props => (
               <Form.Control
                 type="date"
                 name={`${props.id}__date__${option.name}`}
+                value={props.values.date ? props.values.date[option.name] : undefined}
               />
             </Col>
           :

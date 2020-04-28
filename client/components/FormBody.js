@@ -54,8 +54,7 @@ class FormBody extends Component {
                 <Card.Body>
                   <Card.Title as="h6">（一）症狀（初始症狀或疾病過程中曾出現）（請註明開始日期）</Card.Title>
                   <HealthConditionSymptoms
-                    handleChange={this.props.handleChange}
-                    handleColumnRemove={this.props.handleColumnRemove}
+                    {...this.props}
                   />
                 </Card.Body>
               </Card>
@@ -87,7 +86,29 @@ class FormBody extends Component {
               <Card>
                 <Card.Body>
                   <Card.Title as="h6">（三）慢性疾病</Card.Title>
-                  <HealthConditionChronicDisease handleChange={this.props.handleChange} />
+                  <HealthConditionChronicDisease
+                    handleChange={this.props.handleChange}
+                    {...(() => {
+                      const values = {};
+                      Object.entries(this.props).forEach(([key, val]) => {
+                        if (/\bchronic_disease/.test(key)) {
+                          if (val !== undefined) {
+                            const type = key.split('__')[1];
+                            if (type === 'input' || type === 'date') {
+                              const columnName = key.split('__')[2];
+                              if (values[type] === undefined) {
+                                values[type] = {};
+                              }
+                              values[type][columnName] = val;
+                            } else {
+                              values[type] = val;
+                            }
+                          }
+                        }
+                      });
+                      return { values };
+                    })()}
+                  />
                 </Card.Body>
               </Card>
             </Card.Body>
@@ -191,6 +212,9 @@ const Information = props => (
                 const type = key.split('__')[1];
                 if (type === 'input') {
                   const columnName = key.split('__')[2];
+                  if (value[type] === undefined) {
+                    value[type] = {};
+                  }
                   value[type][columnName] = val;
                 } else {
                   value[type] = val;
@@ -239,6 +263,9 @@ const Information = props => (
                 const type = key.split('__')[1];
                 if (type === 'input') {
                   const columnName = key.split('__')[2];
+                  if (value[type] === undefined) {
+                    value[type] = {};
+                  }
                   value[type][columnName] = val;
                 } else {
                   value[type] = val;
@@ -265,6 +292,9 @@ const Information = props => (
                 const type = key.split('__')[1];
                 if (type === 'input') {
                   const columnName = key.split('__')[2];
+                  if (value[type] === undefined) {
+                    value[type] = {};
+                  }
                   value[type][columnName] = val;
                 } else {
                   value[type] = val;
@@ -288,6 +318,9 @@ const Information = props => (
                 const type = key.split('__')[1];
                 if (type === 'input') {
                   const columnName = key.split('__')[2];
+                  if (value[type] === undefined) {
+                    value[type] = {};
+                  }
                   value[type][columnName] = val;
                 } else {
                   value[type] = val;
@@ -308,6 +341,18 @@ const HealthConditionSymptoms = props => (
       id="no_symptom"
       options={['無症狀（以下免填，跳至（二））'].map(name => ({ name }))}
       handleChange={props.handleChange}
+      {...(() => {
+        const values = {};
+        Object.entries(props).forEach(([key, val]) => {
+          if (/\bno_symptom/.test(key)) {
+            if (val !== undefined) {
+              const type = key.split('__')[1];
+              values[type] = val;
+            }
+          }
+        });
+        return { values };
+      })()}
     />
     {[
       '發燒（≥38℃）',
@@ -339,12 +384,39 @@ const HealthConditionSymptoms = props => (
         name={name}
         options={[{ name: '否' }, { name: '是', date: true }]}
         handleChange={props.handleChange}
+        {...(() => {
+          const value = {};
+          Object.entries(props).forEach(([key, val]) => {
+            if (/\bsymptoms/.test(key)) {
+              if (val !== undefined) {
+                const type = key.split('__')[1];
+                const columnName = key.split('__')[2];
+                if (columnName === name) {
+                  value[type] = val;
+                }
+              }
+            }
+          });
+          return { value };
+        })()}
       />
     ))}
     <MultiColumnWrapper
       id="symptoms_other"
       handleChange={props.handleChange}
       handleColumnRemove={props.handleColumnRemove}
+      {...(() => {
+        const values = {};
+        Object.entries(props).forEach(([key, val]) => {
+          if (/\bsymptoms_other/.test(key)) {
+            if (val !== undefined) {
+              const type = key.split('__')[1];
+              values[type] = val;
+            }
+          }
+        });
+        return { values };
+      })()}
     >
       <OtherSymptomsColumn {...props} />
     </MultiColumnWrapper>
@@ -386,7 +458,7 @@ const HealthConditionChronicDisease = props => (
         '免疫低下狀態，說明：',
         '其他，說明：',
       ].map(name => ({ name, input: true })))}
-      handleChange={props.handleChange}
+      {...props}
     />
   </React.Fragment>
 );

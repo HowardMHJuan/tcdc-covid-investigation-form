@@ -19,7 +19,6 @@ class MultiColumnWrapper extends Component {
    * @param {object} state - The state to change.
    * @return {object} - The state changed. */
   static getDerivedStateFromProps(props, state) {
-    console.log('d', state)
     if (props.values) {
       state.rowIds = Object.keys(props.values);
     } else {
@@ -34,7 +33,6 @@ class MultiColumnWrapper extends Component {
    * Handle the click of the add button. */
   handleAdd() {
     const newId = String(Math.max(-1, ...this.state.rowIds) + 1);
-    console.log(this.state, newId)
     const newIds = [...this.state.newIds, newId];
     this.setState({ newIds });
   }
