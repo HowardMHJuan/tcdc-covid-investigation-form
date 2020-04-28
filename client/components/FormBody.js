@@ -894,7 +894,7 @@ const Contactor = props => (
           <TFcheckbox1
             id="is_public_area"
             name=""
-            options={['是', '否']}
+            options={['是（請自行增列）', '否']}
             handleChange={props.handleChange}
             ischecked={(() => {
               var ischecked = false;
@@ -939,7 +939,7 @@ const Contactor = props => (
             <Card.Title as="h6"> 是否有密切接觸者*：</Card.Title>
             <TFcheckbox1
               id="is_close_contactor"
-              name="" options={['是', '否']}
+              name="" options={['是（請自行增列）', '否']}
               handleChange={props.handleChange}
               ischecked={(() => {
                 var ischecked = false;
