@@ -241,8 +241,8 @@ const TFcheckbox1 = props => (
   <Form.Group as={Col} controlId={props.id}>
     <Form.Label>{props.name}</Form.Label>
     &nbsp; &nbsp; &nbsp;
-    <Form.Check inline label={props.options[0]} type="checkbox" id="inline-checkbox-1" onChange={props.handleChange} />
-    <Form.Check inline label={props.options[1]} type="checkbox" id="inline-checkbox-2" onChange={props.handleChange} />
+    <Form.Check inline label={props.options[0]} type="checkbox" id="inline-checkbox-1" onChange={props.handleChange} defaultChecked={props.ischecked}/>
+    <Form.Check inline label={props.options[1]} type="checkbox" id="inline-checkbox-2" onChange={props.handleChange} defaultChecked={!props.ischecked}/>
   </Form.Group>
 );
 
@@ -397,7 +397,7 @@ const NationColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__nation`}
-              value={props.inputValue}
+              value={props.values.nation}
             />
           </Col>
           <Col>
@@ -405,7 +405,7 @@ const NationColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__type`}
-              value={props.inputValue}
+              value={props.values.type}
             />
           </Col>
         </Row>
@@ -415,7 +415,7 @@ const NationColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__start_date`}
-              value={props.dateValue}
+              value={props.values.start_date}
             />
           </Col>
           <Col>
@@ -423,7 +423,7 @@ const NationColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__end_date`}
-              value={props.dateValue}
+              value={props.values.end_date}
             />
           </Col>
         </Row>
@@ -433,7 +433,7 @@ const NationColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__companion_num`}
-              value={props.inputValue}
+              value={props.values.companion_num}
             />
           </Col>
           <Col>
@@ -441,7 +441,7 @@ const NationColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__companion_symptoms`}
-              value={props.inputValue}
+              value={props.values.companion_symptoms}
             />
           </Col>
         </Row>
@@ -451,7 +451,7 @@ const NationColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__transport_and_flight_code`}
-              value={props.inputValue}
+              value={props.values.transport_and_flight_code}
             />
           </Col>
         </Row>
@@ -473,7 +473,7 @@ const PublicColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__start_date`}
-              value={props.dateValue}
+              value={props.values.start_date}
             />
           </Col>
           <Col>
@@ -481,7 +481,7 @@ const PublicColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__end_date`}
-              value={props.dateValue}
+              value={props.values.end_date}
             />
           </Col>
         </Row>
@@ -491,7 +491,7 @@ const PublicColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__city`}
-              value={props.inputValue}
+              value={props.values.city}
             />
           </Col>
           <Col>
@@ -499,7 +499,7 @@ const PublicColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__location`}
-              value={props.inputValue}
+              value={props.values.location}
             />
           </Col>
         </Row>
@@ -509,7 +509,7 @@ const PublicColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__transportation`}
-              value={props.inputValue}
+              value={props.values.transportation}
             />
           </Col>
         </Row>
@@ -531,7 +531,7 @@ const CloseContactorColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__type`}
-              value={props.inputValue}
+              value={props.values.type}
             />
           </Col>
           <Col>
@@ -539,7 +539,7 @@ const CloseContactorColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__number`}
-              value={props.inputValue}
+              value={props.values.number}
             />
           </Col>
         </Row>
@@ -549,7 +549,7 @@ const CloseContactorColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__symptom_count`}
-              value={props.inputValue}
+              value={props.values.symptom_count}
             />
           </Col>
           <Col>
@@ -557,7 +557,7 @@ const CloseContactorColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__fever_count`}
-              value={props.inputValue}
+              value={props.values.fever_count}
             />
           </Col>
         </Row>
@@ -567,7 +567,7 @@ const CloseContactorColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__last_date`}
-              value={props.dateValue}
+              value={props.values.last_date}
             />
           </Col>
           <Col>
@@ -575,7 +575,7 @@ const CloseContactorColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__note`}
-              value={props.inputValue}
+              value={props.values.note}
             />
           </Col>
         </Row>
@@ -597,7 +597,7 @@ const ActivityColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__date`}
-              value={props.inputValue}
+              value={props.values.date}
             />
           </Col>
           <Col>
@@ -605,7 +605,7 @@ const ActivityColumn = props => (
             <Form.Control
               type="time"
               name={`${props.id}__start_time`}
-              value={props.inputValue}
+              value={props.values.start_time}
             />
           </Col>
         </Row>
@@ -615,7 +615,7 @@ const ActivityColumn = props => (
             <Form.Control
               type="time"
               name={`${props.id}__end_time`}
-              value={props.inputValue}
+              value={props.values.end_time}
             />
           </Col>
           <Col>
@@ -623,7 +623,7 @@ const ActivityColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__description`}
-              value={props.inputValue}
+              value={props.values.description}
             />
           </Col>
         </Row>
