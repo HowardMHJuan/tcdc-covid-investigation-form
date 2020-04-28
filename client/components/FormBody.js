@@ -72,10 +72,12 @@ class FormBody extends Component {
                         if (/\bseeing_doctor/.test(key)) {
                           const id = key.split('__')[1];
                           const columnName = key.split('__')[2];
-                          if (values[id] === undefined) {
-                            values[id] = {};
+                          if (val !== undefined) {
+                            if (values[id] === undefined) {
+                              values[id] = {};
+                            }
+                            values[id][columnName] = val;
                           }
-                          values[id][columnName] = val;
                         }
                       });
                       return { values };

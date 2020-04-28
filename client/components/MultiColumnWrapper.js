@@ -9,9 +9,7 @@ class MultiColumnWrapper extends Component {
    * @param {object} props - The props used to construct. */
   constructor(props) {
     super(props);
-    this.state = {
-      rowIds: [0],
-    };
+    this.state = {};
     this.handleAdd = this.handleAdd.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
   }
@@ -21,8 +19,10 @@ class MultiColumnWrapper extends Component {
    * @param {object} state - The state to change.
    * @return {object} - The state changed. */
   static getDerivedStateFromProps(props, state) {
-    if (props.values) {
+    if (props.values && Object.keys(props.values).length > 0) {
       state = { rowIds: Object.keys(props.values) };
+    } else {
+      state = { rowIds: [0] };
     }
     return state;
   }
@@ -54,7 +54,7 @@ class MultiColumnWrapper extends Component {
           React.cloneElement(this.props.children, {
             id: `${this.props.id}__${id}`,
             key: `${this.props.id}__${id}`,
-            values: this.props.values ? this.props.values[id] : {},
+            values: this.props.values && this.props.values[id] ? this.props.values[id] : {},
             handleRemove: this.handleRemove,
           })
         ))}

@@ -226,8 +226,8 @@ const MedicalTreatmentColumn = props => (
                 type="radio"
                 label={value}
                 name={`${props.id}__radio`}
-                defaultChecked={props.values.radio === value}
                 value={value}
+                defaultChecked={props.values.radio === value}
               />
             ))}
           </Col>
