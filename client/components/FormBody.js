@@ -124,10 +124,12 @@ class FormBody extends Component {
                     if (/\bactivity_detail/.test(key)) {
                       const id = key.split('__')[1];
                       const columnName = key.split('__')[2];
-                      if (values[id] === undefined) {
-                        values[id] = {};
+                      if (val !== undefined) {
+                        if (values[id] === undefined) {
+                          values[id] = {};
+                        }
+                        values[id][columnName] = val;
                       }
-                      values[id][columnName] = val;
                     }
                   });
                   return { values };
@@ -426,10 +428,12 @@ const Source = props => (
                 if (/\bnation_and_location/.test(key)) {
                   const id = key.split('__')[1];
                   const columnName = key.split('__')[2];
-                  if (values[id] === undefined) {
-                    values[id] = {};
+                  if (val !== undefined) {
+                    if (values[id] === undefined) {
+                      values[id] = {};
+                    }
+                    values[id][columnName] = val;
                   }
-                  values[id][columnName] = val;
                 }
               });
               return { values };
@@ -449,18 +453,138 @@ const Source = props => (
               options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]}
               options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))}
               handleChange={props.handleChange}
-
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bcontact_fever/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'start_date' || type === 'end_date') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else if (type === 'type') {
+                        const columnName = key.split('__')[2];
+                        if (columnName === 'input') {
+                          const columnName2 = key.split('__')[3];
+                          if (value[columnName] === undefined) {
+                            value[columnName] = {};
+                          }
+                          value[columnName][columnName2] = val;
+                        }
+                        else {
+                          // columnName = 'checkbox'
+                          if (value[columnName] === undefined) {
+                            value[columnName] = {};
+                          }
+                          value[columnName] = val;
+                        }
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
             />
           </Card.Body>
         </Card>
         <Card>
           <Card.Body>
-            <RadioAndInputColumn3 id="contact_patient" name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))} handleChange={props.handleChange} />
+            <RadioAndInputColumn3
+              id="contact_patient"
+              name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例："
+              options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]}
+              options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bcontact_patient/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'start_date' || type === 'end_date') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else if (type === 'type') {
+                        const columnName = key.split('__')[2];
+                        if (columnName === 'input') {
+                          const columnName2 = key.split('__')[3];
+                          if (value[columnName] === undefined) {
+                            value[columnName] = {};
+                          }
+                          value[columnName][columnName2] = val;
+                        }
+                        else {
+                          // columnName = 'checkbox'
+                          if (value[columnName] === undefined) {
+                            value[columnName] = {};
+                          }
+                          value[columnName] = val;
+                        }
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Card.Body>
         </Card>
         <Card>
           <Card.Body>
-            <RadioAndInputColumn3 id="contact_secretion" name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例之呼吸道分泌物、體液（包含實驗室檢體）：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))} handleChange={props.handleChange} />
+            <RadioAndInputColumn3
+              id="contact_secretion"
+              name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例之呼吸道分泌物、體液（包含實驗室檢體）："
+              options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]}
+              options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bcontact_secretion/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'start_date' || type === 'end_date') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else if (type === 'type') {
+                        const columnName = key.split('__')[2];
+                        if (columnName === 'input') {
+                          const columnName2 = key.split('__')[3];
+                          if (value[columnName] === undefined) {
+                            value[columnName] = {};
+                          }
+                          value[columnName][columnName2] = val;
+                        }
+                        else {
+                          // columnName = 'checkbox'
+                          if (value[columnName] === undefined) {
+                            value[columnName] = {};
+                          }
+                          value[columnName] = val;
+                        }
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                console.log(value);
+                return { value };
+              })()}
+            />
           </Card.Body>
         </Card>
       </Card.Body>
@@ -484,6 +608,26 @@ const Source = props => (
                 },
               ]}
               handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\binfect/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input' || type === 'start_date' || type === 'end_date') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
             />
           </Form.Row>
           <Form.Row>
@@ -501,6 +645,26 @@ const Source = props => (
                 },
               ]}
               handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bmarket/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input' || type === 'start_date' || type === 'end_date') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
             />
           </Form.Row>
           <Form.Row>
@@ -518,6 +682,26 @@ const Source = props => (
                 },
               ]}
               handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bhospital/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input' || type === 'start_date' || type === 'end_date') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
             />
           </Form.Row>
         </Card.Body>
@@ -733,10 +917,12 @@ const Contactor = props => (
                 if (/\bpublic_area/.test(key)) {
                   const id = key.split('__')[1];
                   const columnName = key.split('__')[2];
-                  if (values[id] === undefined) {
-                    values[id] = {};
+                  if (val !== undefined) {
+                    if (values[id] === undefined) {
+                      values[id] = {};
+                    }
+                    values[id][columnName] = val;
                   }
-                  values[id][columnName] = val;
                 }
               });
               return { values };
@@ -780,10 +966,12 @@ const Contactor = props => (
                 if (/\bclose_contactor/.test(key)) {
                   const id = key.split('__')[1];
                   const columnName = key.split('__')[2];
-                  if (values[id] === undefined) {
-                    values[id] = {};
+                  if (val !== undefined) {
+                    if (values[id] === undefined) {
+                      values[id] = {};
+                    }
+                    values[id][columnName] = val;
                   }
-                  values[id][columnName] = val;
                 }
               });
               return { values };
