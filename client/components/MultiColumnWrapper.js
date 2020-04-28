@@ -9,7 +9,7 @@ class MultiColumnWrapper extends Component {
    * @param {object} props - The props used to construct. */
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { rowIds: [], newIds: [] };
     this.handleAdd = this.handleAdd.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
   }
@@ -19,28 +19,34 @@ class MultiColumnWrapper extends Component {
    * @param {object} state - The state to change.
    * @return {object} - The state changed. */
   static getDerivedStateFromProps(props, state) {
-    if (props.values && Object.keys(props.values).length > 0) {
-      state = { rowIds: Object.keys(props.values) };
+    console.log('d', state)
+    if (props.values) {
+      state.rowIds = Object.keys(props.values);
     } else {
-      state = { rowIds: [0] };
+      state.rowIds = [0];
     }
+    state.rowIds = state.rowIds.concat(state.newIds);
+    state.rowIds = [...new Set(state.rowIds)];
     return state;
   }
 
   /**
    * Handle the click of the add button. */
   handleAdd() {
-    const rowIds = this.state.rowIds.concat(Math.max(-1, ...this.state.rowIds) + 1);
-    this.setState({ rowIds });
+    const newId = String(Math.max(-1, ...this.state.rowIds) + 1);
+    console.log(this.state, newId)
+    const newIds = [...this.state.newIds, newId];
+    this.setState({ newIds });
   }
 
   /**
    * Handle the click of the remove button.
    * @param {object} event - The triggering event. */
   handleRemove(event) {
-    const idToRemove = Number(event.target.id.split('__')[1]);
+    const idToRemove = event.target.id.split('__')[1];
     const rowIds = this.state.rowIds.filter(id => id !== idToRemove);
-    this.setState({ rowIds });
+    const newIds = this.state.newIds.filter(id => id !== idToRemove);
+    this.setState({ rowIds, newIds });
     this.props.handleColumnRemove(event.target.id);
   }
 
