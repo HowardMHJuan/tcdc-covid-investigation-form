@@ -48,9 +48,9 @@ const getFeverValue = s => (
   s.contact_fever__type__checkbox === undefined || s.contact_fever__radio === undefined || s.contact_fever__radio === '否' ? [] : s.contact_fever__type__checkbox.map((name) => {
     const tempName = '是（續填以下欄位，可複選）';
     if (name.slice(0, 2) === '其他') {
-      return { name: `其他：${s[`contact_fever__type__input__${name}`]}`, start_date: `${s[`contact_fever__date1__${tempName}`]}`, end_date: `${s[`contact_fever__date2__${tempName}`]}` };
+      return { name: `其他：${s[`contact_fever__type__input__${name}`]}`, start_date: `${s[`contact_fever__start_date__${tempName}`]}`, end_date: `${s[`contact_fever__end_date__${tempName}`]}` };
     } else {
-      return { name, start_date: s[`contact_fever__date1__${tempName}`], end_date: s[`contact_fever__date2__${tempName}`] };
+      return { name, start_date: s[`contact_fever__start_date__${tempName}`], end_date: s[`contact_fever__end_date__${tempName}`] };
     }
   })
 );
@@ -59,9 +59,9 @@ const getPatientValue = s => (
   s.contact_patient__type__checkbox === undefined || s.contact_patient__radio === undefined || s.contact_patient__radio === '否' ? [] : s.contact_patient__type__checkbox.map((name) => {
     const tempName = '是（續填以下欄位，可複選）';
     if (name.slice(0, 2) === '其他') {
-      return { name: `其他：${s[`contact_patient__type__input__${name}`]}`, start_date: `${s[`contact_patient__date1__${tempName}`]}`, end_date: `${s[`contact_patient__date2__${tempName}`]}` };
+      return { name: `其他：${s[`contact_patient__type__input__${name}`]}`, start_date: `${s[`contact_patient__start_date__${tempName}`]}`, end_date: `${s[`contact_patient__end_date__${tempName}`]}` };
     } else {
-      return { name, start_date: s[`contact_patient__date1__${tempName}`], end_date: s[`contact_patient__date2__${tempName}`] };
+      return { name, start_date: s[`contact_patient__start_date__${tempName}`], end_date: s[`contact_patient__end_date__${tempName}`] };
     }
   })
 );
@@ -70,9 +70,9 @@ const getSecretionValue = s => (
   s.contact_secretion__type__checkbox === undefined || s.contact_secretion__radio === undefined || s.contact_secretion__radio === '否' ? [] : s.contact_secretion__type__checkbox.map((name) => {
     const tempName = '是（續填以下欄位，可複選）';
     if (name.slice(0, 2) === '其他') {
-      return { name: `其他：${s[`contact_secretion__type__input__${name}`]}`, start_date: `${s[`contact_secretion__date1__${tempName}`]}`, end_date: `${s[`contact_secretion__date2__${tempName}`]}` };
+      return { name: `其他：${s[`contact_secretion__type__input__${name}`]}`, start_date: `${s[`contact_secretion__start_date__${tempName}`]}`, end_date: `${s[`contact_secretion__end_date__${tempName}`]}` };
     } else {
-      return { name, start_date: s[`contact_secretion__date1__${tempName}`], end_date: s[`contact_secretion__date2__${tempName}`] };
+      return { name, start_date: s[`contact_secretion__start_date__${tempName}`], end_date: s[`contact_secretion__end_date__${tempName}`] };
     }
   })
 );

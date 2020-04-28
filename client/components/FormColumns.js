@@ -281,6 +281,7 @@ const RadioAndInputColumn2 = props => (
                 label={option.name}
                 name={`${props.id}__radio`}
                 value={option.name}
+                checked={props.value.radio === option.name}
               />
             </Col>
           </Row>
@@ -291,6 +292,7 @@ const RadioAndInputColumn2 = props => (
                 <Form.Control
                   type="text"
                   name={`${props.id}__input__${option.name}`}
+                  value={props.value.input ? props.value.input[option.name] : undefined}
                 />
               </Col>
             :
@@ -302,6 +304,7 @@ const RadioAndInputColumn2 = props => (
                 <Form.Control
                   type="date"
                   name={`${props.id}__start_date__${option.name}`}
+                  value={props.value.start_date ? props.value.start_date[option.name] : undefined}
                 />
               </Col>
             :
@@ -313,6 +316,7 @@ const RadioAndInputColumn2 = props => (
                 <Form.Control
                   type="date"
                   name={`${props.id}__end_date__${option.name}`}
+                  value={props.value.end_date ? props.value.end_date[option.name] : undefined}
                 />
               </Col>
             :
@@ -338,6 +342,7 @@ const RadioAndInputColumn3 = props => (
                 label={option.name}
                 name={`${props.id}__radio`}
                 value={option.name}
+                checked={props.value.radio === option.name}
               />
             </Col>
           </Row>
@@ -347,7 +352,8 @@ const RadioAndInputColumn3 = props => (
                 <Form.Label>接觸開始日期</Form.Label>
                 <Form.Control
                   type="date"
-                  name={`${props.id}__date1__${option.name}`}
+                  name={`${props.id}__start_date__${option.name}`}
+                  value={props.value.start_date ? props.value.start_date[option.name] : undefined}
                 />
               </Col>
             :
@@ -358,7 +364,8 @@ const RadioAndInputColumn3 = props => (
                 <Form.Label>接觸結束日期</Form.Label>
                 <Form.Control
                   type="date"
-                  name={`${props.id}__date2__${option.name}`}
+                  name={`${props.id}__end_date__${option.name}`}
+                  value={props.value.end_date ? props.value.end_date[option.name] : undefined}
                 />
               </Col>
             :
@@ -376,6 +383,7 @@ const RadioAndInputColumn3 = props => (
               label={option.name}
               name={`${props.id}__type__checkbox`}
               value={option.name}
+              checked={props.value.checkbox ? props.value.checkbox.includes(option.name) : false}
             />
           </Col>
           {option.input === true ?
@@ -383,6 +391,7 @@ const RadioAndInputColumn3 = props => (
               <Form.Control
                 type="text"
                 name={`${props.id}__type__input__${option.name}`}
+                value={props.value.input ? props.value.input[option.name] : undefined}
               />
             </Col>
           :
