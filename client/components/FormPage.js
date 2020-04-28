@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import axios from 'axios';
 
 import { apiConfig } from '../../config-api';
@@ -48,9 +48,9 @@ const getFeverValue = s => (
   s.contact_fever__type__checkbox === undefined || s.contact_fever__radio === undefined || s.contact_fever__radio === '否' ? [] : s.contact_fever__type__checkbox.map((name) => {
     const tempName = '是（續填以下欄位，可複選）';
     if (name.slice(0, 2) === '其他') {
-      return { name: `其他：${s[`contact_fever__type__input__${name}`]}`, start_date: `${s[`contact_fever__date1__${tempName}`]}`, end_date: `${s[`contact_fever__date2__${tempName}`]}` };
+      return { name: `其他：${s[`contact_fever__type__input__${name}`]}`, start_date: `${s[`contact_fever__start_date__${tempName}`]}`, end_date: `${s[`contact_fever__end_date__${tempName}`]}` };
     } else {
-      return { name, start_date: s[`contact_fever__date1__${tempName}`], end_date: s[`contact_fever__date2__${tempName}`] };
+      return { name, start_date: s[`contact_fever__start_date__${tempName}`], end_date: s[`contact_fever__end_date__${tempName}`] };
     }
   })
 );
@@ -59,9 +59,9 @@ const getPatientValue = s => (
   s.contact_patient__type__checkbox === undefined || s.contact_patient__radio === undefined || s.contact_patient__radio === '否' ? [] : s.contact_patient__type__checkbox.map((name) => {
     const tempName = '是（續填以下欄位，可複選）';
     if (name.slice(0, 2) === '其他') {
-      return { name: `其他：${s[`contact_patient__type__input__${name}`]}`, start_date: `${s[`contact_patient__date1__${tempName}`]}`, end_date: `${s[`contact_patient__date2__${tempName}`]}` };
+      return { name: `其他：${s[`contact_patient__type__input__${name}`]}`, start_date: `${s[`contact_patient__start_date__${tempName}`]}`, end_date: `${s[`contact_patient__end_date__${tempName}`]}` };
     } else {
-      return { name, start_date: s[`contact_patient__date1__${tempName}`], end_date: s[`contact_patient__date2__${tempName}`] };
+      return { name, start_date: s[`contact_patient__start_date__${tempName}`], end_date: s[`contact_patient__end_date__${tempName}`] };
     }
   })
 );
@@ -70,9 +70,9 @@ const getSecretionValue = s => (
   s.contact_secretion__type__checkbox === undefined || s.contact_secretion__radio === undefined || s.contact_secretion__radio === '否' ? [] : s.contact_secretion__type__checkbox.map((name) => {
     const tempName = '是（續填以下欄位，可複選）';
     if (name.slice(0, 2) === '其他') {
-      return { name: `其他：${s[`contact_secretion__type__input__${name}`]}`, start_date: `${s[`contact_secretion__date1__${tempName}`]}`, end_date: `${s[`contact_secretion__date2__${tempName}`]}` };
+      return { name: `其他：${s[`contact_secretion__type__input__${name}`]}`, start_date: `${s[`contact_secretion__start_date__${tempName}`]}`, end_date: `${s[`contact_secretion__end_date__${tempName}`]}` };
     } else {
-      return { name, start_date: s[`contact_secretion__date1__${tempName}`], end_date: s[`contact_secretion__date2__${tempName}`] };
+      return { name, start_date: s[`contact_secretion__start_date__${tempName}`], end_date: s[`contact_secretion__end_date__${tempName}`] };
     }
   })
 );
@@ -172,6 +172,7 @@ const getForm = s => ({
   activity: {
     activity_detail: getActivityValue(s),
   },
+  orig_state: JSON.stringify(s),
 });
 
 /**
@@ -182,12 +183,47 @@ class FormPage extends Component {
    * @param {object} props - The props used to construct. */
   constructor(props) {
     super(props);
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('id')) {
+      if (params.get('id') === '') { // If id === '', it gets all data from db.
+        this.props.changeMode(1, { error: true });
+      } else {
+        this.search(params.get('id'));
+      }
+    }
+
     this.state = {
       submitting: false,
     };
+
+    this.search = this.search.bind(this);
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleColumnRemove = this.handleColumnRemove.bind(this);
+  }
+
+  /**
+   * Search form by id.
+   * @param {string} id - The id to search. */
+  search(id) {
+    console.log(id);
+    axios.get(apiConfig.mongoGet.replace(':id', id))
+      .then((res) => {
+        // console.log(res.data);
+        if (res.data === '') {
+          this.props.changeMode(1, { error: true });
+        } else {
+          const newState = JSON.parse(res.data.orig_state);
+          // console.log(newState);
+          newState.editMode = true;
+          newState.submitting = false;
+          this.setState(newState);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   /**
@@ -195,14 +231,25 @@ class FormPage extends Component {
   submit() {
     // console.log(getForm(this.state));
     this.setState({ submitting: true });
-    axios.post(apiConfig.mongoPost, getForm(this.state))
-      .then((res) => {
-        console.log(res.data);
-        this.props.changeMode(1);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (this.state.editMode) {
+      axios.put(apiConfig.mongoPut.replace(':id', this.state.id), getForm(this.state))
+        .then((res) => {
+          console.log(res.data);
+          this.props.changeMode(1);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      axios.post(apiConfig.mongoPost, getForm(this.state))
+        .then((res) => {
+          console.log(res.data);
+          this.props.changeMode(1);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   /**
@@ -241,14 +288,26 @@ class FormPage extends Component {
     return (
       <div className="form-page">
         <Container>
-          <Row className="justify-content-center" style={{ margin: '2rem 0 2rem 0' }}>
+          <Row style={{ margin: '2rem 0 0 0' }}>
+            <Col lg={{ span: 6, offset: 4 }} style={{ textAlign: 'right' }}>
+              {this.state.editMode ?
+                <Button variant="dark" onClick={() => this.props.changeMode(0)}>
+                  填新疫調單 ＞
+                </Button>
+              :
+                <Button variant="dark" onClick={() => this.props.changeMode(2)}>
+                  編輯資料庫中的疫調單（前往搜尋頁面）＞
+                </Button>}
+            </Col>
+          </Row>
+          <Row className="justify-content-center" style={{ margin: '1rem 0 2rem 0' }}>
             <Col lg="8">
               <FormBody
                 handleChange={this.handleChange}
                 handleColumnRemove={this.handleColumnRemove}
                 submit={this.submit}
-                submitting={this.state.submitting}
-                address_city={this.state.address_city}
+
+                {...this.state}
               />
             </Col>
           </Row>

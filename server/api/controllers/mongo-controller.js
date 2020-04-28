@@ -16,8 +16,8 @@ module.exports = {
     const healthFormId = req.params.id;
     const healthFormProps = req.body;
 
-    HealthForm.findByIdAndUpdate({ _id: healthFormId }, healthFormProps)
-      .then(() => HealthForm.findById({ _id: healthFormId }))
+    HealthForm.findOneAndUpdate({ id: healthFormId }, healthFormProps)
+      .then(() => HealthForm.findOne({ id: healthFormId }))
       .then(healthForm => res.send(healthForm))
       .catch(next);
   },
@@ -25,7 +25,7 @@ module.exports = {
   delete(req, res, next) {
     const healthFormId = req.params.id;
 
-    HealthForm.findByIdAndRemove({ _id: healthFormId })
+    HealthForm.findByIdAndRemove({ id: healthFormId })
       .then(healthForm => res.status(204).send(healthForm))
       .catch(next);
   },
@@ -38,7 +38,7 @@ module.exports = {
 
   getHealthForm(req, res, next) {
     const healthFormId = req.params.id;
-    HealthForm.findOne({ _id: healthFormId })
+    HealthForm.findOne({ id: healthFormId })
       .then(healthForm => res.send(healthForm))
       .catch(next);
   },

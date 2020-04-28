@@ -9,6 +9,7 @@ const StringColumn = props => (
       type="text"
       name={props.id}
       onChange={props.handleChange}
+      value={props.value}
     />
   </Form.Group>
 );
@@ -20,6 +21,7 @@ const DateColumn = props => (
       type="date"
       name={props.id}
       onChange={props.handleChange}
+      value={props.value}
     />
   </Form.Group>
 );
@@ -27,7 +29,7 @@ const DateColumn = props => (
 const SelectColumn = props => (
   <Form.Group as={Col} controlId={props.id}>
     <Form.Label>{props.name}</Form.Label>
-    <Form.Control as="select" name={props.id} onChange={props.handleChange}>
+    <Form.Control as="select" name={props.id} onChange={props.handleChange} value={props.value}>
       <option>{null}</option>
       {props.options.map(option => <option>{option}</option>)}
     </Form.Control>
@@ -46,6 +48,7 @@ const RadioAndInputColumn = props => (
               label={option.name}
               name={`${props.id}__radio`}
               value={option.name}
+              checked={props.value.radio === option.name}
             />
           </Col>
           {option.input === true ?
@@ -53,6 +56,7 @@ const RadioAndInputColumn = props => (
               <Form.Control
                 type="text"
                 name={`${props.id}__input__${option.name}`}
+                value={props.value.input ? props.value.input[option.name] : undefined}
               />
             </Col>
           :
@@ -77,6 +81,7 @@ const RadioAndDateColumn = props => (
                 label={option.name}
                 name={`${props.id}__radio__${props.name}`}
                 value={option.name}
+                checked={props.value.radio === option.name}
               />
             </Col>
             {option.date === true ?
@@ -84,6 +89,7 @@ const RadioAndDateColumn = props => (
                 <Form.Control
                   type="date"
                   name={`${props.id}__date__${props.name}`}
+                  value={props.value.date}
                 />
               </Col>
             :
@@ -109,7 +115,7 @@ const OtherSymptomsColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__input`}
-              value={props.dateValue}
+              value={props.values.input}
             />
           </Col>
           <Col>
@@ -117,7 +123,7 @@ const OtherSymptomsColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__date`}
-              value={props.inputValue}
+              value={props.values.date}
             />
           </Col>
         </Row>
@@ -137,6 +143,7 @@ const CheckboxInputAndDateColumn = props => (
               label={option.name}
               name={`${props.id}__checkbox`}
               value={option.name}
+              checked={props.values.checkbox ? props.values.checkbox.includes(option.name) : undefined}
             />
           </Col>
           {option.input === true ?
@@ -144,6 +151,7 @@ const CheckboxInputAndDateColumn = props => (
               <Form.Control
                 type="text"
                 name={`${props.id}__input__${option.name}`}
+                value={props.values.input ? props.values.input[option.name] : undefined}
               />
             </Col>
           :
@@ -154,6 +162,7 @@ const CheckboxInputAndDateColumn = props => (
               <Form.Control
                 type="date"
                 name={`${props.id}__date__${option.name}`}
+                value={props.values.date ? props.values.date[option.name] : undefined}
               />
             </Col>
           :
@@ -171,14 +180,14 @@ const LocationColumn = props => (
     <Row style={{ marginBottom: '0.3rem' }}>
       <Col sm="4">
         <div>縣市：</div>
-        <Form.Control as="select" name={`${props.id}_city`} onChange={props.handleChange}>
+        <Form.Control as="select" name={`${props.id}_city`} onChange={props.handleChange} value={props.value[`${props.id}_city`]}>
           <option key="null" />
           {Object.keys(AreaNames).map(option => <option key={option}>{option}</option>)}
         </Form.Control>
       </Col>
       <Col sm="5">
         <div>鄉鎮市區：</div>
-        <Form.Control as="select" name={`${props.id}_area`} onChange={props.handleChange}>
+        <Form.Control as="select" name={`${props.id}_area`} onChange={props.handleChange} value={props.value[`${props.id}_area`]}>
           <option key="null" />
           {AreaNames[props[`${props.id}_city`]] === undefined ?
             null
@@ -192,6 +201,7 @@ const LocationColumn = props => (
       type="text"
       name={props.id}
       onChange={props.handleChange}
+      value={props.value[props.id]}
     />
   </Form.Group>
 );
@@ -209,7 +219,7 @@ const MedicalTreatmentColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__date`}
-              value={props.dateValue}
+              value={props.values.date}
             />
           </Col>
           <Col>
@@ -217,7 +227,7 @@ const MedicalTreatmentColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__input`}
-              value={props.inputValue}
+              value={props.values.input}
             />
           </Col>
           <Col sm="auto">
@@ -227,6 +237,7 @@ const MedicalTreatmentColumn = props => (
                 label={value}
                 name={`${props.id}__radio`}
                 value={value}
+                checked={props.values.radio === value}
               />
             ))}
           </Col>
@@ -240,8 +251,8 @@ const TFcheckbox1 = props => (
   <Form.Group as={Col} controlId={props.id}>
     <Form.Label>{props.name}</Form.Label>
     &nbsp; &nbsp; &nbsp;
-    <Form.Check inline label={props.options[0]} type="checkbox" id="inline-checkbox-1" onChange={props.handleChange} />
-    <Form.Check inline label={props.options[1]} type="checkbox" id="inline-checkbox-2" onChange={props.handleChange} />
+    <Form.Check inline label={props.options[0]} type="checkbox" id="inline-checkbox-1" onChange={props.handleChange} defaultChecked={props.ischecked}/>
+    <Form.Check inline label={props.options[1]} type="checkbox" id="inline-checkbox-2" onChange={props.handleChange} defaultChecked={!props.ischecked}/>
   </Form.Group>
 );
 
@@ -270,6 +281,7 @@ const RadioAndInputColumn2 = props => (
                 label={option.name}
                 name={`${props.id}__radio`}
                 value={option.name}
+                checked={props.value.radio === option.name}
               />
             </Col>
           </Row>
@@ -280,6 +292,7 @@ const RadioAndInputColumn2 = props => (
                 <Form.Control
                   type="text"
                   name={`${props.id}__input__${option.name}`}
+                  value={props.value.input ? props.value.input[option.name] : undefined}
                 />
               </Col>
             :
@@ -291,6 +304,7 @@ const RadioAndInputColumn2 = props => (
                 <Form.Control
                   type="date"
                   name={`${props.id}__start_date__${option.name}`}
+                  value={props.value.start_date ? props.value.start_date[option.name] : undefined}
                 />
               </Col>
             :
@@ -302,6 +316,7 @@ const RadioAndInputColumn2 = props => (
                 <Form.Control
                   type="date"
                   name={`${props.id}__end_date__${option.name}`}
+                  value={props.value.end_date ? props.value.end_date[option.name] : undefined}
                 />
               </Col>
             :
@@ -327,6 +342,7 @@ const RadioAndInputColumn3 = props => (
                 label={option.name}
                 name={`${props.id}__radio`}
                 value={option.name}
+                checked={props.value.radio === option.name}
               />
             </Col>
           </Row>
@@ -336,7 +352,8 @@ const RadioAndInputColumn3 = props => (
                 <Form.Label>接觸開始日期</Form.Label>
                 <Form.Control
                   type="date"
-                  name={`${props.id}__date1__${option.name}`}
+                  name={`${props.id}__start_date__${option.name}`}
+                  value={props.value.start_date ? props.value.start_date[option.name] : undefined}
                 />
               </Col>
             :
@@ -347,7 +364,8 @@ const RadioAndInputColumn3 = props => (
                 <Form.Label>接觸結束日期</Form.Label>
                 <Form.Control
                   type="date"
-                  name={`${props.id}__date2__${option.name}`}
+                  name={`${props.id}__end_date__${option.name}`}
+                  value={props.value.end_date ? props.value.end_date[option.name] : undefined}
                 />
               </Col>
             :
@@ -365,6 +383,7 @@ const RadioAndInputColumn3 = props => (
               label={option.name}
               name={`${props.id}__type__checkbox`}
               value={option.name}
+              checked={props.value.checkbox ? props.value.checkbox.includes(option.name) : false}
             />
           </Col>
           {option.input === true ?
@@ -372,6 +391,7 @@ const RadioAndInputColumn3 = props => (
               <Form.Control
                 type="text"
                 name={`${props.id}__type__input__${option.name}`}
+                value={props.value.input ? props.value.input[option.name] : undefined}
               />
             </Col>
           :
@@ -396,7 +416,7 @@ const NationColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__nation`}
-              value={props.inputValue}
+              value={props.values.nation}
             />
           </Col>
           <Col>
@@ -404,7 +424,7 @@ const NationColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__type`}
-              value={props.inputValue}
+              value={props.values.type}
             />
           </Col>
         </Row>
@@ -414,7 +434,7 @@ const NationColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__start_date`}
-              value={props.dateValue}
+              value={props.values.start_date}
             />
           </Col>
           <Col>
@@ -422,7 +442,7 @@ const NationColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__end_date`}
-              value={props.dateValue}
+              value={props.values.end_date}
             />
           </Col>
         </Row>
@@ -432,7 +452,7 @@ const NationColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__companion_num`}
-              value={props.inputValue}
+              value={props.values.companion_num}
             />
           </Col>
           <Col>
@@ -440,7 +460,7 @@ const NationColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__companion_symptoms`}
-              value={props.inputValue}
+              value={props.values.companion_symptoms}
             />
           </Col>
         </Row>
@@ -450,7 +470,7 @@ const NationColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__transport_and_flight_code`}
-              value={props.inputValue}
+              value={props.values.transport_and_flight_code}
             />
           </Col>
         </Row>
@@ -472,7 +492,7 @@ const PublicColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__start_date`}
-              value={props.dateValue}
+              value={props.values.start_date}
             />
           </Col>
           <Col>
@@ -480,7 +500,7 @@ const PublicColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__end_date`}
-              value={props.dateValue}
+              value={props.values.end_date}
             />
           </Col>
         </Row>
@@ -490,7 +510,7 @@ const PublicColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__city`}
-              value={props.inputValue}
+              value={props.values.city}
             />
           </Col>
           <Col>
@@ -498,7 +518,7 @@ const PublicColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__location`}
-              value={props.inputValue}
+              value={props.values.location}
             />
           </Col>
         </Row>
@@ -508,7 +528,7 @@ const PublicColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__transportation`}
-              value={props.inputValue}
+              value={props.values.transportation}
             />
           </Col>
         </Row>
@@ -530,7 +550,7 @@ const CloseContactorColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__type`}
-              value={props.inputValue}
+              value={props.values.type}
             />
           </Col>
           <Col>
@@ -538,7 +558,7 @@ const CloseContactorColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__number`}
-              value={props.inputValue}
+              value={props.values.number}
             />
           </Col>
         </Row>
@@ -548,7 +568,7 @@ const CloseContactorColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__symptom_count`}
-              value={props.inputValue}
+              value={props.values.symptom_count}
             />
           </Col>
           <Col>
@@ -556,7 +576,7 @@ const CloseContactorColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__fever_count`}
-              value={props.inputValue}
+              value={props.values.fever_count}
             />
           </Col>
         </Row>
@@ -566,7 +586,7 @@ const CloseContactorColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__last_date`}
-              value={props.dateValue}
+              value={props.values.last_date}
             />
           </Col>
           <Col>
@@ -574,7 +594,7 @@ const CloseContactorColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__note`}
-              value={props.inputValue}
+              value={props.values.note}
             />
           </Col>
         </Row>
@@ -596,7 +616,7 @@ const ActivityColumn = props => (
             <Form.Control
               type="date"
               name={`${props.id}__date`}
-              value={props.inputValue}
+              value={props.values.date}
             />
           </Col>
           <Col>
@@ -604,7 +624,7 @@ const ActivityColumn = props => (
             <Form.Control
               type="time"
               name={`${props.id}__start_time`}
-              value={props.inputValue}
+              value={props.values.start_time}
             />
           </Col>
         </Row>
@@ -614,7 +634,7 @@ const ActivityColumn = props => (
             <Form.Control
               type="time"
               name={`${props.id}__end_time`}
-              value={props.inputValue}
+              value={props.values.end_time}
             />
           </Col>
           <Col>
@@ -622,7 +642,7 @@ const ActivityColumn = props => (
             <Form.Control
               type="text"
               name={`${props.id}__description`}
-              value={props.inputValue}
+              value={props.values.description}
             />
           </Col>
         </Row>

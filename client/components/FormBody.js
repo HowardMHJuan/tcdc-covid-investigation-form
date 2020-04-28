@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Card, Row, Col, Button, Spinner } from 'react-bootstrap';
-import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, RadioAndDateColumn, OtherSymptomsColumn, CheckboxInputAndDateColumn, LocationColumn, MedicalTreatmentColumn, TFcheckbox1, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3, ActivityColumn} from './FormColumns';
+import { StringColumn, DateColumn, SelectColumn, RadioAndInputColumn, RadioAndDateColumn, OtherSymptomsColumn, CheckboxInputAndDateColumn, LocationColumn, MedicalTreatmentColumn, TFcheckbox1, NationColumn, PublicColumn, CloseContactorColumn, RadioAndInputColumn2, RadioAndInputColumn3, ActivityColumn } from './FormColumns';
 import MultiColumnWrapper from './MultiColumnWrapper';
 
 /**
@@ -33,9 +33,9 @@ class FormBody extends Component {
             <Card.Body>
               <Card.Title as="h2">嚴重特殊傳染性肺炎疫調單</Card.Title>
               <Form.Row>
-                <DateColumn id="inv_date" name="調查日期（西元年）" handleChange={this.props.handleChange} />
-                <StringColumn id="inv_person" name="調查人" handleChange={this.props.handleChange} />
-                <StringColumn id="inv_institution" name="調查單位" handleChange={this.props.handleChange} />
+                <DateColumn id="inv_date" name="調查日期（西元年）" handleChange={this.props.handleChange} value={this.props.inv_date} />
+                <StringColumn id="inv_person" name="調查人" handleChange={this.props.handleChange} value={this.props.inv_person} />
+                <StringColumn id="inv_institution" name="調查單位" handleChange={this.props.handleChange} value={this.props.inv_institution} />
               </Form.Row>
             </Card.Body>
           </Card>
@@ -43,8 +43,7 @@ class FormBody extends Component {
             <Card.Body>
               <Card.Title>一、基本資料</Card.Title>
               <Information
-                handleChange={this.props.handleChange}
-                address_city={this.props.address_city}
+                {...this.props}
               />
             </Card.Body>
           </Card>
@@ -55,8 +54,7 @@ class FormBody extends Component {
                 <Card.Body>
                   <Card.Title as="h6">（一）症狀（初始症狀或疾病過程中曾出現）（請註明開始日期）</Card.Title>
                   <HealthConditionSymptoms
-                    handleChange={this.props.handleChange}
-                    handleColumnRemove={this.props.handleColumnRemove}
+                    {...this.props}
                   />
                 </Card.Body>
               </Card>
@@ -66,13 +64,51 @@ class FormBody extends Component {
                   <HealthConditionDoctors
                     handleChange={this.props.handleChange}
                     handleColumnRemove={this.props.handleColumnRemove}
+                    {...(() => {
+                      const values = {};
+                      Object.entries(this.props).forEach(([key, val]) => {
+                        if (/\bseeing_doctor/.test(key)) {
+                          const id = key.split('__')[1];
+                          const columnName = key.split('__')[2];
+                          if (val !== undefined) {
+                            if (values[id] === undefined) {
+                              values[id] = {};
+                            }
+                            values[id][columnName] = val;
+                          }
+                        }
+                      });
+                      return { values };
+                    })()}
                   />
                 </Card.Body>
               </Card>
               <Card>
                 <Card.Body>
                   <Card.Title as="h6">（三）慢性疾病</Card.Title>
-                  <HealthConditionChronicDisease handleChange={this.props.handleChange} />
+                  <HealthConditionChronicDisease
+                    handleChange={this.props.handleChange}
+                    {...(() => {
+                      const values = {};
+                      Object.entries(this.props).forEach(([key, val]) => {
+                        if (/\bchronic_disease/.test(key)) {
+                          if (val !== undefined) {
+                            const type = key.split('__')[1];
+                            if (type === 'input' || type === 'date') {
+                              const columnName = key.split('__')[2];
+                              if (values[type] === undefined) {
+                                values[type] = {};
+                              }
+                              values[type][columnName] = val;
+                            } else {
+                              values[type] = val;
+                            }
+                          }
+                        }
+                      });
+                      return { values };
+                    })()}
+                  />
                 </Card.Body>
               </Card>
             </Card.Body>
@@ -83,6 +119,7 @@ class FormBody extends Component {
               <Source
                 handleChange={this.props.handleChange}
                 handleColumnRemove={this.props.handleColumnRemove}
+                states={this.props}
               />
             </Card.Body>
           </Card>
@@ -92,6 +129,7 @@ class FormBody extends Component {
               <Contactor
                 handleChange={this.props.handleChange}
                 handleColumnRemove={this.props.handleColumnRemove}
+                states={this.props}
               />
             </Card.Body>
           </Card>
@@ -101,6 +139,22 @@ class FormBody extends Component {
               <ActivityDetail
                 handleChange={this.props.handleChange}
                 handleColumnRemove={this.props.handleColumnRemove}
+                {...(() => {
+                  const values = {};
+                  Object.entries(this.props).forEach(([key, val]) => {
+                    if (/\bactivity_detail/.test(key)) {
+                      const id = key.split('__')[1];
+                      const columnName = key.split('__')[2];
+                      if (val !== undefined) {
+                        if (values[id] === undefined) {
+                          values[id] = {};
+                        }
+                        values[id][columnName] = val;
+                      }
+                    }
+                  });
+                  return { values };
+                })()}
               />
             </Card.Body>
           </Card>
@@ -108,13 +162,23 @@ class FormBody extends Component {
             <Card.Body>
               <Row className="justify-content-center">
                 <Col sm={4} align="center">
-                  {this.props.submitting ?
-                    <Spinner animation="border" variant="primary" />
-                  :
-                    <Button variant="primary" onClick={this.handleSubmit} block>
-                      填完送出
-                    </Button>
-                  }
+                  {(() => {
+                    if (this.props.submitting) {
+                      return <Spinner animation="border" variant="primary" />;
+                    } else if (this.props.editMode) {
+                      return (
+                        <Button variant="primary" onClick={this.handleSubmit} block>
+                          送出修改
+                        </Button>
+                      );
+                    } else {
+                      return (
+                        <Button variant="primary" onClick={this.handleSubmit} block>
+                          填完送出
+                        </Button>
+                      );
+                    }
+                  })()}
                 </Col>
               </Row>
             </Card.Body>
@@ -128,20 +192,40 @@ class FormBody extends Component {
 const Information = props => (
   <React.Fragment>
     <Form.Row>
-      <StringColumn id="id" name="法傳編號" handleChange={props.handleChange} />
-      <DateColumn id="report_date" name="通報日期" handleChange={props.handleChange} />
+      <StringColumn id="id" name="法傳編號" handleChange={props.handleChange} value={props.id} />
+      <DateColumn id="report_date" name="通報日期" handleChange={props.handleChange} value={props.report_date} />
     </Form.Row>
     <Form.Row>
-      <StringColumn id="name" name="姓名" handleChange={props.handleChange} />
-      <SelectColumn id="gender" name="生理性別" options={['男', '女']} handleChange={props.handleChange} />
+      <StringColumn id="name" name="姓名" handleChange={props.handleChange} value={props.name} />
+      <SelectColumn id="gender" name="生理性別" options={['男', '女']} handleChange={props.handleChange} value={props.gender} />
     </Form.Row>
     <Form.Row>
-      <DateColumn id="birth_date" name="出生日期" handleChange={props.handleChange} />
+      <DateColumn id="birth_date" name="出生日期" handleChange={props.handleChange} value={props.birth_date} />
       <RadioAndInputColumn
         id="nationality"
         name="國籍"
         options={[{ name: '本國籍' }, { name: '其他，國籍：', input: true }]}
         handleChange={props.handleChange}
+        {...(() => {
+          const value = {};
+          Object.entries(props).forEach(([key, val]) => {
+            if (/\bnationality/.test(key)) {
+              if (val !== undefined) {
+                const type = key.split('__')[1];
+                if (type === 'input') {
+                  const columnName = key.split('__')[2];
+                  if (value[type] === undefined) {
+                    value[type] = {};
+                  }
+                  value[type][columnName] = val;
+                } else {
+                  value[type] = val;
+                }
+              }
+            }
+          });
+          return { value };
+        })()}
       />
     </Form.Row>
     <Form.Row>
@@ -150,11 +234,22 @@ const Information = props => (
         name="居住地"
         address_city={props.address_city}
         handleChange={props.handleChange}
+        {...(() => {
+          const value = {};
+          Object.entries(props).forEach(([key, val]) => {
+            if (/\baddress/.test(key)) {
+              if (val !== undefined) {
+                value[key] = val;
+              }
+            }
+          });
+          return { value };
+        })()}
       />
     </Form.Row>
     <Form.Row>
-      <StringColumn id="contact" name="聯絡方式" handleChange={props.handleChange} />
-      <StringColumn id="occupation" name="職業" handleChange={props.handleChange} />
+      <StringColumn id="contact" name="聯絡方式" handleChange={props.handleChange} value={props.contact} />
+      <StringColumn id="occupation" name="職業" handleChange={props.handleChange} value={props.occupation} />
     </Form.Row>
     <Form.Row>
       <RadioAndInputColumn
@@ -162,8 +257,28 @@ const Information = props => (
         name="是否為醫療機構人員"
         options={[{ name: '否' }, { name: '是，職稱：', input: true }]}
         handleChange={props.handleChange}
+        {...(() => {
+          const value = {};
+          Object.entries(props).forEach(([key, val]) => {
+            if (/\bmed_title/.test(key)) {
+              if (val !== undefined) {
+                const type = key.split('__')[1];
+                if (type === 'input') {
+                  const columnName = key.split('__')[2];
+                  if (value[type] === undefined) {
+                    value[type] = {};
+                  }
+                  value[type][columnName] = val;
+                } else {
+                  value[type] = val;
+                }
+              }
+            }
+          });
+          return { value };
+        })()}
       />
-      <DateColumn id="onset" name="發病日期（無症狀者填第一次採檢日期）" handleChange={props.handleChange} />
+      <DateColumn id="onset" name="發病日期（無症狀者填第一次採檢日期）" handleChange={props.handleChange} value={props.onset} />
     </Form.Row>
     <Form.Row>
       <RadioAndInputColumn
@@ -171,12 +286,52 @@ const Information = props => (
         name="是否懷孕（女性）"
         options={[{ name: '否' }, { name: '是，懷孕幾週：', input: true }]}
         handleChange={props.handleChange}
+        {...(() => {
+          const value = {};
+          Object.entries(props).forEach(([key, val]) => {
+            if (/\bpregnant_week/.test(key)) {
+              if (val !== undefined) {
+                const type = key.split('__')[1];
+                if (type === 'input') {
+                  const columnName = key.split('__')[2];
+                  if (value[type] === undefined) {
+                    value[type] = {};
+                  }
+                  value[type][columnName] = val;
+                } else {
+                  value[type] = val;
+                }
+              }
+            }
+          });
+          return { value };
+        })()}
       />
       <RadioAndInputColumn
         id="married"
         name="婚姻狀況"
         options={[{ name: '已婚' }, { name: '未婚' }]}
         handleChange={props.handleChange}
+        {...(() => {
+          const value = {};
+          Object.entries(props).forEach(([key, val]) => {
+            if (/\bmarried/.test(key)) {
+              if (val !== undefined) {
+                const type = key.split('__')[1];
+                if (type === 'input') {
+                  const columnName = key.split('__')[2];
+                  if (value[type] === undefined) {
+                    value[type] = {};
+                  }
+                  value[type][columnName] = val;
+                } else {
+                  value[type] = val;
+                }
+              }
+            }
+          });
+          return { value };
+        })()}
       />
     </Form.Row>
   </React.Fragment>
@@ -188,6 +343,18 @@ const HealthConditionSymptoms = props => (
       id="no_symptom"
       options={['無症狀（以下免填，跳至（二））'].map(name => ({ name }))}
       handleChange={props.handleChange}
+      {...(() => {
+        const values = {};
+        Object.entries(props).forEach(([key, val]) => {
+          if (/\bno_symptom/.test(key)) {
+            if (val !== undefined) {
+              const type = key.split('__')[1];
+              values[type] = val;
+            }
+          }
+        });
+        return { values };
+      })()}
     />
     {[
       '發燒（≥38℃）',
@@ -219,12 +386,39 @@ const HealthConditionSymptoms = props => (
         name={name}
         options={[{ name: '否' }, { name: '是', date: true }]}
         handleChange={props.handleChange}
+        {...(() => {
+          const value = {};
+          Object.entries(props).forEach(([key, val]) => {
+            if (/\bsymptoms/.test(key)) {
+              if (val !== undefined) {
+                const type = key.split('__')[1];
+                const columnName = key.split('__')[2];
+                if (columnName === name) {
+                  value[type] = val;
+                }
+              }
+            }
+          });
+          return { value };
+        })()}
       />
     ))}
     <MultiColumnWrapper
       id="symptoms_other"
       handleChange={props.handleChange}
       handleColumnRemove={props.handleColumnRemove}
+      {...(() => {
+        const values = {};
+        Object.entries(props).forEach(([key, val]) => {
+          if (/\bsymptoms_other/.test(key)) {
+            if (val !== undefined) {
+              const type = key.split('__')[1];
+              values[type] = val;
+            }
+          }
+        });
+        return { values };
+      })()}
     >
       <OtherSymptomsColumn {...props} />
     </MultiColumnWrapper>
@@ -235,8 +429,7 @@ const HealthConditionDoctors = props => (
   <React.Fragment>
     <MultiColumnWrapper
       id="seeing_doctor"
-      handleChange={props.handleChange}
-      handleColumnRemove={props.handleColumnRemove}
+      {...props}
     >
       <MedicalTreatmentColumn {...props} />
     </MultiColumnWrapper>
@@ -267,7 +460,7 @@ const HealthConditionChronicDisease = props => (
         '免疫低下狀態，說明：',
         '其他，說明：',
       ].map(name => ({ name, input: true })))}
-      handleChange={props.handleChange}
+      {...props}
     />
   </React.Fragment>
 );
@@ -278,7 +471,21 @@ const Source = props => (
       <Card.Body>
         <Card.Title as="h6">（一）發病前14天內是否曾在國外旅遊或居住</Card.Title>
         <Form.Row>
-          <TFcheckbox1 id="is_abroad" name="" options={['是（續填以下欄位）', '否']} handleChange={props.handleChange} />
+          <TFcheckbox1
+            id="is_abroad"
+            name="" 
+            options={['是（續填以下欄位）', '否']}
+            handleChange={props.handleChange}
+            ischecked={(() => {
+              var ischecked = false;
+              Object.entries(props.states).forEach(([key, val]) => {
+                if (/\bnation_and_location/.test(key)) {
+                  ischecked = true;
+                }
+              });
+              return { ischecked };
+            })()}
+          />
         </Form.Row>
         <Card.Body>
           <Form.Row>
@@ -287,6 +494,22 @@ const Source = props => (
           <NationandLocation
             handleChange={props.handleChange}
             handleColumnRemove={props.handleColumnRemove}
+            {...(() => {
+              const values = {};
+              Object.entries(props.states).forEach(([key, val]) => {
+                if (/\bnation_and_location/.test(key)) {
+                  const id = key.split('__')[1];
+                  const columnName = key.split('__')[2];
+                  if (val !== undefined) {
+                    if (values[id] === undefined) {
+                      values[id] = {};
+                    }
+                    values[id][columnName] = val;
+                  }
+                }
+              });
+              return { values };
+            })()}
           />
         </Card.Body>
       </Card.Body>
@@ -296,17 +519,144 @@ const Source = props => (
         <Card.Title as="h6">（二）發病前14天內接觸史調查</Card.Title>
         <Card>
           <Card.Body>
-            <RadioAndInputColumn3 id="contact_fever" name="是否曾接觸有發燒或呼吸道症狀人士：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))} handleChange={props.handleChange} />
+            <RadioAndInputColumn3
+              id="contact_fever"
+              name="是否曾接觸有發燒或呼吸道症狀人士："
+              options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]}
+              options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bcontact_fever/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'start_date' || type === 'end_date') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else if (type === 'type') {
+                        const columnName = key.split('__')[2];
+                        if (columnName === 'input') {
+                          const columnName2 = key.split('__')[3];
+                          if (value[columnName] === undefined) {
+                            value[columnName] = {};
+                          }
+                          value[columnName][columnName2] = val;
+                        }
+                        else {
+                          // columnName = 'checkbox'
+                          if (value[columnName] === undefined) {
+                            value[columnName] = {};
+                          }
+                          value[columnName] = val;
+                        }
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Card.Body>
         </Card>
         <Card>
           <Card.Body>
-            <RadioAndInputColumn3 id="contact_patient" name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))} handleChange={props.handleChange} />
+            <RadioAndInputColumn3
+              id="contact_patient"
+              name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例："
+              options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]}
+              options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bcontact_patient/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'start_date' || type === 'end_date') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else if (type === 'type') {
+                        const columnName = key.split('__')[2];
+                        if (columnName === 'input') {
+                          const columnName2 = key.split('__')[3];
+                          if (value[columnName] === undefined) {
+                            value[columnName] = {};
+                          }
+                          value[columnName][columnName2] = val;
+                        }
+                        else {
+                          // columnName = 'checkbox'
+                          if (value[columnName] === undefined) {
+                            value[columnName] = {};
+                          }
+                          value[columnName] = val;
+                        }
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Card.Body>
         </Card>
         <Card>
           <Card.Body>
-            <RadioAndInputColumn3 id="contact_secretion" name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例之呼吸道分泌物、體液（包含實驗室檢體）：" options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]} options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))} handleChange={props.handleChange} />
+            <RadioAndInputColumn3
+              id="contact_secretion"
+              name="是否曾接觸嚴重特殊傳染性肺炎極可能或確定病例之呼吸道分泌物、體液（包含實驗室檢體）："
+              options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]}
+              options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bcontact_secretion/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'start_date' || type === 'end_date') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else if (type === 'type') {
+                        const columnName = key.split('__')[2];
+                        if (columnName === 'input') {
+                          const columnName2 = key.split('__')[3];
+                          if (value[columnName] === undefined) {
+                            value[columnName] = {};
+                          }
+                          value[columnName][columnName2] = val;
+                        }
+                        else {
+                          // columnName = 'checkbox'
+                          if (value[columnName] === undefined) {
+                            value[columnName] = {};
+                          }
+                          value[columnName] = val;
+                        }
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                console.log(value);
+                return { value };
+              })()}
+            />
           </Card.Body>
         </Card>
       </Card.Body>
@@ -316,13 +666,115 @@ const Source = props => (
         <Card.Title as="h6">（三）發病前14天內之活動史調查</Card.Title>
         <Card.Body>
           <Form.Row>
-            <RadioAndInputColumn2 id="infect" name="是否曾至中國湖北省（含武漢市）（或公告疫區）：" loc="地點" options={[{ name: '否' }, { name: '是：', input: true, start_date: true, end_date: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn2
+              id="infect"
+              name="是否曾至中國湖北省（含武漢市）（或公告疫區）："
+              loc="地點"
+              options={[
+                { name: '否' },
+                {
+                  name: '是：',
+                  input: true,
+                  start_date: true,
+                  end_date: true,
+                },
+              ]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\binfect/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input' || type === 'start_date' || type === 'end_date') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn2 id="market" name="是否曾至野味市場：" loc="地點" options={[{ name: '否' }, { name: '是：', input: true, start_date: true, end_date: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn2
+              id="market"
+              name="是否曾至野味市場："
+              loc="地點"
+              options={[
+                { name: '否' },
+                {
+                  name: '是：',
+                  input: true,
+                  start_date: true,
+                  end_date: true,
+                },
+              ]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bmarket/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input' || type === 'start_date' || type === 'end_date') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn2 id="hospital" name="是否曾至醫療院所：" loc="醫療院所名稱" options={[{ name: '否' }, { name: '是：', input: true, start_date: true, end_date: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn2
+              id="hospital"
+              name="是否曾至醫療院所："
+              loc="醫療院所名稱"
+              options={[
+                { name: '否' },
+                {
+                  name: '是：',
+                  input: true,
+                  start_date: true,
+                  end_date: true,
+                },
+              ]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bhospital/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input' || type === 'start_date' || type === 'end_date') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
         </Card.Body>
       </Card.Body>
@@ -332,22 +784,172 @@ const Source = props => (
         <Card.Title as="h6">（四）發病前14天內之動物接觸史調查</Card.Title>
         <Card.Body>
           <Form.Row>
-            <RadioAndInputColumn id="pet" name="是否飼養任何動物(寵物)：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn
+              id="pet"
+              name="是否飼養任何動物(寵物)："
+              options={[{ name: '否' }, { name: '是：', input: true }]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bpet/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn id="bird" name="是否曾接觸禽鳥、活禽市場或養禽場(雞鴨等禽類) ：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn
+              id="bird"
+              name="是否曾接觸禽鳥、活禽市場或養禽場(雞鴨等禽類) ："
+              options={[{ name: '否' }, { name: '是：', input: true }]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bbird/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn id="farm" name="是否曾接觸畜牧場(豬、牛、羊及鹿等畜類) ：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn
+              id="farm"
+              name="是否曾接觸畜牧場(豬、牛、羊及鹿等畜類) ："
+              options={[{ name: '否' }, { name: '是：', input: true }]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bfarm/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn id="shamble" name="是否曾接觸屠宰場：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn
+              id="shamble"
+              name="是否曾接觸屠宰場："
+              options={[{ name: '否' }, { name: '是：', input: true }]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bshamble/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn id="wild" name="是否曾接觸或食用野生動物：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn
+              id="wild"
+              name="是否曾接觸或食用野生動物："
+              options={[{ name: '否' }, { name: '是：', input: true }]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bwild/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
           <Form.Row>
-            <RadioAndInputColumn id="other" name="是否有其他動物接觸史：" options={[{ name: '否' }, { name: '是：', input: true }]} handleChange={props.handleChange} />
+            <RadioAndInputColumn
+              id="other"
+              name="是否有其他動物接觸史："
+              options={[{ name: '否' }, { name: '是：', input: true }]}
+              handleChange={props.handleChange}
+              {...(() => {
+                const value = {};
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bother/.test(key)) {
+                    if (val !== undefined) {
+                      const type = key.split('__')[1];
+                      if (type === 'input') {
+                        const columnName = key.split('__')[2];
+                        if (value[type] === undefined) {
+                          value[type] = {};
+                        }
+                        value[type][columnName] = val;
+                      } else {
+                        value[type] = val;
+                      }
+                    }
+                  }
+                });
+                return { value };
+              })()}
+            />
           </Form.Row>
         </Card.Body>
       </Card.Body>
@@ -361,12 +963,42 @@ const Contactor = props => (
       <Card.Body>
         <Card.Title as="h6">（一）自個案發病日前兩天至隔離前，是否曾至國內公共場所或搭乘大眾交通工具？</Card.Title>
         <Form.Row>
-          <TFcheckbox1 id="is_public_area" name="" options={['是', '否']} handleChange={props.handleChange} />
+          <TFcheckbox1
+            id="is_public_area"
+            name=""
+            options={['是（請自行增列）', '否']}
+            handleChange={props.handleChange}
+            ischecked={(() => {
+              var ischecked = false;
+              Object.entries(props.states).forEach(([key, val]) => {
+                if (/\bpublic_area/.test(key)) {
+                  ischecked = true;
+                }
+              });
+              return { ischecked };
+            })()}
+            />
         </Form.Row>
         <Card.Body>
           <PublicArea
             handleChange={props.handleChange}
             handleColumnRemove={props.handleColumnRemove}
+            {...(() => {
+              const values = {};
+              Object.entries(props.states).forEach(([key, val]) => {
+                if (/\bpublic_area/.test(key)) {
+                  const id = key.split('__')[1];
+                  const columnName = key.split('__')[2];
+                  if (val !== undefined) {
+                    if (values[id] === undefined) {
+                      values[id] = {};
+                    }
+                    values[id][columnName] = val;
+                  }
+                }
+              });
+              return { values };
+            })()}
           />
         </Card.Body>
       </Card.Body>
@@ -375,9 +1007,22 @@ const Contactor = props => (
       <Card.Body>
         <Card.Title as="h6">（二）自個案發病日前兩天至隔離前</Card.Title>
         <div style={{ margin: '0 0 0 1.5rem' }}>
-          <Form.Row>    
+          <Form.Row>
             <Card.Title as="h6"> 是否有密切接觸者*：</Card.Title>
-            <TFcheckbox1 id="is_close_contactor" name="" options={['是', '否']} handleChange={props.handleChange} />
+            <TFcheckbox1
+              id="is_close_contactor"
+              name="" options={['是（請自行增列）', '否']}
+              handleChange={props.handleChange}
+              ischecked={(() => {
+                var ischecked = false;
+                Object.entries(props.states).forEach(([key, val]) => {
+                  if (/\bpublic_area/.test(key)) {
+                    ischecked = true;
+                  }
+                });
+                return { ischecked };
+              })()}
+              />
           </Form.Row>
           <Card.Title as="h6"> *密切接觸者：</Card.Title>
           <Card.Title as="h6">（1）在無適當防護下曾有長時間（大於 15 分鐘）面對面之接觸者，或提供照護、相處、接觸病患呼吸道分泌物或體液之同住者</Card.Title>
@@ -387,6 +1032,22 @@ const Contactor = props => (
           <CloseContactor
             handleChange={props.handleChange}
             handleColumnRemove={props.handleColumnRemove}
+            {...(() => {
+              const values = {};
+              Object.entries(props.states).forEach(([key, val]) => {
+                if (/\bclose_contactor/.test(key)) {
+                  const id = key.split('__')[1];
+                  const columnName = key.split('__')[2];
+                  if (val !== undefined) {
+                    if (values[id] === undefined) {
+                      values[id] = {};
+                    }
+                    values[id][columnName] = val;
+                  }
+                }
+              });
+              return { values };
+            })()}
           />
         </Card.Body>
       </Card.Body>
@@ -398,8 +1059,7 @@ const NationandLocation = props => (
   <React.Fragment>
     <MultiColumnWrapper
       id="nation_and_location"
-      handleChange={props.handleChange}
-      handleColumnRemove={props.handleColumnRemove}
+      {...props}
     >
       <NationColumn {...props} />
     </MultiColumnWrapper>
@@ -410,8 +1070,7 @@ const PublicArea = props => (
   <React.Fragment>
     <MultiColumnWrapper
       id="public_area"
-      handleChange={props.handleChange}
-      handleColumnRemove={props.handleColumnRemove}
+      {...props}
     >
       <PublicColumn {...props} />
     </MultiColumnWrapper>
@@ -422,8 +1081,7 @@ const CloseContactor = props => (
   <React.Fragment>
     <MultiColumnWrapper
       id="close_contactor"
-      handleChange={props.handleChange}
-      handleColumnRemove={props.handleColumnRemove}
+      {...props}
     >
       <CloseContactorColumn {...props} />
     </MultiColumnWrapper>
@@ -434,8 +1092,7 @@ const ActivityDetail = props => (
   <React.Fragment>
     <MultiColumnWrapper
       id="activity_detail"
-      handleChange={props.handleChange}
-      handleColumnRemove={props.handleColumnRemove}
+      {...props}
     >
       <ActivityColumn {...props} />
     </MultiColumnWrapper>
