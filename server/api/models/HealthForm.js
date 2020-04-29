@@ -19,7 +19,7 @@ const HealthFormSchema = new Schema({
     occupation: String,
     med_title: String,
     onset: String,
-    pregnant_weeks: Number,
+    pregnant_week: Number,
     married: String,
   },
   health_condition: {
