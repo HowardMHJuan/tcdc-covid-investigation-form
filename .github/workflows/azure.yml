@@ -13,6 +13,8 @@
 # For more information on GitHub Actions for Azure, refer to https://github.com/Azure/Actions
 # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
 on:
+  push:
+    branches: [master]
   release:
     types: [created]
 
@@ -32,7 +34,11 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
     - name: load .env
-      run: ${{ env.DOTENV }} > .env
+      shell: bash
+      env:
+        DOTENV: ${{ secrets.DOTENV }}
+      run: |
+        echo $DOTENV > .env
     - name: npm install & build
       run: |
         # Build and test the project, then
