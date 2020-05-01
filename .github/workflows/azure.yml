@@ -36,9 +36,13 @@ jobs:
     - name: load .env
       shell: bash
       env:
-        DOTENV: ${{ secrets.DOTENV }}
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        MONGODB_USER: ${{ secrets.MONGODB_USER }}
+        MONGODB_KEY: ${{ secrets.MONGODB_KEY }}
       run: |
-        echo $DOTENV > .env
+        echo $MONGODB_URI > .env
+        echo $MONGODB_USER >> .env
+        echo $MONGODB_KEY >> .env
     - name: npm install & build
       run: |
         # Build and test the project, then
