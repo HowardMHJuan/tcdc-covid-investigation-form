@@ -251,20 +251,16 @@ const TFcheckbox1 = props => (
   <Form.Group as={Col} controlId={props.id}>
     <Form.Label>{props.name}</Form.Label>
     &nbsp; &nbsp; &nbsp;
-    <Form.Check inline label={props.options[0]} type="checkbox" id="inline-checkbox-1" onChange={props.handleChange} defaultChecked={props.ischecked}/>
-    <Form.Check inline label={props.options[1]} type="checkbox" id="inline-checkbox-2" onChange={props.handleChange} defaultChecked={!props.ischecked}/>
-  </Form.Group>
-);
-
-const TFcheckbox2 = props => (
-  <Form.Group as={Col} controlId={props.id}>
-    <Form.Label>{props.name}</Form.Label>
-    &nbsp; &nbsp; &nbsp;
-    <Form.Check inline label={props.options[0]} type="checkbox" id="inline-checkbox-1" onChange={props.handleChange} />
-    <Form.Check inline label={props.options[1]} type="checkbox" id="inline-checkbox-2" onChange={props.handleChange} />
-    <Form.Check inline label={props.options[2]} type="checkbox" id="inline-checkbox-3" onChange={props.handleChange} />
-    <Form.Check inline label={props.options[3]} type="checkbox" id="inline-checkbox-4" onChange={props.handleChange} />
-    <Form.Control type="text" onChange={props.handleChange} />
+      {props.options.map(option => (
+        <Form.Check
+          inline
+          type="radio"
+          label={option.name}
+          name={`${props.id}__radio`}
+          value={option.name}
+          checked={props.value.radio ? props.value.radio === option.name : undefined}
+        />
+      ))}
   </Form.Group>
 );
 
@@ -383,7 +379,7 @@ const RadioAndInputColumn3 = props => (
               label={option.name}
               name={`${props.id}__type__checkbox`}
               value={option.name}
-              checked={props.value.checkbox ? props.value.checkbox.includes(option.name) : false}
+              checked={props.value.checkbox ? props.value.checkbox.includes(option.name) : undefined}
             />
           </Col>
           {option.input === true ?
@@ -662,7 +658,6 @@ export {
   LocationColumn,
   MedicalTreatmentColumn,
   TFcheckbox1,
-  TFcheckbox2,
   NationColumn,
   PublicColumn,
   CloseContactorColumn,
