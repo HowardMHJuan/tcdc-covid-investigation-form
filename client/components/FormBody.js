@@ -474,16 +474,18 @@ const Source = props => (
           <TFcheckbox1
             id="is_abroad"
             name="" 
-            options={['是（續填以下欄位）', '否']}
+            options={[{ name: '是（續填以下欄位）' }, { name: '否'}]}
             handleChange={props.handleChange}
-            ischecked={(() => {
-              var ischecked = false;
+            {...(() => {
+              const value = {};
               Object.entries(props.states).forEach(([key, val]) => {
                 if (/\bnation_and_location/.test(key)) {
-                  ischecked = true;
+                  if (val !== undefined) {
+                    value['radio'] = '是（續填以下欄位）';
+                  }
                 }
               });
-              return { ischecked };
+              return { value };
             })()}
           />
         </Form.Row>
@@ -653,7 +655,6 @@ const Source = props => (
                     }
                   }
                 });
-                console.log(value);
                 return { value };
               })()}
             />
@@ -966,16 +967,18 @@ const Contactor = props => (
           <TFcheckbox1
             id="is_public_area"
             name=""
-            options={['是（請自行增列）', '否']}
+            options={[{ name: '是（請自行增列）' }, { name: '否'}]}
             handleChange={props.handleChange}
-            ischecked={(() => {
-              var ischecked = false;
+            {...(() => {
+              const value = {};
               Object.entries(props.states).forEach(([key, val]) => {
                 if (/\bpublic_area/.test(key)) {
-                  ischecked = true;
+                  if (val !== undefined) {
+                    value['radio'] = '是（請自行增列）';
+                  }
                 }
               });
-              return { ischecked };
+              return { value };
             })()}
             />
         </Form.Row>
@@ -1011,16 +1014,19 @@ const Contactor = props => (
             <Card.Title as="h6"> 是否有密切接觸者*：</Card.Title>
             <TFcheckbox1
               id="is_close_contactor"
-              name="" options={['是（請自行增列）', '否']}
+              name=""
+              options={[{ name: '是（請自行增列）' }, { name: '否'}]}
               handleChange={props.handleChange}
-              ischecked={(() => {
-                var ischecked = false;
+              {...(() => {
+                const value = {};
                 Object.entries(props.states).forEach(([key, val]) => {
-                  if (/\bpublic_area/.test(key)) {
-                    ischecked = true;
+                  if (/\bclose_contactor/.test(key)) {
+                    if (val !== undefined) {
+                      value['radio'] = '是（請自行增列）';
+                    }
                   }
                 });
-                return { ischecked };
+                return { value };
               })()}
               />
           </Form.Row>
