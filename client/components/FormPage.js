@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import { apiConfig } from '../../config-api';
 import FormBody from './FormBody';
+import FormPageModal from './FormPageModal';
 
 const getRadioInputValue = (radioName, input) => (
   input === undefined ? radioName : radioName + input
@@ -201,6 +202,8 @@ class FormPage extends Component {
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleColumnRemove = this.handleColumnRemove.bind(this);
+    this.handleModalConfirm = this.handleModalConfirm.bind(this);
+    this.handleModalClose = this.handleModalClose.bind(this);
   }
 
   /**
@@ -218,6 +221,7 @@ class FormPage extends Component {
           // console.log(newState);
           newState.editMode = true;
           newState.submitting = false;
+          newState.modalShowed = false;
           this.setState(newState);
         }
       })
@@ -227,15 +231,49 @@ class FormPage extends Component {
   }
 
   /**
+   * Handle modal confirm. */
+  handleModalConfirm() {
+    this.setState({ modalShowed: true, showModal: false }, () => this.submit());
+  }
+
+  /**
+   * Handle modal close. */
+  handleModalClose() {
+    this.setState({ showModal: false, submitting: false });
+  }
+
+  /**
    * Post the data to backend. */
   submit() {
     // console.log(getForm(this.state));
     this.setState({ submitting: true });
     if (this.state.editMode) {
-      axios.put(apiConfig.mongoPut.replace(':id', this.state.id), getForm(this.state))
+      axios.get(apiConfig.mongoGet.replace(':id', this.state.id))
         .then((res) => {
-          console.log(res.data);
-          this.props.changeMode(1);
+          if (!this.state.modalShowed) {
+            this.setState({
+              showModal: true,
+              editMode: (res.data === '' ? 'new' : 'edit'),
+            });
+          } else if (res.data === '') {
+            axios.post(apiConfig.mongoPost, getForm(this.state))
+              .then((r) => {
+                console.log(r.data);
+                this.props.changeMode(1);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          } else {
+            axios.put(apiConfig.mongoPut.replace(':id', this.state.id), getForm(this.state))
+              .then((r) => {
+                console.log(r.data);
+                this.props.changeMode(1);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -312,6 +350,14 @@ class FormPage extends Component {
             </Col>
           </Row>
         </Container>
+
+        <FormPageModal
+          handleModalClose={this.handleModalClose}
+          handleModalConfirm={this.handleModalConfirm}
+          showModal={this.state.showModal}
+          editMode={this.state.editMode}
+          id={this.state.id}
+        />
       </div>
     );
   }
