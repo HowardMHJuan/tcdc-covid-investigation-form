@@ -35,19 +35,14 @@ class SubmittedPage extends Component {
                     <Col sm="auto" as="h4">已送出</Col>}
                 </Row>
                 <Row className="justify-content-center">
-                  {this.state.error ?
-                    <React.Fragment>
-                      <Col sm={3}>
-                        <Button onClick={() => this.props.changeMode(0)}>填新疫調單</Button>
-                      </Col>
-                      <Col sm={5}>
-                        <Button onClick={() => this.props.changeMode(2)}>編輯資料庫中的疫調單（前往搜尋頁面）</Button>
-                      </Col>
-                    </React.Fragment>
-                  :
-                    <Col sm="auto">
-                      <Button onClick={() => this.props.changeMode(0)}>再填一單</Button>
-                    </Col>}
+                  <React.Fragment>
+                    <Col sm={3}>
+                      <Button onClick={() => this.props.changeMode(0)}>填新疫調單</Button>
+                    </Col>
+                    <Col sm={5}>
+                      <Button onClick={() => this.props.changeMode(2)}>編輯資料庫中的疫調單（前往搜尋頁面）</Button>
+                    </Col>
+                  </React.Fragment>
                 </Row>
               </Card.Body>
             </Card>
