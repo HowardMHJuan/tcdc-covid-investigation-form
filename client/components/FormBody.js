@@ -139,6 +139,7 @@ class FormBody extends Component {
               <ActivityDetail
                 handleChange={this.props.handleChange}
                 handleColumnRemove={this.props.handleColumnRemove}
+                handleColumnCopy={this.props.handleColumnCopy}
                 {...(() => {
                   const values = {};
                   Object.entries(this.props).forEach(([key, val]) => {

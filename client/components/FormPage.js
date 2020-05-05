@@ -202,6 +202,7 @@ class FormPage extends Component {
     this.submit = this.submit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleColumnRemove = this.handleColumnRemove.bind(this);
+    this.handleColumnCopy = this.handleColumnCopy.bind(this);
     this.handleModalConfirm = this.handleModalConfirm.bind(this);
     this.handleModalClose = this.handleModalClose.bind(this);
   }
@@ -319,6 +320,16 @@ class FormPage extends Component {
     });
   }
 
+  handleColumnCopy(from, to) {
+    const re_from = RegExp(`\\b${from}`);
+    const re_to = RegExp(`\\b${to}`);
+    Object.entries(this.state).forEach(([key, val]) => {
+      if (re_from.test(key)) {
+        this.setState({ [to + '__' + key.split('__')[2]]: val });
+      }
+    });
+  }
+
   /**
    * @return {JSX} - A syntax extension to JavaScript, which will be
    * eventually compiled into html code. */
@@ -343,6 +354,7 @@ class FormPage extends Component {
               <FormBody
                 handleChange={this.handleChange}
                 handleColumnRemove={this.handleColumnRemove}
+                handleColumnCopy={this.handleColumnCopy}
                 submit={this.submit}
 
                 {...this.state}
