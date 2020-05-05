@@ -606,6 +606,10 @@ const ActivityColumn = props => (
         <Button size="sm" variant="danger" id={props.id} onClick={props.handleRemove}>
           移除
         </Button>
+        &nbsp; &nbsp;
+        <Button size="sm" variant="primary" id={props.id} onClick={props.handleCopy}>
+          複製
+        </Button>
         <Row>
           <Col>
             <Form.Label>日期</Form.Label>

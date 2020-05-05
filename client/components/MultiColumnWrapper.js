@@ -12,6 +12,7 @@ class MultiColumnWrapper extends Component {
     this.state = { rowIds: [], newIds: [] };
     this.handleAdd = this.handleAdd.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
+    this.handleCopy = this.handleCopy.bind(this);
   }
 
   /**
@@ -26,6 +27,7 @@ class MultiColumnWrapper extends Component {
     }
     state.rowIds = state.rowIds.concat(state.newIds);
     state.rowIds = [...new Set(state.rowIds)];
+    // console.log(state.rowIds, state.newIds);
     return state;
   }
 
@@ -35,6 +37,8 @@ class MultiColumnWrapper extends Component {
     const newId = String(Math.max(-1, ...this.state.rowIds) + 1);
     const newIds = [...this.state.newIds, newId];
     this.setState({ newIds });
+    // console.log(newIds)
+    // console.log(this.newIds);
   }
 
   /**
@@ -46,6 +50,13 @@ class MultiColumnWrapper extends Component {
     const newIds = this.state.newIds.filter(id => id !== idToRemove);
     this.setState({ rowIds, newIds });
     this.props.handleColumnRemove(event.target.id);
+  }
+
+  handleCopy(event) {
+    const from = event.target.id;
+    const to = event.target.id.split('__')[0] + '__' + String(Math.max(-1, ...this.state.rowIds) + 1);
+    this.handleAdd();
+    this.props.handleColumnCopy(from, to);
   }
 
   /**
@@ -60,6 +71,7 @@ class MultiColumnWrapper extends Component {
             key: `${this.props.id}__${id}`,
             values: this.props.values && this.props.values[id] ? this.props.values[id] : {},
             handleRemove: this.handleRemove,
+            handleCopy: this.handleCopy,
           })
         ))}
         <Button variant="primary" onClick={this.handleAdd}>
