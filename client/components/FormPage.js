@@ -173,6 +173,9 @@ const getForm = s => ({
   activity: {
     activity_detail: getActivityValue(s),
   },
+  note: {
+    note_content: s.note_content,
+  },
   orig_state: JSON.stringify(s),
 });
 
