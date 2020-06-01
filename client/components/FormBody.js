@@ -35,7 +35,7 @@ class FormBody extends Component {
               <Form.Row>
                 <DateColumn id="inv_date" name="調查日期（西元年）" handleChange={this.props.handleChange} value={this.props.inv_date} />
                 <StringColumn id="inv_person" name="調查人" handleChange={this.props.handleChange} value={this.props.inv_person} />
-                <StringColumn id="inv_institution" name="調查單位" handleChange={this.props.handleChange} value={this.props.inv_institution} />
+                <SelectColumn id="inv_institution" name="調查單位" options={['台北區管制中心', '北區管制中心', '中區管制中心', '南區管制中心', '高屏區管制中心', '東區管制中心']} handleChange={this.props.handleChange} value={this.props.inv_institution} />
               </Form.Row>
             </Card.Body>
           </Card>
@@ -157,6 +157,12 @@ class FormBody extends Component {
                   return { values };
                 })()}
               />
+            </Card.Body>
+          </Card>
+          <Card>
+            <Card.Body>
+              <Card.Title>六、備註</Card.Title>
+                <StringColumn id="note_content" name="備註內容" handleChange={this.props.handleChange} value={this.props.note_content} />
             </Card.Body>
           </Card>
           <Card>
@@ -381,6 +387,9 @@ const HealthConditionSymptoms = props => (
       '下肢水腫',
       '血尿',
       '胸部影像學檢查(CXR 或 CT)顯示肺炎',
+
+      '嗅覺異常',
+      '味覺異常',
     ].map(name => (
       <RadioAndDateColumn
         id="symptoms"

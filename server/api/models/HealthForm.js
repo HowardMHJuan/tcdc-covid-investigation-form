@@ -49,6 +49,9 @@ const HealthFormSchema = new Schema({
   activity: {
     activity_detail: Array,
   },
+  note: {
+    note_content: String,
+  },
   orig_state: String,
 });
 
