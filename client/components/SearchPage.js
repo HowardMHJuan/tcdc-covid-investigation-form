@@ -79,8 +79,28 @@ class SearchPage extends Component {
                 </Row>
                 <Row className="justify-content-center" style={{ marginTop: '2rem' }}>
                   <Col sm="auto">
-                    <Button onClick={this.search}>搜尋</Button>
+                    <Button onClick={this.search}>編輯</Button>
                   </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Row className="justify-content-center" style={{ marginTop: '1rem' }}>
+          <Col sm="8">
+            <Card>
+              <Card.Body>
+                <Row className="justify-content-center">
+                  <Col sm="auto" as="h4">搜尋法傳編號</Col>
+                </Row>
+                <Row>
+                  <iframe
+                    title="疫調報告搜尋"
+                    style={{ width: '100%', border: '0px', height: '30em' }}
+                    sandbox="allow-scripts allow-forms allow-same-origin"
+                    scrolling="auto"
+                    src="https://timelinewebapp.azurewebsites.net/"
+                  />
                 </Row>
               </Card.Body>
             </Card>
