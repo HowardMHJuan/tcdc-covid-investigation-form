@@ -7,7 +7,7 @@ import SearchPage from '../components/SearchPage';
 const redirect = (mode, props) => {
   if (mode === 0) {
     if (props !== undefined) {
-      window.location.href = `/form?id=${props.id}&name=${props.name}`;
+      window.location.href = `/form?id=${props.id}`;
     } else {
       window.location.href = '/form';
     }
