@@ -537,41 +537,42 @@ const Source = props => (
               options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]}
               options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))}
               handleChange={props.handleChange}
+              handleColumnRemove={props.handleColumnRemove}
               {...(() => {
-                const value = {};
+                const values = {};
                 Object.entries(props.states).forEach(([key, val]) => {
                   if (/\bcontact_fever/.test(key)) {
                     if (val !== undefined) {
                       const type = key.split('__')[1];
                       if (type === 'start_date' || type === 'end_date') {
                         const columnName = key.split('__')[2];
-                        if (value[type] === undefined) {
-                          value[type] = {};
+                        if (values[type] === undefined) {
+                          values[type] = {};
                         }
-                        value[type][columnName] = val;
+                        values[type][columnName] = val;
                       } else if (type === 'type') {
                         const columnName = key.split('__')[2];
                         if (columnName === 'input') {
                           const columnName2 = key.split('__')[3];
-                          if (value[columnName] === undefined) {
-                            value[columnName] = {};
+                          if (values[columnName] === undefined) {
+                            values[columnName] = {};
                           }
-                          value[columnName][columnName2] = val;
+                          values[columnName][columnName2] = val;
                         }
                         else {
                           // columnName = 'checkbox'
-                          if (value[columnName] === undefined) {
-                            value[columnName] = {};
+                          if (values[columnName] === undefined) {
+                            values[columnName] = {};
                           }
-                          value[columnName] = val;
+                          values[columnName] = val;
                         }
                       } else {
-                        value[type] = val;
+                        values[type] = val;
                       }
                     }
                   }
                 });
-                return { value };
+                return { values };
               })()}
             />
           </Card.Body>
@@ -584,41 +585,42 @@ const Source = props => (
               options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]}
               options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))}
               handleChange={props.handleChange}
+              handleColumnRemove={props.handleColumnRemove}
               {...(() => {
-                const value = {};
+                const values = {};
                 Object.entries(props.states).forEach(([key, val]) => {
                   if (/\bcontact_patient/.test(key)) {
                     if (val !== undefined) {
                       const type = key.split('__')[1];
                       if (type === 'start_date' || type === 'end_date') {
                         const columnName = key.split('__')[2];
-                        if (value[type] === undefined) {
-                          value[type] = {};
+                        if (values[type] === undefined) {
+                          values[type] = {};
                         }
-                        value[type][columnName] = val;
+                        values[type][columnName] = val;
                       } else if (type === 'type') {
                         const columnName = key.split('__')[2];
                         if (columnName === 'input') {
                           const columnName2 = key.split('__')[3];
-                          if (value[columnName] === undefined) {
-                            value[columnName] = {};
+                          if (values[columnName] === undefined) {
+                            values[columnName] = {};
                           }
-                          value[columnName][columnName2] = val;
+                          values[columnName][columnName2] = val;
                         }
                         else {
                           // columnName = 'checkbox'
-                          if (value[columnName] === undefined) {
-                            value[columnName] = {};
+                          if (values[columnName] === undefined) {
+                            values[columnName] = {};
                           }
-                          value[columnName] = val;
+                          values[columnName] = val;
                         }
                       } else {
-                        value[type] = val;
+                        values[type] = val;
                       }
                     }
                   }
                 });
-                return { value };
+                return { values };
               })()}
             />
           </Card.Body>
@@ -631,41 +633,42 @@ const Source = props => (
               options={[{ name: '否' }, { name: '是（續填以下欄位，可複選）', date1: true, date2: true }]}
               options2={['同住', '同處工作', '醫療院所'].map(name => ({ name })).concat(['其他，請註明'].map(name => ({ name, input: true })))}
               handleChange={props.handleChange}
+              handleColumnRemove={props.handleColumnRemove}
               {...(() => {
-                const value = {};
+                const values = {};
                 Object.entries(props.states).forEach(([key, val]) => {
                   if (/\bcontact_secretion/.test(key)) {
                     if (val !== undefined) {
                       const type = key.split('__')[1];
                       if (type === 'start_date' || type === 'end_date') {
                         const columnName = key.split('__')[2];
-                        if (value[type] === undefined) {
-                          value[type] = {};
+                        if (values[type] === undefined) {
+                          values[type] = {};
                         }
-                        value[type][columnName] = val;
+                        values[type][columnName] = val;
                       } else if (type === 'type') {
                         const columnName = key.split('__')[2];
                         if (columnName === 'input') {
                           const columnName2 = key.split('__')[3];
-                          if (value[columnName] === undefined) {
-                            value[columnName] = {};
+                          if (values[columnName] === undefined) {
+                            values[columnName] = {};
                           }
-                          value[columnName][columnName2] = val;
+                          values[columnName][columnName2] = val;
                         }
                         else {
                           // columnName = 'checkbox'
-                          if (value[columnName] === undefined) {
-                            value[columnName] = {};
+                          if (values[columnName] === undefined) {
+                            values[columnName] = {};
                           }
-                          value[columnName] = val;
+                          values[columnName] = val;
                         }
                       } else {
-                        value[type] = val;
+                        values[type] = val;
                       }
                     }
                   }
                 });
-                return { value };
+                return { values };
               })()}
             />
           </Card.Body>
