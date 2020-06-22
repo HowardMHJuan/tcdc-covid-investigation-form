@@ -1,6 +1,9 @@
 import React from 'react';
 import { Form, Col, Row, Card, Button } from 'react-bootstrap';
 import AreaNames from '../utils/AreaNames';
+import TimePicker from 'rc-time-picker';
+import 'rc-time-picker/assets/index.css';
+
 
 const StringColumn = props => (
   <Form.Group as={Col} controlId={props.id}>
@@ -620,30 +623,82 @@ const ActivityColumn = props => (
             />
           </Col>
           <Col>
-            <Form.Label>開始時間</Form.Label>
-            <Form.Control
-              type="time"
-              name={`${props.id}__start_time`}
-              value={props.values.start_time}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Form.Label>結束時間</Form.Label>
-            <Form.Control
-              type="time"
-              name={`${props.id}__end_time`}
-              value={props.values.end_time}
-            />
-          </Col>
-          <Col>
             <Form.Label>活動描述</Form.Label>
             <Form.Control
               type="text"
               name={`${props.id}__description`}
               value={props.values.description}
             />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Label>開始時間<br />(a.m./p.m.)</Form.Label>
+            <Form.Control 
+              as="select"
+              name={`${props.id}__start_time_ampm`}
+              value={props.values.start_time_ampm}
+            >
+              <option>{null}</option>
+              {['a.m.', 'p.m.'].map(option => <option>{option}</option>)}
+            </Form.Control>
+          </Col>
+          <Col>
+            <Form.Label>開始時間<br />(小時)</Form.Label>
+            <Form.Control 
+              as="select"
+              name={`${props.id}__start_time_hour`}
+              value={props.values.start_time_hour}
+            >
+              <option>{null}</option>
+              {['12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'].map(option => <option>{option}</option>)}
+            </Form.Control>
+          </Col>
+          <Col>
+            <Form.Label>開始時間<br />(分鐘)</Form.Label>
+            <Form.Control 
+              as="select"
+              name={`${props.id}__start_time_minute`}
+              value={props.values.start_time_minute}
+            >
+              <option>{null}</option>
+              {Array.from(Array(60).keys()).map(String).map(option => <option>{option}</option>)}
+            </Form.Control>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Label>結束時間<br />(a.m./p.m.)</Form.Label>
+            <Form.Control 
+              as="select"
+              name={`${props.id}__end_time_ampm`}
+              value={props.values.end_time_ampm}
+            >
+              <option>{null}</option>
+              {['a.m.', 'p.m.'].map(option => <option>{option}</option>)}
+            </Form.Control>
+          </Col>
+          <Col>
+            <Form.Label>結束時間<br />(小時)</Form.Label>
+            <Form.Control 
+              as="select"
+              name={`${props.id}__end_time_hour`}
+              value={props.values.end_time_hour}
+            >
+              <option>{null}</option>
+              {['12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'].map(option => <option>{option}</option>)}
+            </Form.Control>
+          </Col>
+          <Col>
+            <Form.Label>結束時間<br />(分鐘)</Form.Label>
+            <Form.Control 
+              as="select"
+              name={`${props.id}__end_time_minute`}
+              value={props.values.end_time_minute}
+            >
+              <option>{null}</option>
+              {Array.from(Array(60).keys()).map(String).map(option => <option>{option}</option>)}
+            </Form.Control>
           </Col>
         </Row>
       </fieldset>

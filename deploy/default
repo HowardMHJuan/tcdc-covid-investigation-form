@@ -26,7 +26,7 @@ map $http_upgrade $connection_upgrade {
 }
 
 upstream websocket {
-        server localhost:8080;
+        server localhost:8000;
 }
 ## Websocket Config End
     
