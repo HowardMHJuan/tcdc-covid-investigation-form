@@ -10,6 +10,27 @@ const getRadioInputValue = (radioName, input) => (
   input === undefined ? radioName : radioName + input
 );
 
+const formatedTime = (ampm, hour, minute) => {
+  hour = (hour < 10) ? ("0" + hour) : hour;
+  minute = (minute < 10) ? ("0" + minute) : minute;
+  if (ampm == "a.m."){
+    if(hour == "12"){
+      return "00:" + minute;
+    }
+    else{
+      return hour + ":" + minute;
+    }
+  }
+  else {
+    if (hour == "12"){
+      return "12" + ":" + minute;
+    }
+    else {
+      return String(Number(hour) + 12) + ":" + minute;
+    }
+  }
+};
+
 const getOtherSymptomsValue = (s) => {
   const rowIds = [...new Set(Object.keys(s).filter(key => /\bsymptoms_other/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
   return rowIds.map(id => ({ name: `其他：${s[`symptoms_other__${id}__input`]}`, date: s[`symptoms_other__${id}__date`] }));
@@ -118,8 +139,8 @@ const getActivityValue = (s) => {
   const rowIds = [...new Set(Object.keys(s).filter(key => /\bactivity_detail/.test(key) && s[key] !== undefined).map(key => key.split('__')[1]))];
   return rowIds.map(id => ({
     date: s[`activity_detail__${id}__date`],
-    start_time: s[`activity_detail__${id}__start_time`],
-    end_time: s[`activity_detail__${id}__end_time`],
+    start_time: formatedTime(s[`activity_detail__${id}__start_time_ampm`], s[`activity_detail__${id}__start_time_hour`], s[`activity_detail__${id}__start_time_minute`]),
+    end_time: formatedTime(s[`activity_detail__${id}__end_time_ampm`], s[`activity_detail__${id}__end_time_hour`], s[`activity_detail__${id}__end_time_minute`]),
     description: s[`activity_detail__${id}__description`],
   }));
 };

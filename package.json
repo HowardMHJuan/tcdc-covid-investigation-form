@@ -25,6 +25,8 @@
     "mongodb": "^3.0.4",
     "mongoose": "^5.0.9",
     "mysql": "^2.15.0",
+    "nodemon": "^2.0.4",
+    "rc-time-picker": "^3.7.3",
     "react": "^16.0.0",
     "react-bootstrap": "^1.0.0",
     "react-dom": "^16.0.0",
