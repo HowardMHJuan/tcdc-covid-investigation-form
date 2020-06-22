@@ -3,6 +3,7 @@ import { Form, Col, Row, Card, Button } from 'react-bootstrap';
 import AreaNames from '../utils/AreaNames';
 import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
+import MultiColumnWrapper from './MultiColumnWrapper';
 
 
 const StringColumn = props => (
@@ -341,63 +342,18 @@ const RadioAndInputColumn3 = props => (
                 label={option.name}
                 name={`${props.id}__radio`}
                 value={option.name}
-                checked={props.value.radio === option.name}
+                checked={props.values.radio === option.name}
               />
             </Col>
-          </Row>
-          <Row>
-            {option.date1 === true ?
-              <Col style={{ margin: '1rem 0 1.5rem 0' }}>
-                <Form.Label>接觸開始日期</Form.Label>
-                <Form.Control
-                  type="date"
-                  name={`${props.id}__start_date__${option.name}`}
-                  value={props.value.start_date ? props.value.start_date[option.name] : undefined}
-                />
-              </Col>
-            :
-              null
-            }
-            {option.date2 === true ?
-              <Col style={{ margin: '1rem 0 1rem 0' }}>
-                <Form.Label>接觸結束日期</Form.Label>
-                <Form.Control
-                  type="date"
-                  name={`${props.id}__end_date__${option.name}`}
-                  value={props.value.end_date ? props.value.end_date[option.name] : undefined}
-                />
-              </Col>
-            :
-              null
-            }
           </Row>
         </React.Fragment>
       ))}
-      <Form.Label>接觸場所為：</Form.Label>
-      {props.options2.map(option => (
-        <Row>
-          <Col sm="auto">
-            <Form.Check
-              type="checkbox"
-              label={option.name}
-              name={`${props.id}__type__checkbox`}
-              value={option.name}
-              checked={props.value.checkbox ? props.value.checkbox.includes(option.name) : undefined}
-            />
-          </Col>
-          {option.input === true ?
-            <Col>
-              <Form.Control
-                type="text"
-                name={`${props.id}__type__input__${option.name}`}
-                value={props.value.input ? props.value.input[option.name] : undefined}
-              />
-            </Col>
-          :
-            null
-          }
-        </Row>
-      ))}
+      <MultiColumnWrapper
+        id={props.id}
+        {...props}
+      >
+        <ContactHistory {...props} />
+      </MultiColumnWrapper>
     </fieldset>
   </Form.Group>
 );
@@ -702,6 +658,59 @@ const ActivityColumn = props => (
           </Col>
         </Row>
       </fieldset>
+    </Card.Body>
+  </Card>
+);
+
+const ContactHistory = props => (
+  <Card>
+    <Card.Body>
+      <Button size="sm" variant="danger" id={props.id} onClick={props.handleRemove}>
+        移除
+      </Button>
+      <Row>
+        <Col style={{ margin: '1rem 0 1.5rem 0' }}>
+          <Form.Label>接觸開始日期</Form.Label>
+          <Form.Control
+            type="date"
+            name={`${props.id}__start_date__是（續填以下欄位，可複選）`}
+            value={props.values.start_date ? props.values.start_date['是（續填以下欄位，可複選）'] : undefined}
+          />
+        </Col>
+        <Col style={{ margin: '1rem 0 1rem 0' }}>
+          <Form.Label>接觸結束日期</Form.Label>
+          <Form.Control
+            type="date"
+            name={`${props.id}__end_date__是（續填以下欄位，可複選）`}
+            value={props.values.end_date ? props.values.end_date['是（續填以下欄位，可複選）'] : undefined}
+          />
+        </Col>
+      </Row>
+      <Form.Label>接觸場所為：</Form.Label>
+      {props.options2.map(option => (
+        <Row>
+          <Col sm="auto">
+            <Form.Check
+              type="checkbox"
+              label={option.name}
+              name={`${props.id}__type__checkbox`}
+              value={option.name}
+              checked={props.values.checkbox ? props.values.checkbox.includes(option.name) : undefined}
+            />
+          </Col>
+          {option.input === true ?
+            <Col>
+              <Form.Control
+                type="text"
+                name={`${props.id}__type__input__${option.name}`}
+                value={props.values.input ? props.values.input[option.name] : undefined}
+              />
+            </Col>
+          :
+            null
+          }
+        </Row>
+      ))}
     </Card.Body>
   </Card>
 );

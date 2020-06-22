@@ -27,7 +27,7 @@ class AppForDev extends Component {
   changeMode(mode, props) {
     if (mode === 0) {
       if (props !== undefined) {
-        window.history.pushState({}, '', `/?id=${props.id}&name=${props.name}`);
+        window.history.pushState({}, '', `/?id=${props.id}`);
       } else {
         window.location.href = '/';
       }
